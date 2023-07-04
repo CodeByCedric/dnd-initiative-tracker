@@ -1,4 +1,4 @@
-package be.howest.ti.nma.dungeonsanddragonsinitiativetracker
+package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

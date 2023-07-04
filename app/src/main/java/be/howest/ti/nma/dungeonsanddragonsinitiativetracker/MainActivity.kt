@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.DnDInitiativeTrackerApp
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.theme.DungeonsAndDragonsInitiativeTrackerTheme
 
 class MainActivity : ComponentActivity() {
