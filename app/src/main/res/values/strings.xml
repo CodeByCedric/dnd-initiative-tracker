@@ -1,3 +1,40 @@
 <resources>
-    <string name="app_name">Dungeons And Dragons Initiative Tracker</string>
+    <string name="app_name">Dungeons and Dragons Initiative Tracker</string>
+    <string name="campaign_overview_screen">Campaign Overview</string>
+    <string name="add_campaign_screen">Add a New Campaign</string>
+    <string name="character_overview_screen">Character Overview</string>
+    <string name="encounter_builder_screen">Encounter Builder</string>
+    <string name="initative_screen">Initiative</string>
+    <string name="skirmish_screen">Battle</string>
+
+    <string name="expand_button_content_description">See more or less information.</string>
+    <string name="back_button">Back</string>
+
+    <string name="to_character_overview_button">To the Character Overview Screen!</string>
+    <string name="to_character_overview_screen_button">To the Character Overview Screen!</string>
+    <string name="greyed_out_select_campaign_button">Please select a campaign</string>
+
+    <string name="to_encounter_builder_screen_button">To the Encounter Builder Screen!</string>
+
+    <string name="to_initiative_screen_button">To the Initiative Screen!</string>
+
+    <string name="to_skirmish_screen_button">To the Battle Screen!</string>
+    <string name="toEncounterBuilderButton">To the Encounter Builder!</string>
+    <string name="add_new_campaign_button">Add A New Campaign</string>
+    <string name="create_new_campaign_button">Create Campaign</string>
+    <string name="campaign_name_label">Campaign Name</string>
+    <string name="number_of_participants_label">Number of Participants</string>
+    <string name="increment">increment</string>
+    <string name="decrement">decrement</string>
+    <string name="participant_name_label">Player Name</string>
+    <string name="participant_email_label">Player Email</string>
+    <string name="dm_name_label">Dungeon Master Name</string>
+    <string name="dm_email_label">Dungeon Master Email</string>
+    <string name="add_player">Add Player</string>
+    <string name="player_name_label">Player Name</string>
+    <string name="player_email_label">Player Email</string>
+    <string name="delete_player_icon_label">Delete Player</string>
+    <string name="delete_campaign_icon_label">Delete Campaign</string>
+    <string name="pick_an_image">Pick an Image</string>
+    <string name="take_an_image">Take an Image</string>
 </resources>
