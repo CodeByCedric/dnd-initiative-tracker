@@ -1,6 +1,8 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 
@@ -12,4 +14,5 @@ object CharacterOverviewScreenDestination : NavigationDestination {
 
 @Composable
 fun CharacterScreen() {
+    Text(text = stringResource(id = CharacterOverviewScreenDestination.titleRes))
 }

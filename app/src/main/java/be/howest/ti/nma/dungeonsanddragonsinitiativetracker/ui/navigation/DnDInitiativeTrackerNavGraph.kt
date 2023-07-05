@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignScreenDestination
@@ -22,13 +23,19 @@ fun DnDInitiativeTrackerNavHost(
     ) {
         composable(route = CampaignScreenDestination.route) {
             CampaignScreen(
-                navigateToCharacterOverviewScreen = {
+                navigateToCharacterScreen = {
                     navController.navigate(CharacterOverviewScreenDestination.route)
+                },
+                navigateToAddCampaignScreen = {
+                    navController.navigate(AddCampaignScreenDestination.route)
                 }
-            ) {
-                navController.navigate(AddCampaignScreenDestination.route)
-
-            }
+            )
+        }
+        composable(route = AddCampaignScreenDestination.route) {
+            AddCampaignScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
         }
     }
 }

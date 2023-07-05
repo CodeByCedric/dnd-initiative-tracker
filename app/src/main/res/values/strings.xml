@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Dungeons and Dragons Initiative Tracker</string>
-    <string name="campaign_overview_screen">Campaign Overview</string>
+    <string name="campaign_overview_screen">Your Campaigns</string>
     <string name="add_campaign_screen">Add a New Campaign</string>
     <string name="character_overview_screen">Character Overview</string>
     <string name="encounter_builder_screen">Encounter Builder</string>
