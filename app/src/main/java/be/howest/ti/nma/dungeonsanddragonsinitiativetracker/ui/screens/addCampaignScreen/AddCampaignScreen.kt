@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
@@ -41,7 +42,6 @@ import coil.compose.AsyncImage
 object AddCampaignScreenDestination : NavigationDestination {
     override val route: String = "add_campaign_screen"
     override val titleRes: Int = R.string.add_campaign_screen
-
 }
 
 @Composable
@@ -64,35 +64,36 @@ fun AddCampaignScreen(
             modifier = Modifier
                 .padding(innerPadding)
         )
-
     }
 }
 
 @Composable
 fun AddCampaignForm(
-    modifier: Modifier
+    modifier: Modifier,
 ) {
-    Column(modifier = modifier) {
+
+    Column(
+        modifier = modifier
+    ) {
         CampaignName()
         CampaignImage()
-
-        SectionTitle(title = "Dungeon Master")
+        SectionTitle(title = stringResource(id = R.string.dm_section_title))
         DungeonMaster()
+        SectionTitle(title = stringResource(id = R.string.player_section_title))
 
-        SectionTitle(title = "Players")
         Player()
-        SaveCampaign()
+        Button(
+            onClick = {
+                //todo create campaign, campaignParticipants, etc.
+            },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = stringResource(R.string.create_campaign),
+                textAlign = TextAlign.Center
+            )
+        }
     }
-}
-
-
-@Composable
-fun SectionTitle(title: String) {
-    Text(
-        text = title,
-        modifier = Modifier.padding(16.dp),
-        style = MaterialTheme.typography.headlineSmall
-    )
 }
 
 @Composable
@@ -147,6 +148,15 @@ fun CampaignImage(
         }
 
     }
+}
+
+@Composable
+fun SectionTitle(title: String) {
+    Text(
+        text = title,
+        modifier = Modifier.padding(16.dp),
+        style = MaterialTheme.typography.headlineSmall
+    )
 }
 
 @Composable
@@ -205,7 +215,7 @@ fun Player() {
             onClick = {
                 playerList = playerList + Participant(
                     participantName = playerName,
-                    email = playerEmail
+                    email = playerEmail,
                 )
                 playerName = ""
                 playerEmail = ""
@@ -238,25 +248,4 @@ fun PlayerPillBox(
         )
     }
 }
-
-@Composable
-fun SaveCampaign() {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                top = dimensionResource(id = R.dimen.padding_medium),
-                end = dimensionResource(id = R.dimen.padding_medium)
-            )
-    ) {
-        Button(
-            onClick = { /*todo */ }
-        ) {
-            Text(text = stringResource(id = R.string.create_new_campaign_button))
-        }
-    }
-}
-
-
 

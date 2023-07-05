@@ -21,7 +21,7 @@
     <string name="to_skirmish_screen_button">To the Battle Screen!</string>
     <string name="toEncounterBuilderButton">To the Encounter Builder!</string>
     <string name="add_new_campaign_button">Add A New Campaign</string>
-    <string name="create_new_campaign_button">Create Campaign</string>
+    <string name="create_campaign">Create Your Campaign!</string>
     <string name="campaign_name_label">Campaign Name</string>
     <string name="number_of_participants_label">Number of Participants</string>
     <string name="increment">increment</string>
@@ -37,4 +37,7 @@
     <string name="delete_campaign_icon_label">Delete Campaign</string>
     <string name="pick_an_image">Pick an Image</string>
     <string name="take_an_image">Take an Image</string>
+    <string name="add_participants_to_campaign_screen">Add DM and Players</string>
+    <string name="dm_section_title">Dungeon Master</string>
+    <string name="player_section_title">Players</string>
 </resources>
