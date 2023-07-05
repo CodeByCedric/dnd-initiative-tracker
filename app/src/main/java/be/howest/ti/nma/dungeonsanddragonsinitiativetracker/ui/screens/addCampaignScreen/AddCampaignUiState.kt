@@ -5,6 +5,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Par
 
 data class AddCampaignUiState(
     val campaignName: String = "",
+    var campaignIconUri: Uri? = null,
     val dungeonMasterName: String = "",
     val dungeonMasterEmail: String = "",
     val participants: List<Participant> = listOf(
@@ -14,5 +15,5 @@ data class AddCampaignUiState(
             isDungeonMaster = false
         )
     ),
-    var campaignIconUri: Uri? = null
+
 )

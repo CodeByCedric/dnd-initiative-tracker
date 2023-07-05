@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -29,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import coil.compose.AsyncImage
 
@@ -166,6 +172,14 @@ fun DungeonMaster() {
 fun Player() {
     var playerName by remember { mutableStateOf("") }
     var playerEmail by remember { mutableStateOf("") }
+    var playerList by remember { mutableStateOf(listOf<Participant>()) }
+
+    playerList.forEach { player ->
+        PlayerPillBox(
+            playerName = player.participantName,
+            onDelete = { playerList = playerList - player }
+        )
+    }
     TextField(
         value = playerName,
         onValueChange = { newPlayerName -> playerName = newPlayerName },
@@ -188,12 +202,41 @@ fun Player() {
             )
     ) {
         Button(
-            onClick = { /*todo */ }
+            onClick = {
+                playerList = playerList + Participant(
+                    participantName = playerName,
+                    email = playerEmail
+                )
+                playerName = ""
+                playerEmail = ""
+            }
         ) {
             Text(text = stringResource(id = R.string.add_player))
         }
     }
 
+}
+
+@Composable
+fun PlayerPillBox(
+    playerName: String,
+    onDelete: () -> Unit
+) {
+    Row(
+        modifier = Modifier.padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = playerName,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(end = 8.dp)
+        )
+        Icon(
+            imageVector = Icons.Default.Clear,
+            contentDescription = null,
+            modifier = Modifier.clickable(onClick = onDelete)
+        )
+    }
 }
 
 @Composable

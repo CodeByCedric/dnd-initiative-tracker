@@ -10,6 +10,6 @@ data class Participant(
     @PrimaryKey(autoGenerate = true) val participantId: Int = 0,
     val participantName: String,
     val email: String,
-    val isDungeonMaster: Boolean,
+    val isDungeonMaster: Boolean = false,
     var emailValidationError: String? = null
 )
