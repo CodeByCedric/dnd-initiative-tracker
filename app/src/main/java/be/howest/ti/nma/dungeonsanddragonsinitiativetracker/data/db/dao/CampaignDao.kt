@@ -8,7 +8,6 @@ import androidx.room.Query
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import kotlinx.coroutines.flow.Flow
 
-interface CampaignDao {
     @Dao
     interface CampaignDao {
         //Todo, use a better conflictstrategy
@@ -19,7 +18,7 @@ interface CampaignDao {
         * thread. Room doesn't allow database access on the main thread.*/
 
         @Delete
-        suspend fun delete(campaignId: Int)
+        suspend fun delete(campaign: Campaign)
 
         @Query("SELECT * FROM campaigns WHERE campaignId = :campaignId")
         fun getCampaign(campaignId: Int): Flow<Campaign>
@@ -31,4 +30,3 @@ interface CampaignDao {
          receive notification whenever the data in the database changes. The Room keeps this Flow
           updated for you, which means you only need to explicitly get the data once. */
     }
-}

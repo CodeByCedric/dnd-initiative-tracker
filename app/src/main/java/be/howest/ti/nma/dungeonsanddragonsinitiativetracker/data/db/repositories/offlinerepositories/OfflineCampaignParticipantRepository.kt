@@ -2,9 +2,7 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositorie
 
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignParticipantRepository
-import kotlinx.coroutines.flow.Flow
 
 class OfflineCampaignParticipantRepository(private val campaignParticipantDao: CampaignParticipantDao) :
     CampaignParticipantRepository {
@@ -16,8 +14,8 @@ class OfflineCampaignParticipantRepository(private val campaignParticipantDao: C
         campaignParticipantDao.delete(campaignParticipant)
     }
 
-    override fun getCampaignParticipantsForCampaignStream(campaignId: Int):
-            Flow<List<Participant>> =
-        campaignParticipantDao.getCampaignParticipantsForCampaign(campaignId)
-
+//    override fun getCampaignParticipantsForCampaignStream(campaignId: Int):
+//            Flow<List<Participant>> =
+//        campaignParticipantDao.getCampaignParticipantsForCampaign(campaignId)
+// Todo implement this function
 }

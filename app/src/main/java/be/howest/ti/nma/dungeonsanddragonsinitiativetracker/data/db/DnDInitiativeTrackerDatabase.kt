@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import be.howest.ti.nma.bdnd.util.UriTypeConverter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.ParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeConverter
 
 @Database(
     entities = [
@@ -18,6 +21,10 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Par
         CampaignParticipant::class],
     version = 1,
     exportSchema = false
+)
+@TypeConverters(
+    UriTypeConverter::class,
+    DrawableTypeConverter::class,
 )
 abstract class DnDInitiativeTrackerDatabase : RoomDatabase() {
 

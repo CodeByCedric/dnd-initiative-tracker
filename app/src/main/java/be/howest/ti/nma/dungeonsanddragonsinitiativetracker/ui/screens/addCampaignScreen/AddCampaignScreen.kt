@@ -46,7 +46,6 @@ object AddCampaignScreenDestination : NavigationDestination {
 
 @Composable
 fun AddCampaignScreen(
-    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
 ) {
@@ -84,7 +83,11 @@ fun AddCampaignForm(
         Player()
         Button(
             onClick = {
-                //todo create campaign, campaignParticipants, etc.
+                /* Todo
+                create the campaign, get campaignId back
+                create the participants, get the participantIds back
+                create the campaignParticipants, using the campaignId and participantIds
+                * */
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
