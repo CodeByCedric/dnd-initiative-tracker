@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +34,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import coil.compose.AsyncImage
+import kotlinx.coroutines.launch
 
 object AddCampaignScreenDestination : NavigationDestination {
     override val route: String = "add_campaign_screen"
@@ -46,9 +50,12 @@ object AddCampaignScreenDestination : NavigationDestination {
 
 @Composable
 fun AddCampaignScreen(
+    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
+    addCampaignViewModel: AddCampaignViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             DnDInitiativeTrackerTopAppBar(
@@ -60,6 +67,13 @@ fun AddCampaignScreen(
 
     ) { innerPadding ->
         AddCampaignForm(
+            addCampaignUiState = addCampaignViewModel.addCampaignUiState,
+            onSave = {
+                coroutineScope.launch {
+                    addCampaignViewModel.save()
+                    navigateBack()
+                }
+            },
             modifier = Modifier
                 .padding(innerPadding)
         )
@@ -68,27 +82,27 @@ fun AddCampaignScreen(
 
 @Composable
 fun AddCampaignForm(
+    addCampaignUiState: AddCampaignUiState,
+    onSave: () -> Unit,
     modifier: Modifier,
 ) {
 
     Column(
         modifier = modifier
     ) {
-        CampaignName()
-        CampaignImage()
+        CampaignName(
+            addCampaignUiState
+        )
+        CampaignImage(
+            addCampaignUiState
+        )
         SectionTitle(title = stringResource(id = R.string.dm_section_title))
         DungeonMaster()
         SectionTitle(title = stringResource(id = R.string.player_section_title))
 
         Player()
         Button(
-            onClick = {
-                /* Todo
-                create the campaign, get campaignId back
-                create the participants, get the participantIds back
-                create the campaignParticipants, using the campaignId and participantIds
-                * */
-            },
+            onClick = onSave,
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
@@ -100,7 +114,9 @@ fun AddCampaignForm(
 }
 
 @Composable
-fun CampaignName() {
+fun CampaignName(
+    addCampaignUiState: AddCampaignUiState
+) {
     var campaignName by remember { mutableStateOf("") }
     TextField(
         value = campaignName,
@@ -112,6 +128,7 @@ fun CampaignName() {
 
 @Composable
 fun CampaignImage(
+    addCampaignUiState: AddCampaignUiState,
     modifier: Modifier = Modifier
 ) {
     var painter by remember { mutableStateOf<Uri?>(null) }

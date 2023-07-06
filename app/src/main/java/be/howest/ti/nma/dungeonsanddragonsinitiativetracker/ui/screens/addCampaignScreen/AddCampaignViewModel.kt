@@ -1,23 +1,20 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class AddCampaignViewModel(private val campaignRepository: CampaignRepository) : ViewModel() {
-    private val _addCampaignUiState = MutableStateFlow(AddCampaignUiState())
-    val addCampaignUiState: StateFlow<AddCampaignUiState> = _addCampaignUiState.asStateFlow()
 
-    fun createCampaignReturnId(): Int {
-        val currentUiState = addCampaignUiState.value
-        val campaign = Campaign(campaignName = currentUiState.campaignName)
-        if (currentUiState.campaignImageUri != null) {
-            campaign.campaignImageUri = currentUiState.campaignImageUri
-        }
-        //todo insert campaign in DB
-        return campaign.campaignId
+//    private val _addCampaignUiState = MutableStateFlow(AddCampaignUiState())
+//    val addCampaignUiState: StateFlow<AddCampaignUiState> = _addCampaignUiState.asStateFlow()
+
+    var addCampaignUiState by mutableStateOf(AddCampaignUiState())
+        private set
+
+    fun save() {
+        TODO("Not yet implemented")
     }
 }

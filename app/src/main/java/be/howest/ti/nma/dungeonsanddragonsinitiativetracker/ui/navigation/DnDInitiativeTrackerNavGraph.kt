@@ -33,6 +33,7 @@ fun DnDInitiativeTrackerNavHost(
         }
         composable(route = AddCampaignScreenDestination.route) {
             AddCampaignScreen(
+                navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )
         }
