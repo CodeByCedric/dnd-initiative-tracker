@@ -18,7 +18,7 @@ class OfflineCampaignRepository(private val campaignDao: CampaignDao) : Campaign
         return campaignDao.getCampaign(campaignId)
     }
 
-    override fun getAllCampaignsStrean(): Flow<List<Campaign>> {
+    override fun getAllCampaignsStream(): Flow<List<Campaign>> {
         return campaignDao.getAllCampaigns()
     }
 }

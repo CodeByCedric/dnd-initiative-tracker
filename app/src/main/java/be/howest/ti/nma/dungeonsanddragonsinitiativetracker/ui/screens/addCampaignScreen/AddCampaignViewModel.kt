@@ -2,11 +2,12 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampa
 
 import androidx.lifecycle.ViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class AddCampaignViewModel : ViewModel() {
+class AddCampaignViewModel(private val campaignRepository: CampaignRepository) : ViewModel() {
     private val _addCampaignUiState = MutableStateFlow(AddCampaignUiState())
     val addCampaignUiState: StateFlow<AddCampaignUiState> = _addCampaignUiState.asStateFlow()
 

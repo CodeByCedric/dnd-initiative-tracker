@@ -7,6 +7,6 @@ interface CampaignRepository {
     suspend fun insertCampaign(campaign: Campaign)
     suspend fun deleteCampaign(campaign: Campaign)
     fun getCampaignStream(campaignId: Int): Flow<Campaign?>
-    fun getAllCampaignsStrean(): Flow<List<Campaign>>
+    fun getAllCampaignsStream(): Flow<List<Campaign>>
 
 }
