@@ -1,6 +1,5 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -117,10 +116,9 @@ fun AddCampaignForm(
 fun CampaignName(
     addCampaignUiState: AddCampaignUiState
 ) {
-    var campaignName by remember { mutableStateOf("") }
     TextField(
-        value = campaignName,
-        onValueChange = { newCampaignName -> campaignName = newCampaignName },
+        value = addCampaignUiState.campaignName,
+        onValueChange = { addCampaignUiState.campaignName = it },
         label = { Text(stringResource(id = R.string.campaign_name_label)) },
         modifier = Modifier.fillMaxWidth()
     )
@@ -131,12 +129,11 @@ fun CampaignImage(
     addCampaignUiState: AddCampaignUiState,
     modifier: Modifier = Modifier
 ) {
-    var painter by remember { mutableStateOf<Uri?>(null) }
     Row(
         modifier = modifier.padding(top = dimensionResource(id = R.dimen.padding_medium))
     ) {
         AsyncImage(
-            model = painter ?: R.drawable.placeholder_view_vector,
+            model = addCampaignUiState.campaignImageUri ?: R.drawable.placeholder_view_vector,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = modifier
@@ -150,7 +147,7 @@ fun CampaignImage(
         ) {
             val photoPicker = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.PickVisualMedia(),
-                onResult = { painter = it }
+                onResult = { addCampaignUiState.campaignImageUri = it }
             )
             Button(
                 onClick = {

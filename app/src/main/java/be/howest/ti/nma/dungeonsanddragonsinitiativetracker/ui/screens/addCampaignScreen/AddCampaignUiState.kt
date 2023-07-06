@@ -4,8 +4,8 @@ import android.net.Uri
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 
 data class AddCampaignUiState(
-    val campaignName: String = "",
+    var campaignName: String = "",
     val campaignDrawable: Int = R.drawable.placeholder_view_vector,
-    val campaignImageUri: Uri? = null,
+    var campaignImageUri: Uri? = null,
 
     )
