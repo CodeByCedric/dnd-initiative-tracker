@@ -13,9 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignViewModel
 
 object CampaignScreenDestination : NavigationDestination {
     override val route: String = "campaign_screen"
@@ -27,6 +30,8 @@ object CampaignScreenDestination : NavigationDestination {
 fun CampaignScreen(
     navigateToCharacterScreen: () -> Unit,
     navigateToAddCampaignScreen: () -> Unit,
+    canNavigateBack: Boolean = false,
+    addCampaignViewModel: AddCampaignViewModel = viewModel(factory = AppViewModelProvider.Factory),
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -49,10 +54,10 @@ fun CampaignScreen(
                 )
             }
         },
-    ) { innerpadding ->
+    ) { innerPadding ->
         CampaignBody(
             modifier = modifier
-                .padding(innerpadding)
+                .padding(innerPadding)
                 .fillMaxSize()
         )
 

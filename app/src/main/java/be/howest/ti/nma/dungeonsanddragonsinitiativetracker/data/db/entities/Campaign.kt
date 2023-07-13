@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     tableName = "campaigns"
 )
 data class Campaign(
-    @PrimaryKey(autoGenerate = true) val campaignId: Int = 0,
+    @PrimaryKey(autoGenerate = true) val campaignId: Long = 0,
     @DrawableRes val campaignImageDrawable: Int? = null,
     var campaignImageUri: Uri? = null,
     val campaignName: String,

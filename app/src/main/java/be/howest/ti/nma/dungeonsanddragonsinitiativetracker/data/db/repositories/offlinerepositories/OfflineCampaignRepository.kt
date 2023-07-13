@@ -6,9 +6,14 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories
 import kotlinx.coroutines.flow.Flow
 
 class OfflineCampaignRepository(private val campaignDao: CampaignDao) : CampaignRepository {
-    override suspend fun insertCampaign(campaign: Campaign) {
-        campaignDao.insert(campaign)
+    override suspend fun insertCampaign(campaign: Campaign): Long {
+        return campaignDao.insert(campaign)
     }
+
+    override suspend fun insertAllCampaigns(campaigns: List<Campaign>): List<Long> {
+        return campaignDao.insertAll(campaigns)
+    }
+
 
     override suspend fun deleteCampaign(campaign: Campaign) {
         campaignDao.delete(campaign)

@@ -6,8 +6,15 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories
 
 class OfflineCampaignParticipantRepository(private val campaignParticipantDao: CampaignParticipantDao) :
     CampaignParticipantRepository {
-    override suspend fun insertCampaignParticipant(campaignParticipant: CampaignParticipant) {
-        campaignParticipantDao.insert(campaignParticipant)
+    override suspend fun insertCampaignParticipant(campaignParticipant: CampaignParticipant): Long {
+        return campaignParticipantDao.insert(campaignParticipant)
+    }
+
+    override suspend fun insertAllCampaignParticipants(
+        campaignParticipants:
+        List<CampaignParticipant>
+    ): List<Long> {
+        return campaignParticipantDao.insertAll(campaignParticipants)
     }
 
     override suspend fun deleteCampaignParticipant(campaignParticipant: CampaignParticipant) {

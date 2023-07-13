@@ -14,6 +14,9 @@ import kotlinx.coroutines.flow.Flow
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         suspend fun insert(campaign: Campaign): Long
 
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        suspend fun insertAll(campaigns: List<Campaign>): List<Long>
+
         @Delete
         suspend fun delete(campaign: Campaign)
 
@@ -26,8 +29,6 @@ import kotlinx.coroutines.flow.Flow
         @Query("SELECT COUNT(*) FROM campaigns")
         suspend fun getRowCount(): Int
 
-        @Insert(onConflict = OnConflictStrategy.REPLACE)
-        suspend fun insertAll(photos: List<Campaign>)
 
         /* Mark the function with the suspend keyword to let it run on a separate thread.
         The database operations can take a long time to execute, so they need to run on a separate

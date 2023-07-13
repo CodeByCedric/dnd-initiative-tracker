@@ -7,6 +7,6 @@ import androidx.room.Entity
     primaryKeys = ["participantId", "campaignId"]
 )
 data class CampaignParticipant(
-    val participantId: Int,
-    val campaignId: Int
+    val participantId: Long,
+    val campaignId: Long
 )

@@ -6,8 +6,12 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories
 
 class OfflineParticipantRepository(private val participantDao: ParticipantDao) :
     ParticipantRepository {
-    override suspend fun insertParticipant(participant: Participant) {
-        participantDao.insert(participant)
+    override suspend fun insertParticipant(participant: Participant): Long {
+        return participantDao.insert(participant)
+    }
+
+    override suspend fun insertAllParticipants(participants: List<Participant>): List<Long> {
+        return participantDao.insertAll(participants)
     }
 
     override suspend fun deleteParticipant(participant: Participant) {

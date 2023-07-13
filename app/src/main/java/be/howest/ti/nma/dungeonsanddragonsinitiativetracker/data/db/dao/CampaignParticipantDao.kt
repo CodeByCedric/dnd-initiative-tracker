@@ -9,7 +9,10 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Cam
 @Dao
 interface CampaignParticipantDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(campaignParticipant: CampaignParticipant)
+    suspend fun insert(campaignParticipant: CampaignParticipant): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(campaignParticipant: List<CampaignParticipant>): List<Long>
 
     @Delete
     suspend fun delete(campaignParticipant: CampaignParticipant)

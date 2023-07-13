@@ -4,7 +4,8 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Cam
 import kotlinx.coroutines.flow.Flow
 
 interface CampaignRepository {
-    suspend fun insertCampaign(campaign: Campaign)
+    suspend fun insertCampaign(campaign: Campaign): Long
+    suspend fun insertAllCampaigns(campaigns: List<Campaign>): List<Long>
     suspend fun deleteCampaign(campaign: Campaign)
     fun getCampaignStream(campaignId: Long): Flow<Campaign?>
     fun getAllCampaignsStream(): Flow<List<Campaign>>

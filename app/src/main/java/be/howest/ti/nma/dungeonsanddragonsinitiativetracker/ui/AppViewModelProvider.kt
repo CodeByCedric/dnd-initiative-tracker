@@ -6,9 +6,16 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerApplication
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignViewModel
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
+        //Initializer for the CampaignViewModel
+        initializer {
+            CampaignViewModel(
+                dndInitiativeTrackerApplication().container.campaignRepository
+            )
+        }
         //Initializer for the addCampaignViewModel
         initializer {
             AddCampaignViewModel(
