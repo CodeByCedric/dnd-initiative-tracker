@@ -35,6 +35,7 @@ class AddCampaignViewModel(
 
 
     fun save() {
+        saveCampaign()
         /*todo
         * saveCampaign() -> return campaignId
         * saveParticipants() -> return campaignParticipantIds
