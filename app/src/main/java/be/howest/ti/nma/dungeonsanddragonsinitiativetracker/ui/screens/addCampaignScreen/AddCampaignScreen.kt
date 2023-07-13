@@ -3,7 +3,6 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampa
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
@@ -24,7 +21,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +41,6 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.rememberImeState
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
@@ -63,16 +58,6 @@ fun AddCampaignScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val addCampaignUiState by addCampaignViewModel.addCampaignUiState.collectAsState()
-    val imeState = rememberImeState()
-    val scrollState = rememberScrollState()
-
-    LaunchedEffect(
-        key1 = imeState.value
-    ) {
-        if (imeState.value) {
-            scrollState.scrollTo(scrollState.maxValue)
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -87,7 +72,6 @@ fun AddCampaignScreen(
         AddCampaignForm(
             addCampaignViewModel = addCampaignViewModel,
             addCampaignUiState = addCampaignUiState,
-            scrollState = scrollState,
 
             onSave = {
                 coroutineScope.launch {
@@ -105,7 +89,6 @@ fun AddCampaignScreen(
 fun AddCampaignForm(
     addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState,
-    scrollState: ScrollState,
     onSave: () -> Unit,
     modifier: Modifier,
 ) {
@@ -113,7 +96,6 @@ fun AddCampaignForm(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
     ) {
         CampaignName(
             addCampaignViewModel,
@@ -150,6 +132,7 @@ fun CampaignName(
         value = addCampaignUiState.campaignName,
         onValueChange = { addCampaignViewModel.updateCampaignName(it) },
         label = { Text(stringResource(id = R.string.campaign_name_label)) },
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
 }
