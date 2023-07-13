@@ -205,12 +205,14 @@ fun DungeonMaster() {
         value = dungeonMasterName,
         onValueChange = { newDungeonMasterName -> dungeonMasterName = newDungeonMasterName },
         label = { Text(stringResource(id = R.string.dm_name_label)) },
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
     TextField(
         value = dungeonMasterEmail,
         onValueChange = { newDungeonMasterEmail -> dungeonMasterEmail = newDungeonMasterEmail },
         label = { Text(stringResource(id = R.string.dm_email_label)) },
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -231,12 +233,14 @@ fun Player() {
         value = playerName,
         onValueChange = { newPlayerName -> playerName = newPlayerName },
         label = { Text(stringResource(id = R.string.player_name_label)) },
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
     TextField(
         value = playerEmail,
         onValueChange = { newPlayerEmail -> playerEmail = newPlayerEmail },
         label = { Text(stringResource(id = R.string.player_email_label)) },
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
     Row(
