@@ -13,9 +13,6 @@ import kotlinx.coroutines.flow.Flow
         //Todo, use a better conflictstrategy
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         suspend fun insert(campaign: Campaign): Long
-        /* Mark the function with the suspend keyword to let it run on a separate thread.
-        * The database operations can take a long time to execute, so they need to run on a separate
-        * thread. Room doesn't allow database access on the main thread.*/
 
         @Delete
         suspend fun delete(campaign: Campaign)
@@ -32,7 +29,12 @@ import kotlinx.coroutines.flow.Flow
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun insertAll(photos: List<Campaign>)
 
-        /*It is recommended to use Flow in the persistence layer. With Flow as the return type, you
-         receive notification whenever the data in the database changes. The Room keeps this Flow
-          updated for you, which means you only need to explicitly get the data once. */
+        /* Mark the function with the suspend keyword to let it run on a separate thread.
+        The database operations can take a long time to execute, so they need to run on a separate
+        thread. Room doesn't allow database access on the main thread.
+
+        It is recommended to use Flow in the persistence layer. With Flow as the return type, you
+        receive notification whenever the data in the database changes. The Room keeps this Flow
+        updated for you, which means you only need to explicitly get the data once.
+        */
     }
