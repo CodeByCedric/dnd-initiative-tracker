@@ -22,4 +22,8 @@ class OfflineCampaignRepository(private val campaignDao: CampaignDao) : Campaign
         return campaignDao.getAllCampaigns()
     }
 
+    override suspend fun getRowCount(): Int {
+        return campaignDao.getRowCount()
+    }
+
 }

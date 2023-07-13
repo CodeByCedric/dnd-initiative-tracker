@@ -25,7 +25,9 @@ class RefreshDatabaseWorker(
         try {
             val campaigns = DataSource.campaigns
             val database = DnDInitiativeTrackerDatabase.getDatabase(applicationContext)
-            database.CampaignDao().insertAll(campaigns)
+            if (database.isCampaignTableEmpty()) {
+                database.CampaignDao().insertAll(campaigns)
+            }
             Result.success()
         } catch (ex: Exception) {
             Log.e(

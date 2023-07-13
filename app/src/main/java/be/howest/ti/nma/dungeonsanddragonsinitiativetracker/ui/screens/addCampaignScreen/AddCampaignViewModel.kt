@@ -2,10 +2,13 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampa
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class AddCampaignViewModel(
     private val campaignRepository: CampaignRepository
@@ -40,13 +43,14 @@ class AddCampaignViewModel(
         * */
 
     }
-//    private fun saveCampaign(){
-//        val campaign = Campaign(
-//            campaignName = addCampaignUiState.value.campaignName,
-//            campaignImageUri = addCampaignUiState.value.campaignImageUri
-//        )
-//        viewModelScope.launch {
-//            addCampaignRepository.insertCampaign(campaign)
-//        }
-//    }
+
+    private fun saveCampaign() {
+        val campaign = Campaign(
+            campaignName = addCampaignUiState.value.campaignName,
+            campaignImageUri = addCampaignUiState.value.campaignImageUri
+        )
+        viewModelScope.launch {
+            campaignRepository.insertCampaign(campaign)
+        }
+    }
 }

@@ -8,5 +8,6 @@ interface CampaignRepository {
     suspend fun deleteCampaign(campaign: Campaign)
     fun getCampaignStream(campaignId: Long): Flow<Campaign?>
     fun getAllCampaignsStream(): Flow<List<Campaign>>
+    suspend fun getRowCount(): Int
 
 }

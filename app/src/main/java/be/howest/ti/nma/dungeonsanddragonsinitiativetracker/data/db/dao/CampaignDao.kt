@@ -26,6 +26,9 @@ import kotlinx.coroutines.flow.Flow
         @Query("SELECT * from campaigns")
         fun getAllCampaigns(): Flow<List<Campaign>>
 
+        @Query("SELECT COUNT(*) FROM campaigns")
+        suspend fun getRowCount(): Int
+
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun insertAll(photos: List<Campaign>)
 
