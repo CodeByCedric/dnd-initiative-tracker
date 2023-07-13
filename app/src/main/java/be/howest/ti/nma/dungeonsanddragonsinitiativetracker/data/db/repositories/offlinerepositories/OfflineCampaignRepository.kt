@@ -14,11 +14,12 @@ class OfflineCampaignRepository(private val campaignDao: CampaignDao) : Campaign
         campaignDao.delete(campaign)
     }
 
-    override fun getCampaignStream(campaignId: Int): Flow<Campaign?> {
+    override fun getCampaignStream(campaignId: Long): Flow<Campaign?> {
         return campaignDao.getCampaign(campaignId)
     }
 
     override fun getAllCampaignsStream(): Flow<List<Campaign>> {
         return campaignDao.getAllCampaigns()
     }
+
 }

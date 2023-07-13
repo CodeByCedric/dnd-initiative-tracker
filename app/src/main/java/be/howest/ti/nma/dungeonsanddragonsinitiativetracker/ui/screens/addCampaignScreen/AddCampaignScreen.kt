@@ -3,14 +3,18 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampa
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
@@ -20,6 +24,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +45,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.rememberImeState
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
@@ -55,6 +62,18 @@ fun AddCampaignScreen(
     addCampaignViewModel: AddCampaignViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val addCampaignUiState by addCampaignViewModel.addCampaignUiState.collectAsState()
+    val imeState = rememberImeState()
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(
+        key1 = imeState.value
+    ) {
+        if (imeState.value) {
+            scrollState.scrollTo(scrollState.maxValue)
+        }
+    }
+
     Scaffold(
         topBar = {
             DnDInitiativeTrackerTopAppBar(
@@ -66,7 +85,10 @@ fun AddCampaignScreen(
 
     ) { innerPadding ->
         AddCampaignForm(
-            addCampaignUiState = addCampaignViewModel.addCampaignUiState,
+            addCampaignViewModel = addCampaignViewModel,
+            addCampaignUiState = addCampaignUiState,
+            scrollState = scrollState,
+
             onSave = {
                 coroutineScope.launch {
                     addCampaignViewModel.save()
@@ -81,19 +103,26 @@ fun AddCampaignScreen(
 
 @Composable
 fun AddCampaignForm(
+    addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState,
+    scrollState: ScrollState,
     onSave: () -> Unit,
     modifier: Modifier,
 ) {
 
     Column(
         modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         CampaignName(
-            addCampaignUiState
-        )
+            addCampaignViewModel,
+            addCampaignUiState,
+
+            )
         CampaignImage(
-            addCampaignUiState
+            addCampaignViewModel,
+            addCampaignUiState,
         )
         SectionTitle(title = stringResource(id = R.string.dm_section_title))
         DungeonMaster()
@@ -114,18 +143,21 @@ fun AddCampaignForm(
 
 @Composable
 fun CampaignName(
+    addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState
 ) {
     TextField(
         value = addCampaignUiState.campaignName,
-        onValueChange = { addCampaignUiState.campaignName = it },
+        onValueChange = { addCampaignViewModel.updateCampaignName(it) },
         label = { Text(stringResource(id = R.string.campaign_name_label)) },
         modifier = Modifier.fillMaxWidth()
     )
 }
 
+
 @Composable
 fun CampaignImage(
+    addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState,
     modifier: Modifier = Modifier
 ) {
@@ -147,7 +179,11 @@ fun CampaignImage(
         ) {
             val photoPicker = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.PickVisualMedia(),
-                onResult = { addCampaignUiState.campaignImageUri = it }
+                onResult = {
+                    if (it != null) {
+                        addCampaignViewModel.updateCampaignImage(it)
+                    }
+                }
             )
             Button(
                 onClick = {
@@ -166,6 +202,7 @@ fun CampaignImage(
 
     }
 }
+
 
 @Composable
 fun SectionTitle(title: String) {

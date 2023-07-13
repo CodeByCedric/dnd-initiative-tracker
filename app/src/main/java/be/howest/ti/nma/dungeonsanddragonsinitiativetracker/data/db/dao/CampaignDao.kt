@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
     interface CampaignDao {
         //Todo, use a better conflictstrategy
         @Insert(onConflict = OnConflictStrategy.IGNORE)
-        suspend fun insert(campaign: Campaign)
+        suspend fun insert(campaign: Campaign): Long
         /* Mark the function with the suspend keyword to let it run on a separate thread.
         * The database operations can take a long time to execute, so they need to run on a separate
         * thread. Room doesn't allow database access on the main thread.*/
@@ -21,10 +21,13 @@ import kotlinx.coroutines.flow.Flow
         suspend fun delete(campaign: Campaign)
 
         @Query("SELECT * FROM campaigns WHERE campaignId = :campaignId")
-        fun getCampaign(campaignId: Int): Flow<Campaign>
+        fun getCampaign(campaignId: Long): Flow<Campaign>
 
         @Query("SELECT * from campaigns")
         fun getAllCampaigns(): Flow<List<Campaign>>
+
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        suspend fun insertAll(photos: List<Campaign>)
 
         /*It is recommended to use Flow in the persistence layer. With Flow as the return type, you
          receive notification whenever the data in the database changes. The Room keeps this Flow

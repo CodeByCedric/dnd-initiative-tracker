@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface CampaignRepository {
     suspend fun insertCampaign(campaign: Campaign)
     suspend fun deleteCampaign(campaign: Campaign)
-    fun getCampaignStream(campaignId: Int): Flow<Campaign?>
+    fun getCampaignStream(campaignId: Long): Flow<Campaign?>
     fun getAllCampaignsStream(): Flow<List<Campaign>>
 
 }
