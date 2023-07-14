@@ -26,4 +26,9 @@ class CampaignViewModel(
         return campaignRepository.getAllCampaigns()
     }
 
+    suspend fun deleteCampaign(campaign: Campaign) {
+        campaignRepository.deleteCampaign(campaign = campaign)
+
+    }
+
 }
