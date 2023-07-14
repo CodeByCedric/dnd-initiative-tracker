@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CampaignParticipantDao {
@@ -17,8 +19,7 @@ interface CampaignParticipantDao {
     @Delete
     suspend fun delete(campaignParticipant: CampaignParticipant)
 
+    @Query("SELECT * FROM campaignParticipants WHERE campaignId = :campaignId")
+    fun getCampaignParticipantsForCampaign(campaignId: Long): Flow<List<CampaignParticipant>>
 
-//    @Query("SELECT * FROM campaignParticipants")
-//    fun getCampaignParticipantsForCampaign(campaignId: Int): Flow<List<Participant>>
-//    todo set correct query
 }

@@ -7,4 +7,3 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class CampaignUiState(
     val campaigns: Flow<List<Campaign>> = MutableStateFlow(emptyList())
 )
-

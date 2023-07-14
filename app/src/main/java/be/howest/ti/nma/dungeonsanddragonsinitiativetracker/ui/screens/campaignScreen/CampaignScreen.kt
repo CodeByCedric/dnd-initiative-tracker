@@ -8,8 +8,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -18,7 +19,6 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTracker
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignViewModel
 
 object CampaignScreenDestination : NavigationDestination {
     override val route: String = "campaign_screen"
@@ -31,9 +31,11 @@ fun CampaignScreen(
     navigateToCharacterScreen: () -> Unit,
     navigateToAddCampaignScreen: () -> Unit,
     canNavigateBack: Boolean = false,
-    addCampaignViewModel: AddCampaignViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    campaignViewModel: CampaignViewModel = viewModel(factory = AppViewModelProvider.Factory),
     modifier: Modifier = Modifier
 ) {
+    val campaignUiState by campaignViewModel.campaignUiState.collectAsState()
+
     Scaffold(
         topBar = {
             DnDInitiativeTrackerTopAppBar(
@@ -56,6 +58,8 @@ fun CampaignScreen(
         },
     ) { innerPadding ->
         CampaignBody(
+            campaignViewModel = campaignViewModel,
+            campaignUiState = campaignUiState,
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -65,7 +69,10 @@ fun CampaignScreen(
 }
 
 @Composable
-fun CampaignBody(modifier: Any) {
-    Text(text = "hello")
+fun CampaignBody(
+    campaignViewModel: CampaignViewModel,
+    campaignUiState: CampaignUiState,
+    modifier: Modifier
+) {
 
 }

@@ -21,4 +21,7 @@ interface ParticipantDao {
 
     @Query("SELECT * from participants")
     fun getAllParticipants(): Flow<List<Participant>>
+
+    @Query("SELECT * FROM participants WHERE participantId = :participantId")
+    fun getParticipant(participantId: Long): Flow<Participant>
 }

@@ -13,7 +13,8 @@ object AppViewModelProvider {
         //Initializer for the CampaignViewModel
         initializer {
             CampaignViewModel(
-                dndInitiativeTrackerApplication().container.campaignRepository
+                dndInitiativeTrackerApplication().container.campaignRepository,
+                dndInitiativeTrackerApplication().container.campaignParticipantRepository
             )
         }
         //Initializer for the addCampaignViewModel

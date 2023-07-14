@@ -3,6 +3,7 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositorie
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.ParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.ParticipantRepository
+import kotlinx.coroutines.flow.Flow
 
 class OfflineParticipantRepository(private val participantDao: ParticipantDao) :
     ParticipantRepository {
@@ -18,7 +19,13 @@ class OfflineParticipantRepository(private val participantDao: ParticipantDao) :
         participantDao.delete(participant)
     }
 
-    override fun getParticipantStream(participantId: Int) {
-        participantDao.getAllParticipants()
+    override fun getAllParticipants(participantId: Long): Flow<List<Participant>> {
+        return participantDao.getAllParticipants()
     }
+
+    override fun getParticipantById(participantId: Long): Flow<Participant> {
+        return participantDao.getParticipant(participantId)
+    }
+
+
 }

@@ -5,7 +5,9 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Cam
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
 import kotlinx.coroutines.flow.Flow
 
-class OfflineCampaignRepository(private val campaignDao: CampaignDao) : CampaignRepository {
+class OfflineCampaignRepository(
+    private val campaignDao: CampaignDao
+) : CampaignRepository {
     override suspend fun insertCampaign(campaign: Campaign): Long {
         return campaignDao.insert(campaign)
     }
@@ -19,11 +21,11 @@ class OfflineCampaignRepository(private val campaignDao: CampaignDao) : Campaign
         campaignDao.delete(campaign)
     }
 
-    override fun getCampaignStream(campaignId: Long): Flow<Campaign?> {
+    override fun getCampaign(campaignId: Long): Flow<Campaign?> {
         return campaignDao.getCampaign(campaignId)
     }
 
-    override fun getAllCampaignsStream(): Flow<List<Campaign>> {
+    override fun getAllCampaigns(): Flow<List<Campaign>> {
         return campaignDao.getAllCampaigns()
     }
 
