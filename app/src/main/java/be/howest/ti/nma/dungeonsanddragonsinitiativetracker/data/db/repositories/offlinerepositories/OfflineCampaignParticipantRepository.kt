@@ -2,6 +2,7 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositorie
 
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipantDetails
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignParticipantRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -25,6 +26,10 @@ class OfflineCampaignParticipantRepository(
 
     override fun getCampaignParticipantsForCampaign(campaignId: Long): Flow<List<CampaignParticipant>> {
         return campaignParticipantDao.getCampaignParticipantsForCampaign(campaignId)
+    }
+
+    override fun getCampaignParticipantsWithDetails(campaignId: Long): Flow<List<CampaignParticipantDetails>> {
+        return campaignParticipantDao.getCampaignParticipantsWithDetails(campaignId)
     }
 
 }
