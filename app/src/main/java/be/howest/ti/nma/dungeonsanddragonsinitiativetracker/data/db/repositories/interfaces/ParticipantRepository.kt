@@ -8,8 +8,8 @@ interface ParticipantRepository {
 
     suspend fun insertAllParticipants(participants: List<Participant>): List<Long>
     suspend fun deleteParticipant(participant: Participant)
-    fun getAllParticipants(participantId: Long): Flow<List<Participant>>
-
+    fun getAllParticipants(): Flow<List<Participant>>
     fun getParticipantById(participantId: Long): Flow<Participant>
+    fun getParticipantsByIds(participantsIds: List<Long>): Flow<List<Participant>>
 
 }

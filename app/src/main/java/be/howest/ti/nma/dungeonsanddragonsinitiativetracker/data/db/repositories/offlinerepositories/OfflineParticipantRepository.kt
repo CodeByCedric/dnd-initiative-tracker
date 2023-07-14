@@ -19,12 +19,16 @@ class OfflineParticipantRepository(private val participantDao: ParticipantDao) :
         participantDao.delete(participant)
     }
 
-    override fun getAllParticipants(participantId: Long): Flow<List<Participant>> {
+    override fun getAllParticipants(): Flow<List<Participant>> {
         return participantDao.getAllParticipants()
     }
 
     override fun getParticipantById(participantId: Long): Flow<Participant> {
         return participantDao.getParticipant(participantId)
+    }
+
+    override fun getParticipantsByIds(participantsIds: List<Long>): Flow<List<Participant>> {
+        return participantDao.getParticipantsByIds(participantsIds)
     }
 
 
