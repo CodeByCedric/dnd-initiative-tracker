@@ -53,6 +53,12 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.Naviga
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
+/*TODO
+Add more details to the expanded card, viz. the email addresses of the participants
+Add functionality to edit campaign participants from the card
+Add functionality to add new participants to a campaign from the card
+*/
+
 object CampaignScreenDestination : NavigationDestination {
     override val route: String = "campaign_screen"
     override val titleRes: Int = R.string.campaign_overview_screen
