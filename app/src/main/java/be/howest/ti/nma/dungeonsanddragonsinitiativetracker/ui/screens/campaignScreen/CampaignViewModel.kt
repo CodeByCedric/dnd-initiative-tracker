@@ -2,6 +2,8 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaign
 
 import androidx.lifecycle.ViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipantDetails
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,8 +28,18 @@ class CampaignViewModel(
         return campaignRepository.getAllCampaigns()
     }
 
+    fun getCampaignParticipantsWithDetails(campaignId: Long): Flow<List<CampaignParticipantDetails>> {
+        return campaignParticipantRepository.getCampaignParticipantsWithDetails(campaignId)
+
+    }
+
     suspend fun deleteCampaign(campaign: Campaign) {
         campaignRepository.deleteCampaign(campaign = campaign)
+
+    }
+
+    suspend fun deleteParticipant(campaignParticipant: CampaignParticipant) {
+        campaignParticipantRepository.deleteCampaignParticipant(campaignParticipant)
 
     }
 

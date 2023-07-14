@@ -18,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -32,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -43,6 +46,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipantDetails
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import coil.compose.AsyncImage
@@ -164,10 +169,10 @@ fun CampaignCard(
                 CampaignInformation(campaign)
                 Spacer(modifier = Modifier.weight(1f))
                 Column {
-//                    ExpandCampaignCardButton(
-//                        expanded = isExpanded,
-//                        onClickExpandCard = { isExpanded = !isExpanded },
-//                    )
+                    ExpandCampaignCardButton(
+                        expanded = isExpanded,
+                        onClickExpandCard = { isExpanded = !isExpanded },
+                    )
                     RemoveCampaignButton(
                         campaignViewModel,
                         campaign
@@ -175,11 +180,70 @@ fun CampaignCard(
                 }
 
             }
+        }
 
+        if (isExpanded) {
+            CampaignParticipants(
+                campaign = campaign,
+                campaignViewModel = campaignViewModel
+            )
         }
 
     }
 
+}
+
+@Composable
+fun CampaignParticipants(
+    campaign: Campaign,
+    campaignViewModel: CampaignViewModel
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val participants = campaignViewModel.getCampaignParticipantsWithDetails(
+        campaign
+            .campaignId
+    ).collectAsState(initial = emptyList()).value
+
+    Column(
+        modifier = Modifier.padding(
+            dimensionResource(id = R.dimen.padding_medium),
+            dimensionResource(id = R.dimen.padding_small),
+            dimensionResource(id = R.dimen.padding_medium),
+            dimensionResource(id = R.dimen.padding_medium)
+        )
+    ) {
+        participants.forEach { participant ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = participant.participantName,
+                    modifier = Modifier.weight(1f)
+                )
+                // Remove Participant Button
+                RemoveParticipantButton(
+                    campaignViewModel,
+                    participant
+                )
+            }
+        }
+    }
+
+
+}
+
+
+@Composable
+fun ExpandCampaignCardButton(
+    expanded: Boolean,
+    onClickExpandCard: () -> Unit,
+) {
+    IconButton(onClick = onClickExpandCard) {
+        Icon(
+            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = stringResource(id = R.string.expand_button_content_description)
+        )
+    }
 }
 
 
@@ -226,6 +290,34 @@ private fun RemoveCampaignButton(
         Icon(
             Icons.Default.Delete,
             contentDescription = stringResource(id = R.string.delete_campaign_icon_label)
+        )
+    }
+}
+
+@Composable
+private fun RemoveParticipantButton(
+    campaignViewModel: CampaignViewModel,
+    campaignParticipantDetails: CampaignParticipantDetails
+) {
+    val coroutineScope = rememberCoroutineScope()
+    IconButton(
+        onClick = {
+            coroutineScope.launch {
+                campaignViewModel.deleteParticipant(
+                    CampaignParticipant(
+                        participantId = campaignParticipantDetails.participantId,
+                        campaignId = campaignParticipantDetails.campaignId
+                    )
+                )
+            }
+
+
+        },
+        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_small))
+    ) {
+        Icon(
+            Icons.Default.Delete,
+            contentDescription = stringResource(id = R.string.delete_player_icon_label)
         )
     }
 }
