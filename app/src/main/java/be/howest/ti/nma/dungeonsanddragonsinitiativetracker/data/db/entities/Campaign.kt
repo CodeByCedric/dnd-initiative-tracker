@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "campaigns"
@@ -14,5 +13,5 @@ data class Campaign(
     @DrawableRes val campaignImageDrawable: Int? = null,
     var campaignImageUri: Uri? = null,
     val campaignName: String,
-    val nexSession: LocalDateTime? = null
+//    val nexSession: LocalDateTime? = null
 )

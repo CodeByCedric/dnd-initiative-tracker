@@ -1,5 +1,9 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Context
+import android.icu.util.Calendar
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -20,6 +24,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -39,9 +44,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
@@ -74,7 +81,6 @@ fun CampaignScreen(
     modifier: Modifier = Modifier
 ) {
     val campaignUiState by campaignViewModel.campaignUiState.collectAsState()
-    var appBarHeight: Int
 
     Scaffold(
         topBar = {
@@ -120,6 +126,8 @@ fun CampaignBody(
 
     var selectedCampaign by remember { mutableStateOf<Campaign?>(null) }
 
+
+
     LazyColumn(
         modifier = modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
     ) {
@@ -146,6 +154,12 @@ fun CampaignCard(
 ) {
 
     var isExpanded by remember { mutableStateOf(false) }
+    val participants = campaignViewModel.getCampaignParticipantsWithDetails(
+        campaign
+            .campaignId
+    ).collectAsState(initial = emptyList()).value
+
+    val selectedDateTime = remember { mutableStateOf<Long?>(null) }
 
     Card(
         modifier = modifier
@@ -172,7 +186,20 @@ fun CampaignCard(
                     .padding(dimensionResource(id = R.dimen.padding_small))
             ) {
                 CampaignImage(campaign)
-                CampaignInformation(campaign)
+                Column(
+                ) {
+                    CampaignInformation(campaign)
+                    Text(
+                        text = "Next session:",
+                        fontSize = dimensionResource(id = R.dimen.fontSize_medium).value.sp,
+                        modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
+                    )
+                    Text(
+                        text = "dd/mm - hh:mm",
+                        fontSize = dimensionResource(R.dimen.fontSize_small).value.sp
+                    )
+                }
+
                 Spacer(modifier = Modifier.weight(1f))
                 Column {
                     ExpandCampaignCardButton(
@@ -191,24 +218,25 @@ fun CampaignCard(
         if (isExpanded) {
             CampaignParticipants(
                 campaign = campaign,
+                participants = participants,
                 campaignViewModel = campaignViewModel
             )
+            NextSessionButton(onDateSelected = { dateTime ->
+                selectedDateTime.value = dateTime
+            })
         }
 
     }
 
 }
 
+
 @Composable
 fun CampaignParticipants(
     campaign: Campaign,
-    campaignViewModel: CampaignViewModel
+    campaignViewModel: CampaignViewModel,
+    participants: List<CampaignParticipantDetails>
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val participants = campaignViewModel.getCampaignParticipantsWithDetails(
-        campaign
-            .campaignId
-    ).collectAsState(initial = emptyList()).value
 
     Column(
         modifier = Modifier.padding(
@@ -277,6 +305,7 @@ fun CampaignInformation(
     Column {
         Text(
             text = campaign.campaignName,
+            fontSize = dimensionResource(id = R.dimen.fontSize_large).value.sp,
             modifier = modifier.padding(top = 8.dp)
         )
     }
@@ -301,7 +330,7 @@ private fun RemoveCampaignButton(
 }
 
 @Composable
-private fun RemoveParticipantButton(
+fun RemoveParticipantButton(
     campaignViewModel: CampaignViewModel,
     campaignParticipantDetails: CampaignParticipantDetails
 ) {
@@ -327,3 +356,109 @@ private fun RemoveParticipantButton(
         )
     }
 }
+
+//@Composable
+//fun NextSessionButton(
+//    campaign: Campaign,
+//) {
+//    val context = LocalContext.current
+//
+//    Button(
+//        onClick = {
+//            // Launch the date picker or time picker dialog here
+//            val title = campaign.campaignName
+//            val begin = Calendar.getInstance().timeInMillis
+//            val end = begin + 60 * 60 * 4000 // Add 1 hour
+//
+//            val intent = Intent(Intent.ACTION_INSERT)
+//                .setData(CalendarContract.Events.CONTENT_URI)
+//                .putExtra(CalendarContract.Events.TITLE, title)
+//                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin)
+//                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end)
+//
+//            context.startActivity(intent)
+//        },
+//        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+//    ) {
+//        Text(text = "Set Next Session")
+//    }
+//}
+
+@Composable
+fun NextSessionButton(onDateSelected: (Long) -> Unit) {
+    val context = LocalContext.current
+    Button(
+        onClick = {
+            showDatePickerDialog(
+                context,
+                onDateSelected
+            )
+        },
+        modifier = Modifier.padding(top = 16.dp)
+    ) {
+        Text(text = "Select Date and Time")
+    }
+}
+
+private fun showDatePickerDialog(
+    context: Context,
+    onDateSelected: (Long) -> Unit
+) {
+    val currentDateTime = Calendar.getInstance()
+    val year = currentDateTime.get(Calendar.YEAR)
+    val month = currentDateTime.get(Calendar.MONTH)
+    val day = currentDateTime.get(Calendar.DAY_OF_MONTH)
+    val hour = currentDateTime.get(Calendar.HOUR_OF_DAY)
+    val minute = currentDateTime.get(Calendar.MINUTE)
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, selectedYear, selectedMonth, selectedDay ->
+            showTimePickerDialog(
+                context,
+                selectedYear,
+                selectedMonth,
+                selectedDay,
+                hour,
+                minute,
+                onDateSelected
+            )
+        },
+        year,
+        month,
+        day
+    )
+    datePickerDialog.show()
+}
+
+private fun showTimePickerDialog(
+    context: Context,
+    year: Int,
+    month: Int,
+    day: Int,
+    hour: Int,
+    minute: Int,
+    onDateSelected: (Long) -> Unit
+) {
+    val timePickerDialog = TimePickerDialog(
+        context,
+        { _, selectedHour, selectedMinute ->
+            val selectedDateTime = Calendar.getInstance()
+            selectedDateTime.set(
+                year,
+                month,
+                day,
+                selectedHour,
+                selectedMinute
+            )
+            onDateSelected(selectedDateTime.timeInMillis)
+        },
+        hour,
+        minute,
+        false
+    )
+    timePickerDialog.show()
+}
+
+
+

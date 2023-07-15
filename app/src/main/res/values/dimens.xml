@@ -3,6 +3,8 @@
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_large">24dp</dimen>
-    <dimen name="fontSize_medium">16dp</dimen>
+    <dimen name="fontSize_small">14sp</dimen>
+    <dimen name="fontSize_medium">16sp</dimen>
+    <dimen name="fontSize_large">18sp</dimen>
     <dimen name="button_height">72dp</dimen>
 </resources>
