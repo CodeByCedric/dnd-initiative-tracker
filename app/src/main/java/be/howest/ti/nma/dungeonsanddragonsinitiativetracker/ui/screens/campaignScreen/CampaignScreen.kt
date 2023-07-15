@@ -3,6 +3,7 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaign
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -33,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -160,6 +162,8 @@ fun CampaignCard(
     ).collectAsState(initial = emptyList()).value
 
     val selectedDateTime = remember { mutableStateOf<Long?>(null) }
+    val formattedDateTime = selectedDateTime.value?.let { formatDateTime(it) } ?: "No next " +
+    "session planned"
 
     Card(
         modifier = modifier
@@ -195,7 +199,7 @@ fun CampaignCard(
                         modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
                     )
                     Text(
-                        text = "dd/mm - hh:mm",
+                        text = formattedDateTime,
                         fontSize = dimensionResource(R.dimen.fontSize_small).value.sp
                     )
                 }
@@ -221,9 +225,10 @@ fun CampaignCard(
                 participants = participants,
                 campaignViewModel = campaignViewModel
             )
-            NextSessionButton(onDateSelected = { dateTime ->
-                selectedDateTime.value = dateTime
-            })
+            NextSessionButton(
+                selectedDateTime = selectedDateTime,
+                onDateSelected = { dateTime -> selectedDateTime.value = dateTime }
+            )
         }
 
     }
@@ -385,14 +390,19 @@ fun RemoveParticipantButton(
 //}
 
 @Composable
-fun NextSessionButton(onDateSelected: (Long) -> Unit) {
+fun NextSessionButton(
+    onDateSelected: (Long) -> Unit,
+    selectedDateTime: MutableState<Long?>
+) {
     val context = LocalContext.current
     Button(
         onClick = {
             showDatePickerDialog(
                 context,
-                onDateSelected
+                onDateSelected,
+                selectedDateTime
             )
+
         },
         modifier = Modifier.padding(top = 16.dp)
     ) {
@@ -402,7 +412,8 @@ fun NextSessionButton(onDateSelected: (Long) -> Unit) {
 
 private fun showDatePickerDialog(
     context: Context,
-    onDateSelected: (Long) -> Unit
+    onDateSelected: (Long) -> Unit,
+    selectedDateTime: MutableState<Long?>
 ) {
     val currentDateTime = Calendar.getInstance()
     val year = currentDateTime.get(Calendar.YEAR)
@@ -421,7 +432,8 @@ private fun showDatePickerDialog(
                 selectedDay,
                 hour,
                 minute,
-                onDateSelected
+                onDateSelected,
+                selectedDateTime
             )
         },
         year,
@@ -438,27 +450,40 @@ private fun showTimePickerDialog(
     day: Int,
     hour: Int,
     minute: Int,
-    onDateSelected: (Long) -> Unit
+    onDateSelected: (Long) -> Unit,
+    selectedDateTime: MutableState<Long?>
 ) {
     val timePickerDialog = TimePickerDialog(
         context,
         { _, selectedHour, selectedMinute ->
-            val selectedDateTime = Calendar.getInstance()
-            selectedDateTime.set(
-                year,
-                month,
-                day,
-                selectedHour,
-                selectedMinute
-            )
-            onDateSelected(selectedDateTime.timeInMillis)
+            val selectedDateTimeCalendar = Calendar.getInstance().apply {
+                set(
+                    year,
+                    month,
+                    day,
+                    selectedHour,
+                    selectedMinute
+                )
+            }
+            val dateTimeInMillis = selectedDateTimeCalendar.timeInMillis
+            selectedDateTime.value = dateTimeInMillis
+            onDateSelected(dateTimeInMillis)
         },
         hour,
         minute,
-        false
+        true
     )
     timePickerDialog.show()
 }
 
 
-
+private fun formatDateTime(dateTime: Long): String {
+    val calendar = Calendar.getInstance().apply {
+        timeInMillis = dateTime
+    }
+    val dateFormat = SimpleDateFormat("dd/MM")
+    val timeFormat = SimpleDateFormat("HH:mm")
+    val date = dateFormat.format(calendar.time)
+    val time = timeFormat.format(calendar.time)
+    return "$date - $time"
+}
