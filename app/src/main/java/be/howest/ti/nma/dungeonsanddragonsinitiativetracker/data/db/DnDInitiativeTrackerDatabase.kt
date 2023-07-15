@@ -19,7 +19,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeCon
         Campaign::class,
         Participant::class,
         CampaignParticipant::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(

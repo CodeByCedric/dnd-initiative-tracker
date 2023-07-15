@@ -12,7 +12,7 @@ interface CampaignRepository {
     suspend fun getRowCount(): Int
     suspend fun updateDateTimeOfNextSession(
         campaignId: Long,
-        selectedDateTimeAsLong: String?
+        selectedDateTimeAsLong: Long?
     )
 
 }

@@ -1,7 +1,5 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen
 
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
@@ -51,24 +49,12 @@ class CampaignViewModel(
         campaignId: Long,
         selectedDateTime: Long
     ) {
-        val formattedDateTime = formatDateTime(selectedDateTime)
         viewModelScope.launch {
             campaignRepository.updateDateTimeOfNextSession(
                 campaignId,
-                formattedDateTime
+                selectedDateTime
             )
         }
-    }
-
-    private fun formatDateTime(dateTime: Long): String {
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = dateTime
-        }
-        val dateFormat = SimpleDateFormat("dd/MM")
-        val timeFormat = SimpleDateFormat("HH:mm")
-        val date = dateFormat.format(calendar.time)
-        val time = timeFormat.format(calendar.time)
-        return "$date - $time"
     }
 
 }

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.provider.CalendarContract
 import androidx.compose.animation.animateContentSize
@@ -62,6 +63,8 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvi
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
+import java.sql.Date
+import java.util.Locale
 
 /*TODO
 Add more details to the expanded card, viz. the email addresses of the participants
@@ -189,8 +192,7 @@ fun CampaignCard(
                     .padding(dimensionResource(id = R.dimen.padding_small))
             ) {
                 CampaignImage(campaign)
-                Column(
-                ) {
+                Column {
                     CampaignInformation(campaign)
                     Text(
                         text = "Next session:",
@@ -198,7 +200,7 @@ fun CampaignCard(
                         modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
                     )
                     Text(
-                        text = campaign.nextSession
+                        text = campaign.nextSession?.let { convertLongToString(it) }
                             ?: stringResource(id = R.string.no_next_session_planned),
                         fontSize = dimensionResource(R.dimen.fontSize_small).value.sp
                     )
@@ -221,7 +223,6 @@ fun CampaignCard(
 
         if (isExpanded) {
             CampaignParticipants(
-                campaign = campaign,
                 participants = participants,
                 campaignViewModel = campaignViewModel
             )
@@ -240,7 +241,6 @@ fun CampaignCard(
 
 @Composable
 fun CampaignParticipants(
-    campaign: Campaign,
     campaignViewModel: CampaignViewModel,
     participants: List<CampaignParticipantDetails>
 ) {
@@ -372,7 +372,6 @@ fun NextSessionButton(
     campaignViewModel: CampaignViewModel
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     Button(
         onClick = {
             showDatePickerDialog(
@@ -450,6 +449,7 @@ private fun showTimePickerDialog(
                     selectedMinute
                 )
             }
+
             val dateTimeInMillis = selectedDateTimeCalendar.timeInMillis
             selectedDateTime.value = dateTimeInMillis
             onDateSelected(dateTimeInMillis)
@@ -502,4 +502,11 @@ private fun launchCalendarIntent(
     context.startActivity(intent)
 }
 
-
+private fun convertLongToString(dateTimeInMillis: Long): String {
+    val dateFormat = SimpleDateFormat(
+        "dd-MMMM HH:mm",
+        Locale.getDefault()
+    )
+    val dateTime = Date(dateTimeInMillis)
+    return dateFormat.format(dateTime)
+}

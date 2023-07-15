@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
         @Query("UPDATE campaigns SET nextSession = :dateTime WHERE campaignId = :campaignId")
         suspend fun updateCampaignDateTime(
             campaignId: Long,
-            dateTime: String?
+            dateTime: Long?
         )
 
         @Delete
