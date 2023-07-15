@@ -10,5 +10,9 @@ interface CampaignRepository {
     fun getCampaign(campaignId: Long): Flow<Campaign?>
     fun getAllCampaigns(): Flow<List<Campaign>>
     suspend fun getRowCount(): Int
+    suspend fun updateDateTimeOfNextSession(
+        campaignId: Long,
+        selectedDateTimeAsLong: String?
+    )
 
 }

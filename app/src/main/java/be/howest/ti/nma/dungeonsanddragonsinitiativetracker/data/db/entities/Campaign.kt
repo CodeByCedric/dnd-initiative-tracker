@@ -13,5 +13,5 @@ data class Campaign(
     @DrawableRes val campaignImageDrawable: Int? = null,
     var campaignImageUri: Uri? = null,
     val campaignName: String,
-//    val nexSession: LocalDateTime? = null
+    val nextSession: String? = null
 )

@@ -33,4 +33,14 @@ class OfflineCampaignRepository(
         return campaignDao.getRowCount()
     }
 
+    override suspend fun updateDateTimeOfNextSession(
+        campaignId: Long,
+        selectedDateTimeAsLong: String?
+    ) {
+        campaignDao.updateCampaignDateTime(
+            campaignId,
+            selectedDateTimeAsLong
+        )
+    }
+
 }

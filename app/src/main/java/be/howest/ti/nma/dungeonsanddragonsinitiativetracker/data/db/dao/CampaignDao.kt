@@ -17,6 +17,12 @@ import kotlinx.coroutines.flow.Flow
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun insertAll(campaigns: List<Campaign>): List<Long>
 
+        @Query("UPDATE campaigns SET nextSession = :dateTime WHERE campaignId = :campaignId")
+        suspend fun updateCampaignDateTime(
+            campaignId: Long,
+            dateTime: String?
+        )
+
         @Delete
         suspend fun delete(campaign: Campaign)
 

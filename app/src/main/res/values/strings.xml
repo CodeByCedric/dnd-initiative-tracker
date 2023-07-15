@@ -41,4 +41,5 @@
     <string name="dm_section_title">Dungeon Master</string>
     <string name="player_section_title">Players</string>
     <string name="date_time_picker_button">Next Session?</string>
+    <string name="no_next_session_planned">No next session planned.</string>
 </resources>

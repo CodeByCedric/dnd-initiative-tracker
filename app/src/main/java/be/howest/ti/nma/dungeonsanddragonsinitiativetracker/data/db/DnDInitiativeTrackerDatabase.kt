@@ -19,7 +19,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeCon
         Campaign::class,
         Participant::class,
         CampaignParticipant::class],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(
@@ -47,6 +47,7 @@ abstract class DnDInitiativeTrackerDatabase : RoomDatabase() {
                     DnDInitiativeTrackerDatabase::class.java,
                     "dnd_initiative_tracker_database"
                 )
+                    .fallbackToDestructiveMigration()
                     .build()
                     .also { Instance = it }
             }
