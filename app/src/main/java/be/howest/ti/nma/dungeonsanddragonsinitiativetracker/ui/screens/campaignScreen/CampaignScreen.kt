@@ -3,8 +3,10 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaign
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
+import android.provider.CalendarContract
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -112,7 +114,6 @@ fun CampaignScreen(
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-
         )
 
     }
@@ -226,6 +227,7 @@ fun CampaignCard(
                 campaignViewModel = campaignViewModel
             )
             NextSessionButton(
+                campaign = campaign,
                 selectedDateTime = selectedDateTime,
                 onDateSelected = { dateTime -> selectedDateTime.value = dateTime }
             )
@@ -363,7 +365,7 @@ fun RemoveParticipantButton(
 }
 
 //@Composable
-//fun NextSessionButton(
+//fun LaunchCalenderIntent(
 //    campaign: Campaign,
 //) {
 //    val context = LocalContext.current
@@ -391,6 +393,7 @@ fun RemoveParticipantButton(
 
 @Composable
 fun NextSessionButton(
+    campaign: Campaign,
     onDateSelected: (Long) -> Unit,
     selectedDateTime: MutableState<Long?>
 ) {
@@ -398,11 +401,11 @@ fun NextSessionButton(
     Button(
         onClick = {
             showDatePickerDialog(
+                campaign,
                 context,
                 onDateSelected,
                 selectedDateTime
             )
-
         },
         modifier = Modifier.padding(top = 16.dp)
     ) {
@@ -411,6 +414,7 @@ fun NextSessionButton(
 }
 
 private fun showDatePickerDialog(
+    campaign: Campaign,
     context: Context,
     onDateSelected: (Long) -> Unit,
     selectedDateTime: MutableState<Long?>
@@ -426,6 +430,7 @@ private fun showDatePickerDialog(
         context,
         { _, selectedYear, selectedMonth, selectedDay ->
             showTimePickerDialog(
+                campaign,
                 context,
                 selectedYear,
                 selectedMonth,
@@ -444,6 +449,7 @@ private fun showDatePickerDialog(
 }
 
 private fun showTimePickerDialog(
+    campaign: Campaign,
     context: Context,
     year: Int,
     month: Int,
@@ -468,12 +474,46 @@ private fun showTimePickerDialog(
             val dateTimeInMillis = selectedDateTimeCalendar.timeInMillis
             selectedDateTime.value = dateTimeInMillis
             onDateSelected(dateTimeInMillis)
+
+            // Call the function to launch the calendar intent
+            launchCalendarIntent(
+                campaign,
+                context,
+                selectedDateTimeCalendar
+            )
         },
         hour,
         minute,
         true
     )
     timePickerDialog.show()
+}
+
+private fun launchCalendarIntent(
+    campaign: Campaign,
+    context: Context,
+    selectedDateTimeCalendar: Calendar
+) {
+    val title = campaign.campaignName
+    val begin = selectedDateTimeCalendar.timeInMillis
+    val end = begin + 60 * 60 * 4000 // Add 1 hour
+
+    val intent = Intent(Intent.ACTION_INSERT)
+        .setData(CalendarContract.Events.CONTENT_URI)
+        .putExtra(
+            CalendarContract.Events.TITLE,
+            title
+        )
+        .putExtra(
+            CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+            begin
+        )
+        .putExtra(
+            CalendarContract.EXTRA_EVENT_END_TIME,
+            end
+        )
+
+    context.startActivity(intent)
 }
 
 
