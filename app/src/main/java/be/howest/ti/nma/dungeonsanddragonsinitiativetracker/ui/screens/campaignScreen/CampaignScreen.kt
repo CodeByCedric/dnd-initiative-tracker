@@ -36,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -158,14 +157,11 @@ fun CampaignCard(
     modifier: Modifier = Modifier
 ) {
 
-    var isExpanded by remember { mutableStateOf(false) }
+    var isCampaignCardExpanded by remember { mutableStateOf(false) }
     val participants = campaignViewModel.getCampaignParticipantsWithDetails(
         campaign
             .campaignId
     ).collectAsState(initial = emptyList()).value
-
-    val selectedDateTime = remember { mutableStateOf<Long?>(null) }
-
 
     Card(
         modifier = modifier
@@ -209,8 +205,8 @@ fun CampaignCard(
                 Spacer(modifier = Modifier.weight(1f))
                 Column {
                     ExpandCampaignCardButton(
-                        expanded = isExpanded,
-                        onClickExpandCard = { isExpanded = !isExpanded },
+                        expanded = isCampaignCardExpanded,
+                        onClickExpandCard = { isCampaignCardExpanded = !isCampaignCardExpanded },
                     )
                     RemoveCampaignButton(
                         campaignViewModel,
@@ -221,15 +217,13 @@ fun CampaignCard(
             }
         }
 
-        if (isExpanded) {
+        if (isCampaignCardExpanded) {
             CampaignParticipants(
                 participants = participants,
                 campaignViewModel = campaignViewModel
             )
             NextSessionButton(
                 campaign = campaign,
-                selectedDateTime = selectedDateTime,
-                onDateSelected = { dateTime -> selectedDateTime.value = dateTime },
                 campaignViewModel = campaignViewModel
             )
         }
@@ -367,8 +361,6 @@ fun RemoveParticipantButton(
 @Composable
 fun NextSessionButton(
     campaign: Campaign,
-    onDateSelected: (Long) -> Unit,
-    selectedDateTime: MutableState<Long?>,
     campaignViewModel: CampaignViewModel
 ) {
     val context = LocalContext.current
@@ -377,8 +369,6 @@ fun NextSessionButton(
             showDatePickerDialog(
                 campaign,
                 context,
-                onDateSelected,
-                selectedDateTime,
                 campaignViewModel
             )
         },
@@ -391,8 +381,6 @@ fun NextSessionButton(
 private fun showDatePickerDialog(
     campaign: Campaign,
     context: Context,
-    onDateSelected: (Long) -> Unit,
-    selectedDateTime: MutableState<Long?>,
     campaignViewModel: CampaignViewModel
 ) {
     val currentDateTime = Calendar.getInstance()
@@ -413,8 +401,6 @@ private fun showDatePickerDialog(
                 selectedDay,
                 hour,
                 minute,
-                onDateSelected,
-                selectedDateTime,
                 campaignViewModel
             )
         },
@@ -433,8 +419,6 @@ private fun showTimePickerDialog(
     day: Int,
     hour: Int,
     minute: Int,
-    onDateSelected: (Long) -> Unit,
-    selectedDateTime: MutableState<Long?>,
     campaignViewModel: CampaignViewModel
 ) {
     val timePickerDialog = TimePickerDialog(
@@ -451,22 +435,17 @@ private fun showTimePickerDialog(
             }
 
             val dateTimeInMillis = selectedDateTimeCalendar.timeInMillis
-            selectedDateTime.value = dateTimeInMillis
-            onDateSelected(dateTimeInMillis)
+            campaign.nextSession = dateTimeInMillis
 
-            // Call the function to launch the calendar intent
             launchCalendarIntent(
                 campaign,
                 context,
                 selectedDateTimeCalendar
             )
-            selectedDateTime.value?.let {
-                campaignViewModel.updateCampaignDateTime(
-                    campaign.campaignId,
-                    it
-                )
-            }
-
+            campaignViewModel.updateCampaignDateTime(
+                campaign.campaignId,
+                campaign.nextSession!!
+            )
         },
         hour,
         minute,
