@@ -282,8 +282,7 @@ fun Player(
             )
     ) {
         AddPlayerButton(
-            addCampaignViewModel,
-            addCampaignUiState
+            addCampaignViewModel
         )
     }
 
@@ -326,10 +325,7 @@ private fun PlayerNameTextField(
 @Composable
 private fun AddPlayerButton(
     addCampaignViewModel: AddCampaignViewModel,
-    addCampaignUiState: AddCampaignUiState
 ) {
-    var playerList = addCampaignUiState.playerList
-    val player = addCampaignUiState.player
     Button(
         onClick = { addCampaignViewModel.updatePlayerList() }
     ) {
