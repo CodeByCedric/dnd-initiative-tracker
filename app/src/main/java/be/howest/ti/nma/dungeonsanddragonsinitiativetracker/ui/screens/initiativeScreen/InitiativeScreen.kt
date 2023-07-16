@@ -1,4 +1,4 @@
-package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen
+package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.initiativeScreen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,39 +13,37 @@ import androidx.compose.ui.unit.dp
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 
-object CharacterScreenDestination : NavigationDestination {
-    override val route: String = "character_overview_screen"
-    override val titleRes: Int = R.string.character_overview_screen
-
+object InitiativeScreenDestination : NavigationDestination {
+    override val route: String = "initiative_screen"
+    override val titleRes: Int = R.string.initative_screen
 }
 
 @Composable
-fun CharacterScreen(
-    navigateToEncounterBuilderScreen: () -> Unit = {},
+fun InitiativeScreen(
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
-    modifier: Modifier = Modifier
+    navigateToSkirmishScreen: () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     Button(
-        onClick = { navigateToEncounterBuilderScreen() },
+        onClick = { navigateToSkirmishScreen() },
         modifier = Modifier
             .height(72.dp)
             .fillMaxWidth()
             .padding(8.dp)
     ) {
         Text(
-            text = stringResource(R.string.to_encounter_builder_screen_button),
+            text = stringResource(R.string.to_skirmish_screen_button),
             textAlign = TextAlign.Center
         )
     }
-
 }
-
+//
 //@Preview
 //@Composable
-//fun CharacterPreviewScreen() {
+//fun InitiativePreviewScreen() {
 //    DungeonsAndDragonsInitiativeTrackerTheme() {
-//        CharacterScreen()
+//        InitiativeScreen()
 //    }
 //}

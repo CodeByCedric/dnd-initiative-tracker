@@ -1,5 +1,10 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen
 
+import android.content.Context
+import android.content.Intent
+import android.provider.ContactsContract
+import android.provider.ContactsContract.CommonDataKinds
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +61,7 @@ fun AddCampaignScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val addCampaignUiState by addCampaignViewModel.addCampaignUiState.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -281,6 +288,7 @@ fun Player(
                 end = dimensionResource(id = R.dimen.padding_medium)
             )
     ) {
+        SelectPlayerFromContactsButton(addCampaignViewModel)
         AddPlayerButton(
             addCampaignViewModel
         )
@@ -319,6 +327,49 @@ private fun PlayerNameTextField(
         singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
+}
+
+@Composable
+private fun SelectPlayerFromContactsButton(
+    addCampaignViewModel: AddCampaignViewModel
+) {
+    val context = LocalContext.current
+    Button(
+        onClick = {
+            selectContact(
+                context,
+                addCampaignViewModel
+            )
+        },
+        modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
+    ) {
+        Text(text = stringResource(id = R.string.select_player_from_contacts))
+    }
+}
+
+fun selectContact(
+    context: Context,
+    addCampaignViewModel: AddCampaignViewModel
+) {
+    val intent = Intent(Intent.ACTION_PICK).apply {
+        type = CommonDataKinds.Email.CONTENT_TYPE
+    }
+        .putExtra(
+            ContactsContract.Intents.Insert.NAME,
+            true
+        )
+        .putExtra(
+            ContactsContract.Intents.Insert.EMAIL,
+            true
+        )
+
+    context.startActivity(intent)
+    intent.dataString?.let {
+        Log.d(
+            "implicitIntents",
+            it
+        )
+    }
 }
 
 

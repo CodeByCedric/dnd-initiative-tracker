@@ -42,4 +42,5 @@
     <string name="player_section_title">Players</string>
     <string name="date_time_picker_button">Next Session?</string>
     <string name="no_next_session_planned">No next session planned.</string>
+    <string name="select_player_from_contacts">Select from your contacts</string>
 </resources>

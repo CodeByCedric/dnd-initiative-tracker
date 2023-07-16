@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,6 +51,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -110,6 +112,7 @@ fun CampaignScreen(
         },
     ) { innerPadding ->
         CampaignBody(
+            navigateToCharacterScreen = navigateToCharacterScreen,
             campaignViewModel = campaignViewModel,
             campaignUiState = campaignUiState,
             modifier = modifier
@@ -122,6 +125,7 @@ fun CampaignScreen(
 
 @Composable
 fun CampaignBody(
+    navigateToCharacterScreen: () -> Unit,
     campaignViewModel: CampaignViewModel,
     campaignUiState: CampaignUiState,
     modifier: Modifier
@@ -129,8 +133,6 @@ fun CampaignBody(
     val campaigns by campaignUiState.campaigns.collectAsState(initial = emptyList())
 
     var selectedCampaign by remember { mutableStateOf<Campaign?>(null) }
-
-
 
     LazyColumn(
         modifier = modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
@@ -143,9 +145,41 @@ fun CampaignBody(
                 campaignViewModel = campaignViewModel
             )
         }
-
+        item {
+            NavigateToCharacterScreenButton(
+                navigateToCharacterScreen,
+                selectedCampaign
+            )
+        }
     }
 
+}
+
+@Composable
+private fun NavigateToCharacterScreenButton(
+    navigateToCharacterScreen: () -> Unit,
+    selectedCampaign: Campaign?
+) {
+    Button(
+        onClick = { navigateToCharacterScreen() },
+        modifier = Modifier
+            .height(dimensionResource(id = R.dimen.button_height))
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.padding_small)),
+        enabled = selectedCampaign != null
+    ) {
+        if (selectedCampaign != null) {
+            Text(
+                text = stringResource(R.string.to_character_overview_screen_button),
+                textAlign = TextAlign.Center
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.greyed_out_select_campaign_button),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @Composable
@@ -459,9 +493,10 @@ private fun launchCalendarIntent(
     context: Context,
     selectedDateTimeCalendar: Calendar
 ) {
+    //todo work with packagemanager and add to manifest
     val title = campaign.campaignName
     val begin = selectedDateTimeCalendar.timeInMillis
-    val end = begin + 60 * 60 * 4000 // Add 1 hour
+    val end = begin + 60 * 60 * 4000 // Add 4 hours
 
     val intent = Intent(Intent.ACTION_INSERT)
         .setData(CalendarContract.Events.CONTENT_URI)
@@ -479,7 +514,10 @@ private fun launchCalendarIntent(
         )
 
     context.startActivity(intent)
+
+
 }
+
 
 private fun convertLongToString(dateTimeInMillis: Long): String {
     val dateFormat = SimpleDateFormat(
@@ -489,3 +527,5 @@ private fun convertLongToString(dateTimeInMillis: Long): String {
     val dateTime = Date(dateTimeInMillis)
     return dateFormat.format(dateTime)
 }
+
+
