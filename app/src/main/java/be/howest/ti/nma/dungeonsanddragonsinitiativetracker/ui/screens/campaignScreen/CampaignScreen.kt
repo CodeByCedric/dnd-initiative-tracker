@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -101,7 +102,9 @@ fun CampaignScreen(
             FloatingActionButton(
                 onClick = navigateToAddCampaignScreen,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_large))
+                    .testTag("addCampaignFOB")
             )
             {
                 Icon(
@@ -152,7 +155,6 @@ fun CampaignBody(
             )
         }
     }
-
 }
 
 @Composable
@@ -206,6 +208,7 @@ fun CampaignCard(
                 color = if (isSelected) Color.Blue else Color.Transparent,
                 shape = RoundedCornerShape(8.dp)
             )
+            .testTag("campaignCard")
     ) {
         Column(
             modifier = Modifier
@@ -327,7 +330,7 @@ fun CampaignImage(
         contentScale = ContentScale.Crop,
         modifier = modifier
             .size(100.dp)
-            .padding(8.dp)
+            .padding(dimensionResource(id = R.dimen.padding_small))
             .clip(RoundedCornerShape(50))
     )
 }
@@ -341,7 +344,8 @@ fun CampaignInformation(
         Text(
             text = campaign.campaignName,
             fontSize = dimensionResource(id = R.dimen.fontSize_large).value.sp,
-            modifier = modifier.padding(top = 8.dp)
+            modifier = modifier
+                .padding(top = dimensionResource(id = R.dimen.padding_small))
         )
     }
 }

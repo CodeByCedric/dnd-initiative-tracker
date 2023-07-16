@@ -40,7 +40,7 @@ fun DnDInitiativeTrackerNavHost(
         }
         composable(route = AddCampaignScreenDestination.route) {
             AddCampaignScreen(
-                navigateBack = { navController.popBackStack() },
+                navigateBack = { navController.navigateUp() },
                 onNavigateUp = { navController.navigateUp() }
             )
         }
@@ -50,7 +50,8 @@ fun DnDInitiativeTrackerNavHost(
                     navController.navigate(EncounterBuilderScreenDestination.route)
                 },
                 navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() }
+                onNavigateUp = { navController.navigateUp() },
+                navController = navController
             )
         }
         composable(route = EncounterBuilderScreenDestination.route) {
