@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +34,9 @@ class AddCampaignViewModel(
         return addCampaignUiState.value.campaignName
     }
 
+    fun getParticipants(): List<Participant> {
+        return addCampaignUiState.value.playerList
+    }
 
     fun save() {
         saveCampaign()
@@ -54,4 +58,59 @@ class AddCampaignViewModel(
             campaignRepository.insertCampaign(campaign)
         }
     }
+
+    fun updateParticipantName(
+        name: String,
+        isDungeonMaster: Boolean = false,
+    ) {
+        val currentUiState = addCampaignUiState.value
+        if (isDungeonMaster) {
+            val updatedDungeonMasterName = currentUiState.dungeonMaster.copy(participantName = name)
+            _addCampaignUiState.value =
+                currentUiState.copy(dungeonMaster = updatedDungeonMasterName)
+        } else {
+            val updatedPlayerName = currentUiState.player.copy(participantName = name)
+            _addCampaignUiState.value = currentUiState.copy(player = updatedPlayerName)
+        }
+    }
+
+    fun updateParticipantEmail(
+        email: String,
+        isDungeonMaster: Boolean = false,
+    ) {
+        val currentUiState = addCampaignUiState.value
+        if (isDungeonMaster) {
+            val updatedDungeonMasterEmail = currentUiState.dungeonMaster.copy(email = email)
+            _addCampaignUiState.value =
+                currentUiState.copy(dungeonMaster = updatedDungeonMasterEmail)
+        } else {
+            val updatedPlayerEmail = currentUiState.player.copy(email = email)
+            _addCampaignUiState.value = currentUiState.copy(player = updatedPlayerEmail)
+        }
+    }
+
+    fun updatePlayerList() {
+        val currentUiState = addCampaignUiState.value
+        val currentPlayer = currentUiState.player
+
+        val updatedPlayerList = currentUiState.playerList + currentPlayer
+
+        _addCampaignUiState.value = currentUiState.copy(
+            playerList = updatedPlayerList,
+            player = Participant(
+                participantName = "",
+                email = ""
+            )
+        )
+    }
+
+    fun removePlayerFromPlayerList(participant: Participant) {
+        val currentUiState = addCampaignUiState.value
+        val updatedPlayerList = currentUiState.playerList - participant
+
+        _addCampaignUiState.value = currentUiState.copy(
+            playerList = updatedPlayerList
+        )
+    }
+
 }

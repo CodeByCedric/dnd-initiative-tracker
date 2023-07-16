@@ -24,10 +24,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import coil.compose.AsyncImage
@@ -111,25 +107,23 @@ fun AddCampaignForm(
             )
         }
         item { SectionTitle(title = stringResource(id = R.string.dm_section_title)) }
-        item { DungeonMaster() }
+        item {
+            DungeonMaster(
+                addCampaignViewModel,
+                addCampaignUiState
+            )
+        }
         item { SectionTitle(title = stringResource(id = R.string.player_section_title)) }
-        item { Player() }
+        item {
+            Player(
+                addCampaignViewModel,
+                addCampaignUiState
+            )
+        }
         item { SaveCampaignButton(onSave) }
     }
 }
 
-@Composable
-private fun SaveCampaignButton(onSave: () -> Unit) {
-    Button(
-        onClick = onSave,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Text(
-            text = stringResource(R.string.create_campaign),
-            textAlign = TextAlign.Center
-        )
-    }
-}
 
 @Composable
 fun CampaignName(
@@ -205,20 +199,33 @@ fun SectionTitle(title: String) {
 }
 
 @Composable
-fun DungeonMaster() {
-    var dungeonMasterName by remember { mutableStateOf("") }
-    var dungeonMasterEmail by remember { mutableStateOf("") }
-
-    TextField(
-        value = dungeonMasterName,
-        onValueChange = { newDungeonMasterName -> dungeonMasterName = newDungeonMasterName },
-        label = { Text(stringResource(id = R.string.dm_name_label)) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
+fun DungeonMaster(
+    addCampaignViewModel: AddCampaignViewModel,
+    addCampaignUiState: AddCampaignUiState
+) {
+    DungeonMasterNameTextfield(
+        addCampaignUiState,
+        addCampaignViewModel
     )
+    DungeonMasterEmailTextField(
+        addCampaignUiState,
+        addCampaignViewModel
+    )
+}
+
+@Composable
+private fun DungeonMasterEmailTextField(
+    addCampaignUiState: AddCampaignUiState,
+    addCampaignViewModel: AddCampaignViewModel
+) {
     TextField(
-        value = dungeonMasterEmail,
-        onValueChange = { newDungeonMasterEmail -> dungeonMasterEmail = newDungeonMasterEmail },
+        value = addCampaignUiState.dungeonMaster.email,
+        onValueChange = { newDungeonMasterEmail ->
+            addCampaignViewModel.updateParticipantEmail(
+                email = newDungeonMasterEmail,
+                isDungeonMaster = true
+            )
+        },
         label = { Text(stringResource(id = R.string.dm_email_label)) },
         singleLine = true,
         modifier = Modifier.fillMaxWidth()
@@ -226,30 +233,44 @@ fun DungeonMaster() {
 }
 
 @Composable
-fun Player() {
-    var playerName by remember { mutableStateOf("") }
-    var playerEmail by remember { mutableStateOf("") }
-    var playerList by remember { mutableStateOf(listOf<Participant>()) }
+private fun DungeonMasterNameTextfield(
+    addCampaignUiState: AddCampaignUiState,
+    addCampaignViewModel: AddCampaignViewModel
+) {
+    TextField(
+        value = addCampaignUiState.dungeonMaster.participantName,
+        onValueChange = { newDungeonMasterName ->
+            addCampaignViewModel.updateParticipantName(
+                name = newDungeonMasterName,
+                isDungeonMaster = true
+            )
+        },
+        label = { Text(stringResource(id = R.string.dm_name_label)) },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun Player(
+    addCampaignViewModel: AddCampaignViewModel,
+    addCampaignUiState: AddCampaignUiState
+) {
+    val playerList = addCampaignViewModel.getParticipants()
 
     playerList.forEach { player ->
         PlayerPillBox(
             playerName = player.participantName,
-            onDelete = { playerList = playerList - player }
+            onDelete = { addCampaignViewModel.removePlayerFromPlayerList(player) }
         )
     }
-    TextField(
-        value = playerName,
-        onValueChange = { newPlayerName -> playerName = newPlayerName },
-        label = { Text(stringResource(id = R.string.player_name_label)) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
+    PlayerNameTextField(
+        addCampaignViewModel,
+        addCampaignUiState
     )
-    TextField(
-        value = playerEmail,
-        onValueChange = { newPlayerEmail -> playerEmail = newPlayerEmail },
-        label = { Text(stringResource(id = R.string.player_email_label)) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
+    PlayerEmailTextField(
+        addCampaignViewModel,
+        addCampaignUiState
     )
     Row(
         horizontalArrangement = Arrangement.End,
@@ -260,20 +281,60 @@ fun Player() {
                 end = dimensionResource(id = R.dimen.padding_medium)
             )
     ) {
-        Button(
-            onClick = {
-                playerList = playerList + Participant(
-                    participantName = playerName,
-                    email = playerEmail,
-                )
-                playerName = ""
-                playerEmail = ""
-            }
-        ) {
-            Text(text = stringResource(id = R.string.add_player))
-        }
+        AddPlayerButton(
+            addCampaignViewModel,
+            addCampaignUiState
+        )
     }
 
+}
+
+@Composable
+private fun PlayerEmailTextField(
+    addCampaignViewModel: AddCampaignViewModel,
+    addCampaignUiState: AddCampaignUiState
+) {
+    TextField(
+        value = addCampaignUiState.player.email,
+        onValueChange = { newPlayerEmail ->
+            addCampaignViewModel.updateParticipantEmail(
+                email =
+                newPlayerEmail
+            )
+        },
+        label = { Text(stringResource(id = R.string.player_email_label)) },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun PlayerNameTextField(
+    addCampaignViewModel: AddCampaignViewModel,
+    addCampaignUiState: AddCampaignUiState
+) {
+    TextField(
+        value = addCampaignUiState.player.participantName,
+        onValueChange = { newPlayerName -> addCampaignViewModel.updateParticipantName(name = newPlayerName) },
+        label = { Text(stringResource(id = R.string.player_name_label)) },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+
+@Composable
+private fun AddPlayerButton(
+    addCampaignViewModel: AddCampaignViewModel,
+    addCampaignUiState: AddCampaignUiState
+) {
+    var playerList = addCampaignUiState.playerList
+    val player = addCampaignUiState.player
+    Button(
+        onClick = { addCampaignViewModel.updatePlayerList() }
+    ) {
+        Text(text = stringResource(id = R.string.add_player))
+    }
 }
 
 @Composable
@@ -297,4 +358,18 @@ fun PlayerPillBox(
         )
     }
 }
+
+@Composable
+private fun SaveCampaignButton(onSave: () -> Unit) {
+    Button(
+        onClick = onSave,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = stringResource(R.string.create_campaign),
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
 

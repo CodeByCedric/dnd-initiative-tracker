@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "participants")
 data class Participant(
     @PrimaryKey(autoGenerate = true) val participantId: Int = 0,
-    val participantName: String,
-    val email: String,
+    var participantName: String,
+    var email: String,
     val isDungeonMaster: Boolean = false,
 )
