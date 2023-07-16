@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -93,33 +94,40 @@ fun AddCampaignForm(
     modifier: Modifier,
 ) {
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        CampaignName(
-            addCampaignViewModel,
-            addCampaignUiState,
-
-            )
-        CampaignImage(
-            addCampaignViewModel,
-            addCampaignUiState,
-        )
-        SectionTitle(title = stringResource(id = R.string.dm_section_title))
-        DungeonMaster()
-        SectionTitle(title = stringResource(id = R.string.player_section_title))
-
-        Player()
-        Button(
-            onClick = onSave,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(R.string.create_campaign),
-                textAlign = TextAlign.Center
+    LazyColumn(
+        modifier = modifier.fillMaxSize()
+    )
+    {
+        item {
+            CampaignName(
+                addCampaignViewModel,
+                addCampaignUiState
             )
         }
+        item {
+            CampaignImage(
+                addCampaignViewModel,
+                addCampaignUiState
+            )
+        }
+        item { SectionTitle(title = stringResource(id = R.string.dm_section_title)) }
+        item { DungeonMaster() }
+        item { SectionTitle(title = stringResource(id = R.string.player_section_title)) }
+        item { Player() }
+        item { SaveCampaignButton(onSave) }
+    }
+}
+
+@Composable
+private fun SaveCampaignButton(onSave: () -> Unit) {
+    Button(
+        onClick = onSave,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = stringResource(R.string.create_campaign),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
