@@ -69,19 +69,22 @@ fun AddCampaignScreen(
                 canNavigateBack = canNavigateBack,
                 navigateUp = onNavigateUp
             )
+        },
+        bottomBar = {
+            CreateCampaignButton(
+                onSave = {
+                    coroutineScope.launch {
+                        addCampaignViewModel.save()
+                        navigateBack()
+                    }
+                },
+            )
         }
 
     ) { innerPadding ->
         AddCampaignForm(
             addCampaignViewModel = addCampaignViewModel,
             addCampaignUiState = addCampaignUiState,
-
-            onSave = {
-                coroutineScope.launch {
-                    addCampaignViewModel.save()
-                    navigateBack()
-                }
-            },
             modifier = Modifier
                 .padding(innerPadding)
         )
@@ -92,7 +95,6 @@ fun AddCampaignScreen(
 fun AddCampaignForm(
     addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState,
-    onSave: () -> Unit,
     modifier: Modifier,
 ) {
     LazyColumn(
@@ -125,7 +127,6 @@ fun AddCampaignForm(
                 addCampaignUiState
             )
         }
-        item { SaveCampaignButton(onSave) }
     }
 }
 
@@ -405,7 +406,7 @@ fun PlayerPillBox(
 }
 
 @Composable
-private fun SaveCampaignButton(onSave: () -> Unit) {
+private fun CreateCampaignButton(onSave: () -> Unit) {
     Button(
         onClick = onSave,
         modifier = Modifier.fillMaxWidth(),
