@@ -6,11 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemiesApi
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemyResponse
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import java.io.IOException
 
 sealed interface EnemiesUiState {
-    data class Success(val enemies: String) : EnemiesUiState
+    data class Success(val enemies: Response<EnemyResponse>) : EnemiesUiState
     object Error : EnemiesUiState
     object Loading : EnemiesUiState
 }
@@ -26,8 +28,8 @@ class CharacterViewModel : ViewModel() {
     private fun getEnemies() {
         viewModelScope.launch {
             enemiesUiState = try {
-                val listResult = EnemiesApi.retrofitService.getEnemies()
-                EnemiesUiState.Success(listResult)
+                val enemyResponse = EnemiesApi.retrofitService.getEnemies()
+                EnemiesUiState.Success(enemyResponse)
             } catch (e: IOException) {
                 EnemiesUiState.Error
             }

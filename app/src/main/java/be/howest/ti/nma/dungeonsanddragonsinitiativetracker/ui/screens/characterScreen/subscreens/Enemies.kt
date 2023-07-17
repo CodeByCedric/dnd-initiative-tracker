@@ -16,8 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemyResponse
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.EnemiesUiState
+import retrofit2.Response
 
 @Composable
 fun EnemiesScreen(
@@ -39,14 +41,29 @@ fun EnemiesScreen(
 
 @Composable
 fun ResultOfEnemiesApiCall(
-    enemies: String,
+    enemies: Response<EnemyResponse>,
     modifier: Modifier
 ) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        Text(text = enemies)
+        if (enemies.isSuccessful) {
+            val enemyResponse = enemies.body()
+            val enemyList = enemyResponse?.results
+
+            if (!enemyList.isNullOrEmpty()) {
+                Column {
+                    enemyList.forEach { enemy ->
+                        Text(text = enemy.name)
+                    }
+                }
+            } else {
+                Text(text = "No enemies found")
+            }
+        } else {
+            Text(text = "Error: ${enemies.code()}")
+        }
     }
 }
 
