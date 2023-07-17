@@ -82,13 +82,13 @@ fun CharacterScreen(
         },
         bottomBar = {
             Column() {
-                NavigateToEncounterBuilderScreenButton(
-                    navigateToEncounterBuilderScreen = navigateToEncounterBuilderScreen
-                )
                 CharacterTabBar(
                     tabItems = tabItems,
                     selectedTab = selectedTab,
                     onTabSelected = setSelectedTab
+                )
+                NavigateToEncounterBuilderScreenButton(
+                    navigateToEncounterBuilderScreen = navigateToEncounterBuilderScreen
                 )
             }
 
