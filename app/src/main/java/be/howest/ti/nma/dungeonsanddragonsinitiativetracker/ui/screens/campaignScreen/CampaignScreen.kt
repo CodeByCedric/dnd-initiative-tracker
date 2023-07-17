@@ -138,7 +138,7 @@ fun CampaignBody(
     var selectedCampaign by remember { mutableStateOf<Campaign?>(null) }
 
     LazyColumn(
-        modifier = modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
+        modifier = modifier
     ) {
         items(campaigns) { campaign ->
             CampaignCard(

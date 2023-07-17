@@ -57,7 +57,7 @@ fun InitiativeScreenBody(
     modifier: Modifier
 ) {
     LazyColumn(
-        modifier = modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
+        modifier = modifier
     ) {
         item {
             NavigateToSkirmishScreenBody(navigateToSkirmishScreen)

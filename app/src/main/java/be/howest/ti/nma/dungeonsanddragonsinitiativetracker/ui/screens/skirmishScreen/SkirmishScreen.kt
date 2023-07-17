@@ -58,7 +58,7 @@ fun SkirmishScreenBody(
     modifier: Modifier
 ) {
     LazyColumn(
-        modifier = modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
+        modifier = modifier
     ) {
         item {
             NavigateToCharacterScreenButton(navigateToCharacterScreen)
