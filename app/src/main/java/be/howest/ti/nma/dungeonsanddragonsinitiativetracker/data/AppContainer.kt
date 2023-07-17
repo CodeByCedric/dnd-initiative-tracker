@@ -4,15 +4,18 @@ import android.content.Context
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.DnDInitiativeTrackerDatabase
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.ParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineCampaignParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineCampaignRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineEnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineParticipantRepository
 
 interface AppContainer {
     val campaignRepository: CampaignRepository
     val participantRepository: ParticipantRepository
     val campaignParticipantRepository: CampaignParticipantRepository
+    val enemyRepository: EnemyRepository
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -28,6 +31,9 @@ class AppDataContainer(private val context: Context) : AppContainer {
         OfflineCampaignParticipantRepository(
             DnDInitiativeTrackerDatabase.getDatabase(context).CampaignParticipantDao()
         )
+    }
+    override val enemyRepository: EnemyRepository by lazy {
+        OfflineEnemyRepository(DnDInitiativeTrackerDatabase.getDatabase(context).EnemyDao())
     }
 
 }

@@ -8,9 +8,11 @@ import androidx.room.TypeConverters
 import be.howest.ti.nma.bdnd.util.UriTypeConverter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignParticipantDao
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.EnemyDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.ParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeConverter
 
@@ -18,8 +20,9 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeCon
     entities = [
         Campaign::class,
         Participant::class,
-        CampaignParticipant::class],
-    version = 4,
+        CampaignParticipant::class,
+        Enemy::class],
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(
@@ -35,6 +38,8 @@ abstract class DnDInitiativeTrackerDatabase : RoomDatabase() {
 
     abstract fun ParticipantDao(): ParticipantDao
     abstract fun CampaignParticipantDao(): CampaignParticipantDao
+
+    abstract fun EnemyDao(): EnemyDao
 
     companion object {
         @Volatile

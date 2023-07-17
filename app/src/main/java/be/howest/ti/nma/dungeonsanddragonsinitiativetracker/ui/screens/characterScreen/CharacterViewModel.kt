@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemiesApi
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemyResponse
 import kotlinx.coroutines.launch
@@ -17,7 +19,9 @@ sealed interface EnemiesUiState {
     object Loading : EnemiesUiState
 }
 
-class CharacterViewModel : ViewModel() {
+class CharacterViewModel(
+    private val enemyRepository: EnemyRepository
+) : ViewModel() {
     var enemiesUiState: EnemiesUiState by mutableStateOf(EnemiesUiState.Loading)
         private set
 
@@ -29,11 +33,22 @@ class CharacterViewModel : ViewModel() {
         viewModelScope.launch {
             enemiesUiState = try {
                 val enemyResponse = EnemiesApi.retrofitService.getEnemies()
-                EnemiesUiState.Success(enemyResponse)
+                if (enemyResponse.isSuccessful) {
+                    enemyResponse.body()?.results?.forEach { enemy ->
+                        val enemyEntity = Enemy(
+                            enemy.index,
+                            enemy.name,
+                            enemy.url
+                        )
+                        enemyRepository.insertEnemy(enemyEntity)
+                    }
+                    EnemiesUiState.Success(enemyResponse)
+                } else {
+                    EnemiesUiState.Error
+                }
             } catch (e: IOException) {
                 EnemiesUiState.Error
             }
-
         }
     }
 

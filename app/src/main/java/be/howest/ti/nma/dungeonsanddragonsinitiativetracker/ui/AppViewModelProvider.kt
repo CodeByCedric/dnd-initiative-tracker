@@ -26,7 +26,9 @@ object AppViewModelProvider {
         }
         //Initializer for the CharacterViewModel
         initializer {
-            CharacterViewModel()
+            CharacterViewModel(
+                dndInitiativeTrackerApplication().container.enemyRepository
+            )
         }
     }
 }
