@@ -6,14 +6,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
 
 @Composable
 fun EnemiesScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    characterViewModel: CharacterViewModel
 ) {
+    val enemiesUiState = characterViewModel.enemiesUiState
     // Render the content for the Enemies sub-screen
     Text(
-        text = "Enemies",
+        text = enemiesUiState,
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)

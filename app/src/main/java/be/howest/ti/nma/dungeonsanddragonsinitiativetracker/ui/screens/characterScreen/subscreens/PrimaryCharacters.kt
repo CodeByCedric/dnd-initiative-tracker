@@ -6,10 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
 
 @Composable
 fun PrimaryCharacters(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    characterViewModel: CharacterViewModel
 ) {
     // Render the content for the Characters sub-screen
     Text(

@@ -25,9 +25,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.EnemiesScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.PrimaryCharacters
@@ -48,6 +50,7 @@ enum class CharacterTab {
 
 @Composable
 fun CharacterScreen(
+    characterViewModel: CharacterViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToEncounterBuilderScreen: () -> Unit = {},
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
@@ -73,6 +76,7 @@ fun CharacterScreen(
         },
         content = { innerPadding ->
             CharacterScreenBody(
+                characterViewModel = characterViewModel,
                 navigateToEncounterBuilderScreen = navigateToEncounterBuilderScreen,
                 selectedTab = selectedTab,
                 modifier = modifier
@@ -100,25 +104,29 @@ fun CharacterScreen(
 fun CharacterScreenBody(
     navigateToEncounterBuilderScreen: () -> Unit,
     selectedTab: CharacterTab,
-    modifier: Modifier
+    modifier: Modifier,
+    characterViewModel: CharacterViewModel
 ) {
     LazyColumn(modifier = modifier) {
         item {
             when (selectedTab) {
                 CharacterTab.Characters -> {
                     PrimaryCharacters(
+                        characterViewModel = characterViewModel,
                         modifier = modifier
                     )
                 }
 
                 CharacterTab.SecondaryCharacters -> {
                     SecondaryCharacters(
+                        characterViewModel = characterViewModel,
                         modifier = modifier
                     )
                 }
 
                 CharacterTab.Enemies -> {
                     EnemiesScreen(
+                        characterViewModel = characterViewModel,
                         modifier = modifier
                     )
                 }
