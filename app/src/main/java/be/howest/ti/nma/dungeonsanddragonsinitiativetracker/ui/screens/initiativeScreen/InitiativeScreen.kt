@@ -40,7 +40,11 @@ fun InitiativeScreen(
                 navigateUp = onNavigateUp
 
             )
-        }) { innerPadding ->
+        },
+        bottomBar = {
+            NavigateToSkirmishScreenButton(navigateToSkirmishScreen)
+        }
+    ) { innerPadding ->
         InitiativeScreenBody(
             navigateToSkirmishScreen,
             modifier = modifier
@@ -60,15 +64,14 @@ fun InitiativeScreenBody(
         modifier = modifier
     ) {
         item {
-            NavigateToSkirmishScreenBody(navigateToSkirmishScreen)
+            Text(text = "content")
+
         }
     }
-
-
 }
 
 @Composable
-private fun NavigateToSkirmishScreenBody(navigateToSkirmishScreen: () -> Unit) {
+private fun NavigateToSkirmishScreenButton(navigateToSkirmishScreen: () -> Unit) {
     Button(
         onClick = { navigateToSkirmishScreen() },
         modifier = Modifier

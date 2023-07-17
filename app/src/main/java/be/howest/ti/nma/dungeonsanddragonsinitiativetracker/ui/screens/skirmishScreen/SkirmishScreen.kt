@@ -40,7 +40,11 @@ fun SkirmishScreen(
                 navigateUp = onNavigateUp
 
             )
-        }) { innerPadding ->
+        },
+        bottomBar = {
+            NavigateToCharacterScreenButton(navigateToCharacterScreen)
+        }
+    ) { innerPadding ->
         SkirmishScreenBody(
             navigateToCharacterScreen,
             modifier = modifier
@@ -61,7 +65,8 @@ fun SkirmishScreenBody(
         modifier = modifier
     ) {
         item {
-            NavigateToCharacterScreenButton(navigateToCharacterScreen)
+            Text(text = "content")
+
         }
     }
 

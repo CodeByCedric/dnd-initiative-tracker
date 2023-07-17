@@ -41,9 +41,14 @@ fun EncounterBuilderScreen(
                 navigateUp = onNavigateUp
 
             )
-        }) { innerPadding ->
+        },
+        bottomBar = {
+            NavigateToInitiativeScreenButton(
+                navigateToInitiativeScreen = navigateToInitiativeScreen
+            )
+        }
+    ) { innerPadding ->
         EncounterBuilderScreenBody(
-            navigateToInitiativeScreen,
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -55,14 +60,13 @@ fun EncounterBuilderScreen(
 
 @Composable
 fun EncounterBuilderScreenBody(
-    navigateToInitiativeScreen: () -> Unit,
     modifier: Modifier
 ) {
     LazyColumn(
         modifier = modifier
     ) {
         item {
-            NavigateToInitiativeScreenButton(navigateToInitiativeScreen)
+            Text(text = "Content")
         }
     }
 }
