@@ -72,6 +72,7 @@ import java.util.Locale
 Add more details to the expanded card, viz. the email addresses of the participants
 Add functionality to edit campaign participants from the card
 Add functionality to add new participants to a campaign from the card
+Move NavigateToCharacterScreenButton to bottombar in scaffold
 */
 
 object CampaignScreenDestination : NavigationDestination {
