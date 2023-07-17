@@ -43,4 +43,6 @@
     <string name="date_time_picker_button">Next Session?</string>
     <string name="no_next_session_planned">No next session planned.</string>
     <string name="select_player_from_contacts">Select from your contacts</string>
+    <string name="loading">Loading</string>
+    <string name="loading_failed">Failed to load</string>
 </resources>
