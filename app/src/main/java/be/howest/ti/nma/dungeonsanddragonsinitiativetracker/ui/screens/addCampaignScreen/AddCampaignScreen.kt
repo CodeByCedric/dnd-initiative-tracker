@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +30,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +41,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -226,16 +233,31 @@ private fun DungeonMasterEmailTextField(
     addCampaignUiState: AddCampaignUiState,
     addCampaignViewModel: AddCampaignViewModel
 ) {
+    var isEmailValid by remember { mutableStateOf(true) }
+
     TextField(
         value = addCampaignUiState.dungeonMaster.email,
         onValueChange = { newDungeonMasterEmail ->
             addCampaignViewModel.updateParticipantEmail(
                 email = newDungeonMasterEmail,
-                isDungeonMaster = true
+                isDungeonMaster = true,
             )
+            isEmailValid = addCampaignViewModel.isEmailValid(newDungeonMasterEmail)
         },
         label = { Text(stringResource(id = R.string.dm_email_label)) },
         singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        isError = !isEmailValid,
+        visualTransformation = if (!isEmailValid) VisualTransformation.None else VisualTransformation.None,
+        trailingIcon = {
+            if (!isEmailValid) {
+                Icon(
+                    imageVector = Icons.Filled.Error,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        },
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -302,6 +324,7 @@ private fun PlayerEmailTextField(
     addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState
 ) {
+    var isEmailValid by remember { mutableStateOf(true) }
     TextField(
         value = addCampaignUiState.player.email,
         onValueChange = { newPlayerEmail ->
@@ -309,9 +332,22 @@ private fun PlayerEmailTextField(
                 email =
                 newPlayerEmail
             )
+            isEmailValid = addCampaignViewModel.isEmailValid(newPlayerEmail)
         },
         label = { Text(stringResource(id = R.string.player_email_label)) },
         singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        isError = !isEmailValid,
+        visualTransformation = if (!isEmailValid) VisualTransformation.None else VisualTransformation.None,
+        trailingIcon = {
+            if (!isEmailValid) {
+                Icon(
+                    imageVector = Icons.Filled.Error,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        },
         modifier = Modifier.fillMaxWidth()
     )
 }
