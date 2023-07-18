@@ -1,7 +1,7 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces
 
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipantDetails
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignParticipantDetails
 import kotlinx.coroutines.flow.Flow
 
 interface CampaignParticipantRepository {

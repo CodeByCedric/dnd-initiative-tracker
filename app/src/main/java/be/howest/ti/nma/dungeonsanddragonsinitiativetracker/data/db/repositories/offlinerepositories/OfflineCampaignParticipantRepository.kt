@@ -2,8 +2,8 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositorie
 
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipantDetails
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignParticipantRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignParticipantDetails
 import kotlinx.coroutines.flow.Flow
 
 class OfflineCampaignParticipantRepository(

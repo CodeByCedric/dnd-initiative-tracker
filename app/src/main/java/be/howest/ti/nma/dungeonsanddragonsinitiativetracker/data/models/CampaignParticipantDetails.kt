@@ -1,4 +1,4 @@
-package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities
+package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models
 
 data class CampaignParticipantDetails(
     val participantId: Long,

@@ -8,12 +8,16 @@ import androidx.room.TypeConverters
 import be.howest.ti.nma.bdnd.util.UriTypeConverter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignParticipantDao
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignPlayerCharacterDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.EnemyDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.ParticipantDao
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.PlayerCharacterDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.PlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeConverter
 
 @Database(
@@ -21,8 +25,10 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeCon
         Campaign::class,
         Participant::class,
         CampaignParticipant::class,
+        PlayerCharacter::class,
+        CampaignPlayerCharacter::class,
         Enemy::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(
@@ -38,7 +44,8 @@ abstract class DnDInitiativeTrackerDatabase : RoomDatabase() {
 
     abstract fun ParticipantDao(): ParticipantDao
     abstract fun CampaignParticipantDao(): CampaignParticipantDao
-
+    abstract fun PlayerCharacterDao(): PlayerCharacterDao
+    abstract fun CampaignPlayerCharacterDao(): CampaignPlayerCharacterDao
     abstract fun EnemyDao(): EnemyDao
 
     companion object {

@@ -60,7 +60,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTracker
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipantDetails
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignParticipantDetails
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import coil.compose.AsyncImage
