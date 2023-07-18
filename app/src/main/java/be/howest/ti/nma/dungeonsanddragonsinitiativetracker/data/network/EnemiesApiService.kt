@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-//TODO far from optimal, refactor
+//TODO far from optimal, refactor (split between interface and repo)
 private const val BASE_URL =
     "https://www.dnd5eapi.co/api/"
 
