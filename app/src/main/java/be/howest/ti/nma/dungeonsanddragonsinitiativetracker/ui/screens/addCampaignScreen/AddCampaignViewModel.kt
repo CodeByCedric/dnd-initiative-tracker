@@ -4,15 +4,20 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.ParticipantRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AddCampaignViewModel(
-    private val campaignRepository: CampaignRepository
+    private val campaignRepository: CampaignRepository,
+    private val participantRepository: ParticipantRepository,
+    private val campaignParticipantRepository: CampaignParticipantRepository,
 ) : ViewModel() {
     private val _addCampaignUiState = MutableStateFlow(AddCampaignUiState())
     val addCampaignUiState: StateFlow<AddCampaignUiState> = _addCampaignUiState.asStateFlow()
@@ -26,38 +31,48 @@ class AddCampaignViewModel(
         _addCampaignUiState.value = currentUiState.copy(campaignImageUri = uri)
     }
 
-    fun getCampaignImage(): Uri? {
-        return addCampaignUiState.value.campaignImageUri
-    }
-
-    fun getCampaignName(): String {
-        return addCampaignUiState.value.campaignName
-    }
-
     fun getParticipants(): List<Participant> {
         return addCampaignUiState.value.playerList
     }
 
     fun save() {
-        saveCampaign()
-        /*todo
-        * saveCampaign() -> return campaignId
-        * saveParticipants() -> return campaignParticipantIds
-        * saveCampaignParticipants() -> use campaignId and campaignParticipantsIds to store the
-        * campaignParticipants in the intermediate table
-        * */
+        viewModelScope.launch {
+            val campaignId = saveCampaign()
+            val participantIds = saveParticipants()
+            saveCampaignParticipants(
+                campaignId,
+                participantIds
+            )
+        }
+    }
+
+    private suspend fun saveCampaignParticipants(
+        campaignId: Long,
+        participantIds: List<Long>
+    ) {
+        participantIds.forEach { participantId ->
+            val campaignParticipant = CampaignParticipant(
+                campaignId = campaignId,
+                participantId = participantId
+            )
+            campaignParticipantRepository.insertCampaignParticipant(campaignParticipant)
+        }
 
     }
 
-    private fun saveCampaign() {
+    private suspend fun saveCampaign(): Long {
         val campaign = Campaign(
             campaignName = addCampaignUiState.value.campaignName,
             campaignImageUri = addCampaignUiState.value.campaignImageUri
         )
-        viewModelScope.launch {
-            campaignRepository.insertCampaign(campaign)
-        }
+        return campaignRepository.insertCampaign(campaign)
     }
+
+    private suspend fun saveParticipants(): List<Long> {
+        val participants = addCampaignUiState.value.playerList
+        return participantRepository.insertAllParticipants(participants)
+    }
+
 
     fun updateParticipantName(
         name: String,

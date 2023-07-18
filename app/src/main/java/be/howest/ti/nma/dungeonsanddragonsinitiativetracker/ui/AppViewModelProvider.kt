@@ -21,7 +21,9 @@ object AppViewModelProvider {
         //Initializer for the addCampaignViewModel
         initializer {
             AddCampaignViewModel(
-                dndInitiativeTrackerApplication().container.campaignRepository
+                dndInitiativeTrackerApplication().container.campaignRepository,
+                dndInitiativeTrackerApplication().container.participantRepository,
+                dndInitiativeTrackerApplication().container.campaignParticipantRepository
             )
         }
 //        Initializer for the CharacterViewModel
