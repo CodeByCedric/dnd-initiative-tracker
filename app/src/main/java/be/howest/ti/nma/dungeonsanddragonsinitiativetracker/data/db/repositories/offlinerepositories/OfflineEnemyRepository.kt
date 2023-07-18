@@ -12,6 +12,14 @@ class OfflineEnemyRepository(
         enemyDao.insertEnemy(enemy)
     }
 
+    override suspend fun insertAllEnemies(enemies: List<Enemy>) {
+        enemyDao.insertAllEnemies(enemies)
+    }
+
+    override suspend fun getRowCount(): Int {
+        return enemyDao.getRowCount()
+    }
+
     override fun getAllEnemies(): Flow<List<Enemy>> {
         return enemyDao.getAllEnemies()
     }

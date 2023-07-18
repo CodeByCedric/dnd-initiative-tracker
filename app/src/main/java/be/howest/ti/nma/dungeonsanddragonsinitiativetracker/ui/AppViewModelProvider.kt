@@ -24,7 +24,7 @@ object AppViewModelProvider {
                 dndInitiativeTrackerApplication().container.campaignRepository
             )
         }
-        //Initializer for the CharacterViewModel
+//        Initializer for the CharacterViewModel
         initializer {
             CharacterViewModel(
                 dndInitiativeTrackerApplication().container.enemyRepository

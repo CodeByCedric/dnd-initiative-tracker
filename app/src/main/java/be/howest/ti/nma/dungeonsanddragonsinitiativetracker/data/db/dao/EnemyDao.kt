@@ -12,7 +12,13 @@ interface EnemyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEnemy(enemy: Enemy)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllEnemies(enemies: List<Enemy>)
+
     @Query("SELECT * from enemies")
     fun getAllEnemies(): Flow<List<Enemy>>
+
+    @Query("SELECT COUNT(*) FROM enemies")
+    suspend fun getRowCount(): Int
 
 }

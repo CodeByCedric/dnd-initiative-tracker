@@ -38,10 +38,6 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeCon
 abstract class DnDInitiativeTrackerDatabase : RoomDatabase() {
 
     abstract fun CampaignDao(): CampaignDao
-    suspend fun isCampaignTableEmpty(): Boolean {
-        return CampaignDao().getRowCount() == 0
-    }
-
     abstract fun ParticipantDao(): ParticipantDao
     abstract fun CampaignParticipantDao(): CampaignParticipantDao
     abstract fun PlayerCharacterDao(): PlayerCharacterDao

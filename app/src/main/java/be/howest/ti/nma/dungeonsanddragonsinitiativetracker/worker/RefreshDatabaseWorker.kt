@@ -24,18 +24,18 @@ class RefreshDatabaseWorker(
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
+            val database = DnDInitiativeTrackerDatabase.getDatabase(applicationContext)
             val campaigns = DataSource.campaigns
             val participants = DataSource.participants
-            val database = DnDInitiativeTrackerDatabase.getDatabase(applicationContext)
-            if (database.isCampaignTableEmpty()) {
-                val listOfCampaignIds = database.CampaignDao().insertAll(campaigns)
-                val listOfParticipantIds = database.ParticipantDao().insertAll(participants)
-                val campaignParticipants = createCampaignParticipants(
-                    listOfCampaignIds,
-                    listOfParticipantIds
-                )
-                database.CampaignParticipantDao().insertAll(campaignParticipants)
-            }
+
+            val listOfCampaignIds = database.CampaignDao().insertAll(campaigns)
+            val listOfParticipantIds = database.ParticipantDao().insertAll(participants)
+            val campaignParticipants = createCampaignParticipants(
+                listOfCampaignIds,
+                listOfParticipantIds
+            )
+            database.CampaignParticipantDao().insertAll(campaignParticipants)
+
             Result.success()
         } catch (ex: Exception) {
             Log.e(
