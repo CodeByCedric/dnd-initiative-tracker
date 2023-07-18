@@ -70,6 +70,14 @@ fun AddCampaignScreen(
                 navigateUp = onNavigateUp
             )
         },
+        content = { innerPadding ->
+            AddCampaignForm(
+                addCampaignViewModel = addCampaignViewModel,
+                addCampaignUiState = addCampaignUiState,
+                modifier = Modifier
+                    .padding(innerPadding)
+            )
+        },
         bottomBar = {
             CreateCampaignButton(
                 onSave = {
@@ -81,14 +89,7 @@ fun AddCampaignScreen(
             )
         }
 
-    ) { innerPadding ->
-        AddCampaignForm(
-            addCampaignViewModel = addCampaignViewModel,
-            addCampaignUiState = addCampaignUiState,
-            modifier = Modifier
-                .padding(innerPadding)
-        )
-    }
+    )
 }
 
 @Composable
@@ -160,8 +161,8 @@ fun CampaignImage(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = modifier
-                .size(100.dp)
-                .padding(8.dp)
+                .size(dimensionResource(id = R.dimen.image_size))
+                .padding(dimensionResource(id = R.dimen.padding_small))
                 .clip(RoundedCornerShape(50))
         )
         Column(
@@ -185,6 +186,7 @@ fun CampaignImage(
             }
             Button(
                 onClick = { /*TODO*/ },
+                enabled = false,
             ) {
                 Text(text = stringResource(id = R.string.take_an_image))
 
@@ -209,7 +211,7 @@ fun DungeonMaster(
     addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState
 ) {
-    DungeonMasterNameTextfield(
+    DungeonMasterNameTextField(
         addCampaignUiState,
         addCampaignViewModel
     )
@@ -239,7 +241,7 @@ private fun DungeonMasterEmailTextField(
 }
 
 @Composable
-private fun DungeonMasterNameTextfield(
+private fun DungeonMasterNameTextField(
     addCampaignUiState: AddCampaignUiState,
     addCampaignViewModel: AddCampaignViewModel
 ) {

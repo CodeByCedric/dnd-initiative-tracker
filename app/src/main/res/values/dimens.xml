@@ -9,4 +9,5 @@
     <dimen name="button_height">72dp</dimen>
     <dimen name="character_tab_bar_height">72dp</dimen>
     <dimen name="character_tab_indicator_height">2dp</dimen>
+    <dimen name="image_size">100dp</dimen>
 </resources>
