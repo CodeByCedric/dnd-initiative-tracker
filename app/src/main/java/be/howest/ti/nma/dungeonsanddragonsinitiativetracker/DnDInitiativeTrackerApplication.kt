@@ -27,9 +27,7 @@ class DnDInitiativeTrackerApplication : Application() {
 
     private fun setupUniqueWork() {
         val workManager = WorkManager.getInstance(applicationContext)
-        val refreshDataRequest =
-            OneTimeWorkRequestBuilder<RefreshDatabaseWorker>()
-                .build()
+        val refreshDataRequest = OneTimeWorkRequestBuilder<RefreshDatabaseWorker>().build()
         workManager.enqueue(refreshDataRequest)
     }
 }
