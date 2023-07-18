@@ -26,10 +26,10 @@ class CharacterViewModel(
         private set
 
     init {
-        getEnemies()
+        getEnemiesFromApi()
     }
 
-    private fun getEnemies() {
+    private fun getEnemiesFromApi() {
         viewModelScope.launch {
             enemiesUiState = try {
                 val enemyResponse = EnemiesApi.retrofitService.getEnemies()
@@ -40,7 +40,7 @@ class CharacterViewModel(
                             enemy.name,
                             enemy.url
                         )
-                        enemyRepository.insertEnemy(enemyEntity)
+                        insertEnemyInDB(enemyEntity)
                     }
                     EnemiesUiState.Success(enemyResponse)
                 } else {
@@ -49,6 +49,16 @@ class CharacterViewModel(
             } catch (e: IOException) {
                 EnemiesUiState.Error
             }
+        }
+    }
+
+    private suspend fun insertEnemyInDB(enemyEntity: Enemy) {
+        enemyRepository.insertEnemy(enemyEntity)
+    }
+
+    private fun getAllEnemiesFromDB() {
+        viewModelScope.launch {
+            enemyRepository.getAllEnemies()
         }
     }
 
