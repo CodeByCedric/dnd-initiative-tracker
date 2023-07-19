@@ -186,10 +186,6 @@ fun CampaignImage(
                 contract = ActivityResultContracts.PickVisualMedia(),
                 onResult = { uri ->
                     if (uri != null) {
-                        Log.d(
-                            "log for uri",
-                            uri.toString()
-                        )
                         addCampaignViewModel.updateCampaignImage(uri)
                         val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                         context.contentResolver.takePersistableUriPermission(
@@ -223,7 +219,6 @@ fun CampaignImage(
                             permission
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
-                        // Permission is already granted
                         photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     } else {
                         launcherSinglePermission.launch(permission)
@@ -412,18 +407,49 @@ private fun PlayerNameTextField(
 private fun SelectPlayerFromContactsButton(
     addCampaignViewModel: AddCampaignViewModel
 ) {
+
     val context = LocalContext.current
-    Button(
-        onClick = {
+
+    val launcherSinglePermission = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
             selectContact(
                 context,
                 addCampaignViewModel
             )
+        } else {
+            Toast.makeText(
+                context,
+                "Permission Denied",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    Button(
+        onClick = {
+            val permission = android.Manifest.permission.READ_CONTACTS
+
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    permission
+                ) == PackageManager
+                    .PERMISSION_GRANTED
+            ) {
+                selectContact(
+                    context,
+                    addCampaignViewModel
+                )
+            } else {
+                launcherSinglePermission.launch(permission)
+            }
         },
         modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
     ) {
         Text(text = stringResource(id = R.string.select_player_from_contacts))
     }
+
 }
 
 fun selectContact(
