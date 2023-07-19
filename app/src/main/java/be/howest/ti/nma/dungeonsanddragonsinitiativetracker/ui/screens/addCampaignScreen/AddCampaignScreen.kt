@@ -192,11 +192,10 @@ fun CampaignImage(
 
             val context = LocalContext.current
 
-            val launcherMultiplePermissions = rememberLauncherForActivityResult(
-                ActivityResultContracts.RequestMultiplePermissions()
-            ) { permissionsMap ->
-                val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
-                if (areGranted) {
+            val launcherSinglePermission = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
                     photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 } else {
                     Toast.makeText(
@@ -209,19 +208,17 @@ fun CampaignImage(
 
             Button(
                 onClick = {
-                    val permissions = arrayOf(
-                        android.Manifest.permission.READ_MEDIA_IMAGES
-                    )
+                    val permission = android.Manifest.permission.READ_MEDIA_IMAGES
 
-                    if (permissions.all {
-                            ContextCompat.checkSelfPermission(
-                                context,
-                                it
-                            ) == PackageManager.PERMISSION_GRANTED
-                        }) {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            permission
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // Permission is already granted
                         photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     } else {
-                        launcherMultiplePermissions.launch(permissions)
+                        launcherSinglePermission.launch(permission)
                     }
                 }
 
