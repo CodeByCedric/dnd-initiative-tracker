@@ -109,6 +109,15 @@ fun CharacterScreenBody(
 ) {
     LazyColumn(modifier = modifier) {
         item {
+            Text(
+                text = getSubtitle(selectedTab),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
+        item {
             when (selectedTab) {
                 CharacterTab.Characters -> {
                     PrimaryCharacters(
@@ -206,6 +215,16 @@ fun NavigateToEncounterBuilderScreenButton(
         )
     }
 }
+
+@Composable
+private fun getSubtitle(selectedTab: CharacterTab): String {
+    return when (selectedTab) {
+        CharacterTab.Characters -> stringResource(id = R.string.characters_subtitle)
+        CharacterTab.SecondaryCharacters -> stringResource(id = R.string.secondary_characters_subtitle)
+        CharacterTab.Enemies -> stringResource(id = R.string.enemies_subtitle)
+    }
+}
+
 
 @Preview
 @Composable

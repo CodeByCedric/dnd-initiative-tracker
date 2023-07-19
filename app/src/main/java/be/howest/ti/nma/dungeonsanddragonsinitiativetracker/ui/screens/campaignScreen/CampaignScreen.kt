@@ -202,7 +202,7 @@ fun CampaignCard(
 
     Card(
         modifier = modifier
-            .padding(8.dp)
+            .padding(dimensionResource(id = R.dimen.padding_small))
             .clickable { onSelect(campaign) }
             .border(
                 width = 2.dp,
