@@ -180,17 +180,25 @@ fun CampaignImage(
             modifier = Modifier
                 .weight(1f)
         ) {
+            val context = LocalContext.current
 
             val photoPicker = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.PickVisualMedia(),
-                onResult = {
-                    if (it != null) {
-                        addCampaignViewModel.updateCampaignImage(it)
+                onResult = { uri ->
+                    if (uri != null) {
+                        Log.d(
+                            "log for uri",
+                            uri.toString()
+                        )
+                        addCampaignViewModel.updateCampaignImage(uri)
+                        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        context.contentResolver.takePersistableUriPermission(
+                            uri,
+                            flag
+                        )
                     }
                 }
             )
-
-            val context = LocalContext.current
 
             val launcherSinglePermission = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestPermission()
