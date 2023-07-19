@@ -49,4 +49,6 @@
     <string name="secondary_characters_subtitle">Secondary Characters</string>
     <string name="enemies_subtitle">Enemies</string>
     <string name="search_enemies">Search for enemies</string>
+    <string name="create_character">Create and add a new character</string>
+    <string name="create_primary_character_screen">Create your character</string>
 </resources>

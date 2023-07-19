@@ -11,6 +11,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignS
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreenDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createPrimaryCharacterScreen.CreatePrimaryCharacterScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.encounterBuilderScreen.EncounterBuilderScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.encounterBuilderScreen.EncounterBuilderScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.initiativeScreen.InitiativeScreen
@@ -49,6 +50,7 @@ fun DnDInitiativeTrackerNavHost(
                 navigateToEncounterBuilderScreen = {
                     navController.navigate(EncounterBuilderScreenDestination.route)
                 },
+                navigateToCreateCharacterScreen = { navController.navigate(CreatePrimaryCharacterScreenDestination.route) },
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
                 navController = navController

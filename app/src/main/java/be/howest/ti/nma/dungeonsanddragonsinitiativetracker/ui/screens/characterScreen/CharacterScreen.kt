@@ -20,11 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
@@ -34,12 +32,10 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.Naviga
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.EnemiesScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.PrimaryCharacters
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.SecondaryCharacters
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.theme.DungeonsAndDragonsInitiativeTrackerTheme
 
 object CharacterScreenDestination : NavigationDestination {
     override val route: String = "character_overview_screen"
     override val titleRes: Int = R.string.character_overview_screen
-
 }
 
 enum class CharacterTab {
@@ -52,6 +48,7 @@ enum class CharacterTab {
 fun CharacterScreen(
     characterViewModel: CharacterViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToEncounterBuilderScreen: () -> Unit = {},
+    navigateToCreateCharacterScreen: () -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
@@ -78,6 +75,7 @@ fun CharacterScreen(
             CharacterScreenBody(
                 characterViewModel = characterViewModel,
                 navigateToEncounterBuilderScreen = navigateToEncounterBuilderScreen,
+                navigateToCreatePrimaryCharacterScreen = navigateToCreateCharacterScreen,
                 selectedTab = selectedTab,
                 modifier = modifier
                     .padding(innerPadding)
@@ -105,7 +103,8 @@ fun CharacterScreenBody(
     navigateToEncounterBuilderScreen: () -> Unit,
     selectedTab: CharacterTab,
     modifier: Modifier,
-    characterViewModel: CharacterViewModel
+    characterViewModel: CharacterViewModel,
+    navigateToCreatePrimaryCharacterScreen: () -> Unit
 ) {
     LazyColumn(modifier = modifier) {
         item {
@@ -222,18 +221,5 @@ private fun getSubtitle(selectedTab: CharacterTab): String {
         CharacterTab.Characters -> stringResource(id = R.string.characters_subtitle)
         CharacterTab.SecondaryCharacters -> stringResource(id = R.string.secondary_characters_subtitle)
         CharacterTab.Enemies -> stringResource(id = R.string.enemies_subtitle)
-    }
-}
-
-
-@Preview
-@Composable
-fun CharacterPreviewScreen() {
-    DungeonsAndDragonsInitiativeTrackerTheme() {
-        CharacterScreen(
-            navigateBack = { },
-            onNavigateUp = { },
-            navController = NavController(context = LocalContext.current)
-        )
     }
 }
