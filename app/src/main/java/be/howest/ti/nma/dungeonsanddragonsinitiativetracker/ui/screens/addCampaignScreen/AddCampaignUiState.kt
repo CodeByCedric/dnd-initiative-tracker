@@ -17,6 +17,7 @@ data class AddCampaignUiState(
     var player: Participant = Participant(
         participantName = "",
         email = ""
-    )
+    ),
+    var saveButtonEnabled: Boolean = false
 
 )

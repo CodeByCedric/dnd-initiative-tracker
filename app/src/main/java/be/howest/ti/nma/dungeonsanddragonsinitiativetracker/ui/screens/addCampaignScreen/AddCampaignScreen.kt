@@ -2,9 +2,11 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampa
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
@@ -58,6 +61,7 @@ object AddCampaignScreenDestination : NavigationDestination {
     override val titleRes: Int = R.string.add_campaign_screen
 }
 
+
 @Composable
 fun AddCampaignScreen(
     navigateBack: () -> Unit,
@@ -67,7 +71,6 @@ fun AddCampaignScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val addCampaignUiState by addCampaignViewModel.addCampaignUiState.collectAsState()
-
 
     Scaffold(
         topBar = {
@@ -87,6 +90,7 @@ fun AddCampaignScreen(
         },
         bottomBar = {
             CreateCampaignButton(
+                addCampaignViewModel = addCampaignViewModel,
                 onSave = {
                     coroutineScope.launch {
                         addCampaignViewModel.save()
@@ -176,6 +180,7 @@ fun CampaignImage(
             modifier = Modifier
                 .weight(1f)
         ) {
+
             val photoPicker = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.PickVisualMedia(),
                 onResult = {
@@ -184,10 +189,42 @@ fun CampaignImage(
                     }
                 }
             )
+
+            val context = LocalContext.current
+
+            val launcherMultiplePermissions = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissionsMap ->
+                val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
+                if (areGranted) {
+                    photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Permission Denied",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
             Button(
                 onClick = {
-                    photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    val permissions = arrayOf(
+                        android.Manifest.permission.READ_MEDIA_IMAGES
+                    )
+
+                    if (permissions.all {
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                it
+                            ) == PackageManager.PERMISSION_GRANTED
+                        }) {
+                        photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    } else {
+                        launcherMultiplePermissions.launch(permissions)
+                    }
                 }
+
             ) {
                 Text(text = stringResource(id = R.string.pick_an_image))
             }
@@ -415,7 +452,8 @@ private fun AddPlayerButton(
     addCampaignViewModel: AddCampaignViewModel,
 ) {
     Button(
-        onClick = { addCampaignViewModel.updatePlayerList() }
+        onClick = { addCampaignViewModel.updatePlayerList() },
+        enabled = addCampaignViewModel.validatePlayerInputFields()
     ) {
         Text(text = stringResource(id = R.string.add_player))
     }
@@ -444,7 +482,10 @@ fun PlayerPillBox(
 }
 
 @Composable
-private fun CreateCampaignButton(onSave: () -> Unit) {
+private fun CreateCampaignButton(
+    addCampaignViewModel: AddCampaignViewModel,
+    onSave: () -> Unit,
+) {
     Button(
         onClick = onSave,
         modifier = Modifier.fillMaxWidth(),
@@ -455,5 +496,3 @@ private fun CreateCampaignButton(onSave: () -> Unit) {
         )
     }
 }
-
-

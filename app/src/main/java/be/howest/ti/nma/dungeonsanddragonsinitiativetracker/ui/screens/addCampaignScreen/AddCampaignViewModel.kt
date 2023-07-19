@@ -132,4 +132,27 @@ class AddCampaignViewModel(
         val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}".toRegex()
         return emailPattern.matches(email)
     }
+
+    fun validatePlayerInputFields(): Boolean {
+        val currentUiState = addCampaignUiState.value
+        return currentUiState.player.participantName.isNotBlank() && isEmailValid(currentUiState.player.email)
+    }
+
+    private fun validateDungeonMasterInputFields(): Boolean {
+        val currentUiState = addCampaignUiState.value
+        return currentUiState.dungeonMaster.participantName.isNotBlank() && isEmailValid(
+            currentUiState
+                .dungeonMaster.email
+        )
+    }
+
+    private fun validateCampaignName(): Boolean {
+        val currentUiState = addCampaignUiState.value
+        return currentUiState.campaignName.isNotBlank()
+    }
+
+    private fun isPlayerListEmpty(): Boolean {
+        val currentUiState = addCampaignUiState.value
+        return currentUiState.playerList.isNotEmpty()
+    }
 }
