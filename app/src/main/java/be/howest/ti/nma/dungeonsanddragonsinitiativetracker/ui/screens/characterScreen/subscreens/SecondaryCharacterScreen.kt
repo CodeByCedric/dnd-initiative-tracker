@@ -11,7 +11,8 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.character
 @Composable
 fun SecondaryCharacters(
     modifier: Modifier = Modifier,
-    characterViewModel: CharacterViewModel
+    characterViewModel: CharacterViewModel,
+    campaignId: Long
 ) {
     // Render the content for the Secondary Characters sub-screen
     Text(

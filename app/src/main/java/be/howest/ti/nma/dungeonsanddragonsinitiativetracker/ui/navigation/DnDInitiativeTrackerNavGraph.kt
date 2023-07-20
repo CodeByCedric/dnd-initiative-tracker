@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignScreen
@@ -31,12 +32,12 @@ fun DnDInitiativeTrackerNavHost(
     ) {
         composable(route = CampaignScreenDestination.route) {
             CampaignScreen(
-                navigateToCharacterScreen = {
-                    navController.navigate(CharacterScreenDestination.route)
+                navigateToCharacterScreen = { campaignId ->
+                    navController.navigate("${CharacterScreenDestination.route}?campaignId=$campaignId")
                 },
                 navigateToAddCampaignScreen = {
                     navController.navigate(AddCampaignScreenDestination.route)
-                }
+                },
             )
         }
         composable(route = AddCampaignScreenDestination.route) {
@@ -45,8 +46,13 @@ fun DnDInitiativeTrackerNavHost(
                 onNavigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = CharacterScreenDestination.route) {
+        composable(
+            route = "${CharacterScreenDestination.route}?campaignId={campaignId}",
+            arguments = listOf(navArgument("campaignId") { defaultValue = -1L })
+        ) { backStackEntry ->
+            val campaignId = backStackEntry.arguments?.getLong("campaignId") ?: -1L
             CharacterScreen(
+                campaignId = campaignId,
                 navigateToEncounterBuilderScreen = {
                     navController.navigate(EncounterBuilderScreenDestination.route)
                 },

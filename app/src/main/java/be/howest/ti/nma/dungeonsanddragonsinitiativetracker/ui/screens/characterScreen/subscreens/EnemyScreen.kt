@@ -19,7 +19,8 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.character
 @Composable
 fun EnemiesScreen(
     modifier: Modifier = Modifier,
-    characterViewModel: CharacterViewModel
+    characterViewModel: CharacterViewModel,
+    campaignId: Long
 ) {
     val characterUiState by characterViewModel.characterUiState.collectAsState()
 

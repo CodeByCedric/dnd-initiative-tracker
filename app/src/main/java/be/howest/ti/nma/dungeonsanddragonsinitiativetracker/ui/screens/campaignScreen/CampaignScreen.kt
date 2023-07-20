@@ -83,11 +83,11 @@ object CampaignScreenDestination : NavigationDestination {
 
 @Composable
 fun CampaignScreen(
-    navigateToCharacterScreen: () -> Unit,
+    navigateToCharacterScreen: (Long) -> Unit,
     navigateToAddCampaignScreen: () -> Unit,
     canNavigateBack: Boolean = false,
     campaignViewModel: CampaignViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val campaignUiState by campaignViewModel.campaignUiState.collectAsState()
 
@@ -129,7 +129,7 @@ fun CampaignScreen(
 
 @Composable
 fun CampaignBody(
-    navigateToCharacterScreen: () -> Unit,
+    navigateToCharacterScreen: (Long) -> Unit,
     campaignViewModel: CampaignViewModel,
     campaignUiState: CampaignUiState,
     modifier: Modifier
@@ -145,7 +145,9 @@ fun CampaignBody(
             CampaignCard(
                 campaign = campaign,
                 isSelected = campaign == selectedCampaign,
-                onSelect = { selectedCampaign = if (it == selectedCampaign) null else it },
+                onSelect = {
+                    selectedCampaign = if (it == selectedCampaign) null else it
+                },
                 campaignViewModel = campaignViewModel
             )
         }
@@ -160,11 +162,13 @@ fun CampaignBody(
 
 @Composable
 private fun NavigateToCharacterScreenButton(
-    navigateToCharacterScreen: () -> Unit,
+    navigateToCharacterScreen: (Long) -> Unit,
     selectedCampaign: Campaign?
 ) {
     Button(
-        onClick = { navigateToCharacterScreen() },
+        onClick = {
+            selectedCampaign?.let { navigateToCharacterScreen(it.campaignId) }
+        },
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
@@ -196,8 +200,7 @@ fun CampaignCard(
 
     var isCampaignCardExpanded by remember { mutableStateOf(false) }
     val participants = campaignViewModel.getCampaignParticipantsWithDetails(
-        campaign
-            .campaignId
+        campaign.campaignId
     ).collectAsState(initial = emptyList()).value
 
     Card(

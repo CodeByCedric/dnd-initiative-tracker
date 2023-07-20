@@ -46,6 +46,7 @@ enum class CharacterTab {
 
 @Composable
 fun CharacterScreen(
+    campaignId: Long,
     characterViewModel: CharacterViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToEncounterBuilderScreen: () -> Unit = {},
     navigateToCreateCharacterScreen: () -> Unit,
@@ -73,6 +74,7 @@ fun CharacterScreen(
         },
         content = { innerPadding ->
             CharacterScreenBody(
+                campaignId = campaignId,
                 characterViewModel = characterViewModel,
                 navigateToEncounterBuilderScreen = navigateToEncounterBuilderScreen,
                 navigateToCreatePrimaryCharacterScreen = navigateToCreateCharacterScreen,
@@ -104,7 +106,8 @@ fun CharacterScreenBody(
     selectedTab: CharacterTab,
     modifier: Modifier,
     characterViewModel: CharacterViewModel,
-    navigateToCreatePrimaryCharacterScreen: () -> Unit
+    navigateToCreatePrimaryCharacterScreen: () -> Unit,
+    campaignId: Long
 ) {
     LazyColumn(modifier = modifier) {
         item {
@@ -120,6 +123,7 @@ fun CharacterScreenBody(
             when (selectedTab) {
                 CharacterTab.Characters -> {
                     PrimaryCharacters(
+                        campaignId = campaignId,
                         characterViewModel = characterViewModel,
                         modifier = modifier
                     )
@@ -127,6 +131,7 @@ fun CharacterScreenBody(
 
                 CharacterTab.SecondaryCharacters -> {
                     SecondaryCharacters(
+                        campaignId = campaignId,
                         characterViewModel = characterViewModel,
                         modifier = modifier
                     )
@@ -134,6 +139,7 @@ fun CharacterScreenBody(
 
                 CharacterTab.Enemies -> {
                     EnemiesScreen(
+                        campaignId = campaignId,
                         characterViewModel = characterViewModel,
                         modifier = modifier
                     )
