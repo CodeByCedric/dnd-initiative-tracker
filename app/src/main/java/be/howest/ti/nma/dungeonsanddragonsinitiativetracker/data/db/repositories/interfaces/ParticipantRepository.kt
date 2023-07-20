@@ -10,6 +10,11 @@ interface ParticipantRepository {
     suspend fun deleteParticipant(participant: Participant)
     fun getAllParticipants(): Flow<List<Participant>>
     fun getParticipantById(participantId: Long): Flow<Participant>
+
+    fun getParticipantByName(participantName: String): Flow<Participant>
+
+    suspend fun getParticipantIdByName(participantName: String): Long
     fun getParticipantsByIds(participantsIds: List<Long>): Flow<List<Participant>>
+
 
 }

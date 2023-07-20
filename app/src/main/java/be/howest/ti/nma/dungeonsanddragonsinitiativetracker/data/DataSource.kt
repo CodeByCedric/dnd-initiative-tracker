@@ -3,6 +3,7 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.PlayerCharacter
 
 object DataSource {
     val campaigns = listOf(
@@ -34,4 +35,50 @@ object DataSource {
             email = "cedric@cedric.be"
         ),
     )
+
+    val playerCharacters = listOf(
+        PlayerCharacter(
+            name = "Ibun",
+            armorClass = 16,
+            initiativeModifier = -2,
+            isPrimaryCharacter = true,
+            isSecondaryCharacter = false,
+        ),
+        PlayerCharacter(
+            name = "Rhys",
+            armorClass = 18,
+            initiativeModifier = 1,
+            isPrimaryCharacter = true,
+            isSecondaryCharacter = false,
+        ),
+        PlayerCharacter(
+            name = "Tinuviel",
+            armorClass = 14,
+            initiativeModifier = 2,
+            isPrimaryCharacter = true,
+            isSecondaryCharacter = false,
+        ),
+        PlayerCharacter(
+            name = "Stool",
+            armorClass = 12,
+            initiativeModifier = 0,
+            isPrimaryCharacter = false,
+            isSecondaryCharacter = true,
+        ),
+        PlayerCharacter(
+            name = "Sushi",
+            armorClass = 14,
+            initiativeModifier = 1,
+            isPrimaryCharacter = false,
+            isSecondaryCharacter = true,
+        ),
+        PlayerCharacter(
+            name = "Hemmeth",
+            armorClass = 16,
+            initiativeModifier = 0,
+            isPrimaryCharacter = false,
+            isSecondaryCharacter = true,
+        ),
+
+        )
 }

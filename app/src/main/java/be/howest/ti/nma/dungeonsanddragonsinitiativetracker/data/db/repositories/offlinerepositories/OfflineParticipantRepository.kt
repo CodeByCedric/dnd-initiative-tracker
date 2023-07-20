@@ -24,7 +24,15 @@ class OfflineParticipantRepository(private val participantDao: ParticipantDao) :
     }
 
     override fun getParticipantById(participantId: Long): Flow<Participant> {
-        return participantDao.getParticipant(participantId)
+        return participantDao.getParticipantById(participantId)
+    }
+
+    override fun getParticipantByName(participantName: String): Flow<Participant> {
+        return participantDao.getParticipantByName(participantName)
+    }
+
+    override suspend fun getParticipantIdByName(participantName: String): Long {
+        return participantDao.getParticipantIdByName(participantName)
     }
 
     override fun getParticipantsByIds(participantsIds: List<Long>): Flow<List<Participant>> {

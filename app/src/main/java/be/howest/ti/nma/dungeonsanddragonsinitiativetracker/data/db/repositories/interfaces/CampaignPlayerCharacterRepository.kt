@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface CampaignPlayerCharacterRepository {
     suspend fun insertCampaignPlayerCharacter(campaignPlayerCharacter: CampaignPlayerCharacter): Long
+    suspend fun insertAllCampaignPlayerCharacters(
+        campaignPlayerCharacters:
+        List<CampaignPlayerCharacter>
+    ): List<Long>
 
     fun getCampaignPrimaryCharactersWithDetails(campaignId: Long):
             Flow<List<CampaignPlayerCharacterDetails>>

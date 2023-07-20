@@ -4,4 +4,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Pla
 
 interface PlayerCharacterRepository {
     suspend fun insertPlayerCharacter(playerCharacter: PlayerCharacter): Long
+    suspend fun insertAllPlayerCharacters(playerCharacters: List<PlayerCharacter>): List<Long>
+
+    suspend fun getPlayerCharacterIdByName(playerCharacterName: String): Long
 }

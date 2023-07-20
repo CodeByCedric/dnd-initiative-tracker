@@ -13,6 +13,9 @@ interface CampaignPlayerCharacterDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(campaignPlayerCharacter: CampaignPlayerCharacter): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(campaignPlayerCharacters: List<CampaignPlayerCharacter>): List<Long>
+
     @Query(
         "SELECT * FROM campaign_player_characters as cpc INNER JOIN player_characters as pc on" +
                 " cpc.playerCharacterId = pc.playerCharacterId WHERE cpc.campaignId = :campaignId " +

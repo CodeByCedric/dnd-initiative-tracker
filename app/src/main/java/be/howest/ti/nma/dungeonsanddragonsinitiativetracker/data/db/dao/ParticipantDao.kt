@@ -23,7 +23,13 @@ interface ParticipantDao {
     fun getAllParticipants(): Flow<List<Participant>>
 
     @Query("SELECT * FROM participants WHERE participantId = :participantId")
-    fun getParticipant(participantId: Long): Flow<Participant>
+    fun getParticipantById(participantId: Long): Flow<Participant>
+
+    @Query("SELECT * FROM participants WHERE participantId = :participantName")
+    fun getParticipantByName(participantName: String): Flow<Participant>
+
+    @Query("SELECT participantId FROM participants WHERE participantId = :participantName")
+    suspend fun getParticipantIdByName(participantName: String): Long
 
     @Query("SELECT * FROM participants WHERE participantId IN (:participantIds)")
     fun getParticipantsByIds(participantIds: List<Long>): Flow<List<Participant>>

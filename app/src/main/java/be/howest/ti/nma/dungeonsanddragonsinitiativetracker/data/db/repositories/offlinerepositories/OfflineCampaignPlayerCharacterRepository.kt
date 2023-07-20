@@ -13,6 +13,10 @@ class OfflineCampaignPlayerCharacterRepository(
         return campaignPlayerCharacterDao.insert(campaignPlayerCharacter)
     }
 
+    override suspend fun insertAllCampaignPlayerCharacters(campaignPlayerCharacters: List<CampaignPlayerCharacter>): List<Long> {
+        return campaignPlayerCharacterDao.insertAll(campaignPlayerCharacters)
+    }
+
     override fun getCampaignPrimaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetails>> {
         return campaignPlayerCharacterDao.getCampaignPrimaryCharactersWithDetails(campaignId)
     }

@@ -10,4 +10,13 @@ class OfflinePlayerCharacterRepository(
     override suspend fun insertPlayerCharacter(playerCharacter: PlayerCharacter): Long {
         return playerCharacterDao.insert(playerCharacter)
     }
+
+    override suspend fun insertAllPlayerCharacters(playerCharacters: List<PlayerCharacter>):
+            List<Long> {
+        return playerCharacterDao.insertAll(playerCharacters)
+    }
+
+    override suspend fun getPlayerCharacterIdByName(playerCharacterName: String): Long {
+        return playerCharacterDao.getPlayerCharacterIdByName(playerCharacterName)
+    }
 }

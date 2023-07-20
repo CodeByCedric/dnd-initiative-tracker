@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.DataSource
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.DnDInitiativeTrackerDatabase
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -27,14 +28,34 @@ class RefreshDatabaseWorker(
             val database = DnDInitiativeTrackerDatabase.getDatabase(applicationContext)
             val campaigns = DataSource.campaigns
             val participants = DataSource.participants
+            val playerCharacters = DataSource.playerCharacters
 
+            //Insert Campaigns
             val listOfCampaignIds = database.CampaignDao().insertAll(campaigns)
+            //Insert Participants
             val listOfParticipantIds = database.ParticipantDao().insertAll(participants)
+
+            //InsertCampaignParticipants
             val campaignParticipants = createCampaignParticipants(
                 listOfCampaignIds,
                 listOfParticipantIds
             )
             database.CampaignParticipantDao().insertAll(campaignParticipants)
+
+            //Insert PlayerCharacters
+            val listOfPlayerCharacterIds = database.PlayerCharacterDao().insertAll(playerCharacters)
+
+            //InsertCampaignPlayerCharacter
+            listOfCampaignIds.forEach { campaignId ->
+                listOfPlayerCharacterIds.forEach { playerCharacterId ->
+                    database.CampaignPlayerCharacterDao().insert(
+                        CampaignPlayerCharacter(
+                            campaignId = campaignId,
+                            playerCharacterId = playerCharacterId
+                        )
+                    )
+                }
+            }
 
             Result.success()
         } catch (ex: Exception) {
@@ -47,11 +68,11 @@ class RefreshDatabaseWorker(
         }
     }
 
+
     private fun createCampaignParticipants(
         listOfCampaignIds: List<Long>,
         listOfParticipantIds: List<Long>
-    )
-            : MutableList<CampaignParticipant> {
+    ): MutableList<CampaignParticipant> {
         val campaignParticipants = mutableListOf<CampaignParticipant>()
         listOfCampaignIds.forEach { campaignId ->
             listOfParticipantIds.forEach { participantId ->
