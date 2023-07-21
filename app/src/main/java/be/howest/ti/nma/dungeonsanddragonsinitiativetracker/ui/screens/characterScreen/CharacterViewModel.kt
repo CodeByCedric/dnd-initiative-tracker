@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 
 class CharacterViewModel(
     private val playerCharacterRepository: PlayerCharacterRepository,
@@ -28,6 +29,43 @@ class CharacterViewModel(
 
             )
     }
+
+    fun rollInitiative(initiativeModifier: Int): Int {
+        return (1..20).random() + initiativeModifier
+    }
+
+    fun selectCharacter(character: CampaignPlayerCharacterDetail) {
+        val currentSelectedCharacters = _characterUiState.value.selectedCharacters.toMutableList()
+        currentSelectedCharacters.add(character)
+        _characterUiState.value =
+            _characterUiState.value.copy(selectedCharacters = currentSelectedCharacters)
+    }
+
+    fun deselectCharacter(character: CampaignPlayerCharacterDetail) {
+        val currentSelectedCharacters = _characterUiState.value.selectedCharacters.toMutableList()
+        currentSelectedCharacters.remove(character)
+        _characterUiState.value =
+            _characterUiState.value.copy(selectedCharacters = currentSelectedCharacters)
+    }
+
+    fun updateInitiativeForPrimaryCharacter(
+        playerCharacter: CampaignPlayerCharacterDetail,
+        initiative: Int
+    ) {
+        val updatedPrimaryCharacters = _characterUiState.value.primaryCharacters.map { characters
+            ->
+            characters.map { character ->
+                if (character == playerCharacter) {
+                    character.copy(initiative = initiative)
+                } else {
+                    character
+                }
+            }
+        }
+        _characterUiState.value =
+            _characterUiState.value.copy(primaryCharacters = updatedPrimaryCharacters)
+    }
+
 
     private fun getPrimaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterRepository.getCampaignPrimaryCharactersWithDetails(campaignId)

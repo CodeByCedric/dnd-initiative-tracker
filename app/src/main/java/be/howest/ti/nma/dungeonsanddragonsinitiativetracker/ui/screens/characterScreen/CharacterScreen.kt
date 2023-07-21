@@ -67,7 +67,7 @@ fun CharacterScreen(
         topBar = {
             DnDInitiativeTrackerTopAppBar(
                 title = stringResource(id = CharacterScreenDestination.titleRes),
-                canNavigateBack = true,
+                canNavigateBack = canNavigateBack,
                 navigateUp = onNavigateUp
 
             )
