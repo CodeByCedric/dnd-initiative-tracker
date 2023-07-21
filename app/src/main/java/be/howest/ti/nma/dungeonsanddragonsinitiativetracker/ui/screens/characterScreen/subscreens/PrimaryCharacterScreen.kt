@@ -44,8 +44,6 @@ fun PrimaryCharacters(
             primaryCharacter,
             characterViewModel,
             characterUiState,
-            onInitiativeChange = { initiative -> /* Handle initiative change here */ },
-            onInitiativeRoll = { /* Handle initiative roll here */ },
             isSelected = primaryCharacter in selectedCharacters
         ) { clickedCharacter ->
             if (selectedCharacters.contains(clickedCharacter)) {
@@ -62,8 +60,6 @@ fun CharacterCard(
     primaryCharacter: CampaignPlayerCharacterDetail,
     characterViewModel: CharacterViewModel,
     characterUiState: CharacterUiState,
-    onInitiativeChange: (Int) -> Unit,
-    onInitiativeRoll: () -> Unit,
     isSelected: Boolean,
     onCardClick: (CampaignPlayerCharacterDetail) -> Unit
 ) {
@@ -100,6 +96,7 @@ fun CharacterCard(
                         }
                     }"
                 )
+                //Textfield for manuel initiative input
                 BasicTextField(
                     value = if (primaryCharacter.initiative == null) {
                         ""
