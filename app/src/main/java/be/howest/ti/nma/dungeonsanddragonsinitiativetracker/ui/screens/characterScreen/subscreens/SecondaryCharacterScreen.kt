@@ -1,11 +1,10 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterCard
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
 
 @Composable
@@ -14,11 +13,23 @@ fun SecondaryCharacters(
     characterViewModel: CharacterViewModel,
     campaignId: Long
 ) {
-    // Render the content for the Secondary Characters sub-screen
-    Text(
-        text = "Secondary Characters",
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    )
+    val characterUiState by characterViewModel.characterUiState.collectAsState()
+    val secondaryCharacters by characterUiState.secondaryCharacters.collectAsState(initial = emptyList())
+
+    val selectedCharacters = characterUiState.selectedCharacters
+
+    secondaryCharacters.forEach { secondaryCharacter ->
+        CharacterCard(
+            secondaryCharacter,
+            characterViewModel,
+            characterUiState,
+            isSelected = secondaryCharacter in selectedCharacters
+        ) { clickedCharacter ->
+            if (selectedCharacters.contains(clickedCharacter)) {
+                characterViewModel.deselectCharacter(clickedCharacter)
+            } else {
+                characterViewModel.selectCharacter(clickedCharacter)
+            }
+        }
+    }
 }

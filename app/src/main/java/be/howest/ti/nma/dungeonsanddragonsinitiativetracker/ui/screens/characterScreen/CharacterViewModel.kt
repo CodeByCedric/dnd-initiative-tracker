@@ -48,11 +48,19 @@ class CharacterViewModel(
             _characterUiState.value.copy(selectedCharacters = currentSelectedCharacters)
     }
 
-    fun updateInitiativeForPrimaryCharacter(
+    fun updateInitiativeForCharacters(
         playerCharacter: CampaignPlayerCharacterDetail,
         initiative: Int
     ) {
-        val updatedPrimaryCharacters = _characterUiState.value.primaryCharacters.map { characters
+        val isPrimaryCharacter = playerCharacter.isPrimaryCharacter
+
+        val characterFlow = if (isPrimaryCharacter) {
+            _characterUiState.value.primaryCharacters
+        } else {
+            _characterUiState.value.secondaryCharacters
+        }
+
+        val updatedCharacters = characterFlow.map { characters
             ->
             characters.map { character ->
                 if (character == playerCharacter) {
@@ -62,8 +70,16 @@ class CharacterViewModel(
                 }
             }
         }
-        _characterUiState.value =
-            _characterUiState.value.copy(primaryCharacters = updatedPrimaryCharacters)
+
+        if (isPrimaryCharacter) {
+            _characterUiState.value =
+                _characterUiState.value.copy(primaryCharacters = updatedCharacters)
+        } else {
+            _characterUiState.value =
+                _characterUiState.value.copy(secondaryCharacters = updatedCharacters)
+        }
+
+
     }
 
 
