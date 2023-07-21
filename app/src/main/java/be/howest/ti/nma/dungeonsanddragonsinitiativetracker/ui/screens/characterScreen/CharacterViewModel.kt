@@ -5,7 +5,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Ene
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignPlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.PlayerCharacterRepository
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetails
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,20 +19,21 @@ class CharacterViewModel(
     private val _characterUiState = MutableStateFlow(CharacterUiState())
     val characterUiState: StateFlow<CharacterUiState> = _characterUiState.asStateFlow()
 
-    init {
-        _characterUiState.value = CharacterUiState(
-//            primaryCharacters = getPrimaryCharacters(),
-//            secondaryCharacters = getSecondaryCharacters(),
-            enemies = getEnemies(),
+//    init {
+//        _characterUiState.value = CharacterUiState(
+//            primaryCharacters = getPrimaryCharacters(campaignId),
+//            secondaryCharacters = getSecondaryCharacters(campaignId),
+//            enemies = getEnemies(),
+//
+//            )
+//    }
 
-            )
-    }
 
-    private fun getPrimaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetails>> {
+    private fun getPrimaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterRepository.getCampaignPrimaryCharactersWithDetails(campaignId)
     }
 
-    private fun getSecondaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetails>> {
+    private fun getSecondaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterRepository.getCampaignSecondaryCharactersWithDetails(campaignId)
     }
 

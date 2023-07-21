@@ -13,11 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.theme.DungeonsAndDragonsInitiativeTrackerTheme
 
 
 object EncounterBuilderScreenDestination : NavigationDestination {
@@ -31,7 +29,8 @@ fun EncounterBuilderScreen(
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    campaignId: Long
 ) {
     Scaffold(
         topBar = {
@@ -83,17 +82,6 @@ private fun NavigateToInitiativeScreenButton(navigateToInitiativeScreen: () -> U
         Text(
             text = stringResource(R.string.to_initiative_screen_button),
             textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Preview
-@Composable
-fun EncounterBuilderPreviewScreen() {
-    DungeonsAndDragonsInitiativeTrackerTheme() {
-        EncounterBuilderScreen(
-            navigateBack = { },
-            onNavigateUp = { }
         )
     }
 }

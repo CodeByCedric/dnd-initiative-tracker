@@ -3,7 +3,7 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositorie
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.CampaignPlayerCharacterDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignPlayerCharacterRepository
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetails
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import kotlinx.coroutines.flow.Flow
 
 class OfflineCampaignPlayerCharacterRepository(
@@ -17,11 +17,11 @@ class OfflineCampaignPlayerCharacterRepository(
         return campaignPlayerCharacterDao.insertAll(campaignPlayerCharacters)
     }
 
-    override fun getCampaignPrimaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetails>> {
+    override fun getCampaignPrimaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterDao.getCampaignPrimaryCharactersWithDetails(campaignId)
     }
 
-    override fun getCampaignSecondaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetails>> {
+    override fun getCampaignSecondaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterDao.getCampaignSecondaryCharactersWithDetails(campaignId)
     }
 }

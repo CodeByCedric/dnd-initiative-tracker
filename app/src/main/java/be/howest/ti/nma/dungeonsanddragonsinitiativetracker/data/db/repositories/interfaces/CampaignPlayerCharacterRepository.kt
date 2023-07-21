@@ -1,7 +1,7 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces
 
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetails
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import kotlinx.coroutines.flow.Flow
 
 interface CampaignPlayerCharacterRepository {
@@ -12,10 +12,10 @@ interface CampaignPlayerCharacterRepository {
     ): List<Long>
 
     fun getCampaignPrimaryCharactersWithDetails(campaignId: Long):
-            Flow<List<CampaignPlayerCharacterDetails>>
+            Flow<List<CampaignPlayerCharacterDetail>>
 
     fun getCampaignSecondaryCharactersWithDetails(campaignId: Long):
-            Flow<List<CampaignPlayerCharacterDetails>>
+            Flow<List<CampaignPlayerCharacterDetail>>
 
 
 }

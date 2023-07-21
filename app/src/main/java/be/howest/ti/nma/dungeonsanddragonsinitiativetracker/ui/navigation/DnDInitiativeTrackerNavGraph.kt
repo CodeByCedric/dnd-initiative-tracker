@@ -12,7 +12,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignS
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreenDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createPrimaryCharacterScreen.CreatePrimaryCharacterScreenDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createCharacterScreen.CreateCharacterScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.encounterBuilderScreen.EncounterBuilderScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.encounterBuilderScreen.EncounterBuilderScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.initiativeScreen.InitiativeScreen
@@ -40,7 +40,9 @@ fun DnDInitiativeTrackerNavHost(
                 },
             )
         }
-        composable(route = AddCampaignScreenDestination.route) {
+        composable(
+            route = AddCampaignScreenDestination.route
+        ) {
             AddCampaignScreen(
                 navigateBack = { navController.navigateUp() },
                 onNavigateUp = { navController.navigateUp() }
@@ -54,16 +56,27 @@ fun DnDInitiativeTrackerNavHost(
             CharacterScreen(
                 campaignId = campaignId,
                 navigateToEncounterBuilderScreen = {
-                    navController.navigate(EncounterBuilderScreenDestination.route)
+                    navController.navigate(
+                        route = "${EncounterBuilderScreenDestination.route}?campaignId=$campaignId"
+                    )
                 },
-                navigateToCreateCharacterScreen = { navController.navigate(CreatePrimaryCharacterScreenDestination.route) },
+                navigateToCreateCharacterScreen = {
+                    navController.navigate(
+                        route = "${CreateCharacterScreenDestination.route}?campaignId=$campaignId",
+                    )
+                },
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
                 navController = navController
             )
         }
-        composable(route = EncounterBuilderScreenDestination.route) {
+        composable(
+            route = "${EncounterBuilderScreenDestination.route}?campaignId={campaignId}",
+            arguments = listOf(navArgument("campaignId") { defaultValue = -1L })
+        ) { backStackEntry ->
+            val campaignId = backStackEntry.arguments?.getLong("campaignId") ?: -1L
             EncounterBuilderScreen(
+                campaignId = campaignId,
                 navigateToInitiativeScreen = {
                     navController.navigate(
                         InitiativeScreenDestination

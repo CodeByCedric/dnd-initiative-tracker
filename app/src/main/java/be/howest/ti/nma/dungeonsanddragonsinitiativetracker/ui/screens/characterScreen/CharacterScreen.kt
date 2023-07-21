@@ -76,7 +76,6 @@ fun CharacterScreen(
             CharacterScreenBody(
                 campaignId = campaignId,
                 characterViewModel = characterViewModel,
-                navigateToEncounterBuilderScreen = navigateToEncounterBuilderScreen,
                 navigateToCreatePrimaryCharacterScreen = navigateToCreateCharacterScreen,
                 selectedTab = selectedTab,
                 modifier = modifier
@@ -102,7 +101,6 @@ fun CharacterScreen(
 
 @Composable
 fun CharacterScreenBody(
-    navigateToEncounterBuilderScreen: () -> Unit,
     selectedTab: CharacterTab,
     modifier: Modifier,
     characterViewModel: CharacterViewModel,
