@@ -72,7 +72,6 @@ import java.util.Locale
 Add more details to the expanded card, viz. the email addresses of the participants
 Add functionality to edit campaign participants from the card
 Add functionality to add new participants to a campaign from the card
-Move NavigateToCharacterScreenButton to bottom bar in scaffold
 */
 
 object CampaignScreenDestination : NavigationDestination {
@@ -497,6 +496,12 @@ fun CampaignScreen(
                 )
             }
         },
+        bottomBar = {
+            NavigateToCharacterScreenButton(
+                navigateToCharacterScreen = navigateToCharacterScreen,
+                selectedCampaignId = campaignUiState.selectedCampaignId
+            )
+        }
     ) { innerPadding ->
         CampaignBody(
             navigateToCharacterScreen = navigateToCharacterScreen,
@@ -518,7 +523,6 @@ fun CampaignBody(
     modifier: Modifier
 ) {
     val campaigns by campaignUiState.campaigns.collectAsState(initial = emptyList())
-    var selectedCampaign by remember { mutableStateOf<Campaign?>(null) }
 
     LazyColumn(
         modifier = modifier
@@ -526,17 +530,9 @@ fun CampaignBody(
         items(campaigns) { campaign ->
             CampaignCard(
                 campaign = campaign,
-                isSelected = campaign == selectedCampaign,
-                onSelect = {
-                    selectedCampaign = if (it == selectedCampaign) null else it
-                },
+                isSelected = campaign.campaignId == campaignUiState.selectedCampaignId,
+                onSelect = { campaignViewModel.updateSelectedCampaignId(campaign.campaignId) },
                 campaignViewModel = campaignViewModel
-            )
-        }
-        item {
-            NavigateToCharacterScreenButton(
-                navigateToCharacterScreen,
-                selectedCampaign
             )
         }
     }
@@ -545,19 +541,19 @@ fun CampaignBody(
 @Composable
 private fun NavigateToCharacterScreenButton(
     navigateToCharacterScreen: (Long) -> Unit,
-    selectedCampaign: Campaign?
+    selectedCampaignId: Long
 ) {
     Button(
         onClick = {
-            selectedCampaign?.let { navigateToCharacterScreen(it.campaignId) }
+            navigateToCharacterScreen(selectedCampaignId)
         },
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.padding_small)),
-        enabled = selectedCampaign != null
+        enabled = selectedCampaignId != -1L
     ) {
-        if (selectedCampaign != null) {
+        if (selectedCampaignId != -1L) {
             Text(
                 text = stringResource(R.string.to_character_overview_screen_button),
                 textAlign = TextAlign.Center

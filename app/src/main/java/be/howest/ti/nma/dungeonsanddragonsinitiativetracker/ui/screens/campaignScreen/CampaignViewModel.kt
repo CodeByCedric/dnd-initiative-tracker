@@ -45,6 +45,11 @@ class CampaignViewModel(
         )
     }
 
+    fun updateSelectedCampaignId(campaignId: Long) {
+        val currentUiState = campaignUiState.value
+        _campaignUiState.value = currentUiState.copy(selectedCampaignId = campaignId)
+    }
+
     private fun getCurrentCampaigns(): Flow<List<Campaign>> {
         return campaignRepository.getAllCampaigns()
     }
@@ -75,5 +80,6 @@ class CampaignViewModel(
             )
         }
     }
+
 
 }
