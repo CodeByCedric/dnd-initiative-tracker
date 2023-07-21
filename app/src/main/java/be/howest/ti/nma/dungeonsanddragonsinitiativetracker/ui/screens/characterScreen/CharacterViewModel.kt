@@ -19,15 +19,15 @@ class CharacterViewModel(
     private val _characterUiState = MutableStateFlow(CharacterUiState())
     val characterUiState: StateFlow<CharacterUiState> = _characterUiState.asStateFlow()
 
-//    init {
-//        _characterUiState.value = CharacterUiState(
-//            primaryCharacters = getPrimaryCharacters(campaignId),
-//            secondaryCharacters = getSecondaryCharacters(campaignId),
-//            enemies = getEnemies(),
-//
-//            )
-//    }
 
+    init {
+        _characterUiState.value = CharacterUiState(
+            primaryCharacters = getPrimaryCharacters(1L),
+            secondaryCharacters = getSecondaryCharacters(1L),
+            enemies = getEnemies(),
+
+            )
+    }
 
     private fun getPrimaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterRepository.getCampaignPrimaryCharactersWithDetails(campaignId)
