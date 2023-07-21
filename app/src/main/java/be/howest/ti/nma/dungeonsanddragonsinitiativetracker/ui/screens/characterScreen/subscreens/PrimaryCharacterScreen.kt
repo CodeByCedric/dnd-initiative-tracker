@@ -28,10 +28,6 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterUiState
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
 
-/*TODO
-generated initiative values need to persist
-* */
-
 @Composable
 fun PrimaryCharacters(
     modifier: Modifier = Modifier,
