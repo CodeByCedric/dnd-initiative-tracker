@@ -7,27 +7,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
 
 @Composable
 fun EnemiesScreen(
     modifier: Modifier = Modifier,
     characterViewModel: CharacterViewModel,
-    campaignId: Long
+    campaignId: Long,
+    enemies: List<Enemy>,
+    selectedCharacters: MutableList<CampaignPlayerCharacterDetail>
 ) {
-    val characterUiState by characterViewModel.characterUiState.collectAsState()
 
-    characterUiState.enemies.collectAsState(initial = emptyList()).value.forEach { enemy: Enemy
-        ->
-        EnemyCard(enemy)
-    }
+    enemies.forEach { enemy: Enemy -> EnemyCard(enemy) }
 
 
 }

@@ -86,10 +86,7 @@ class CharacterViewModel(
             _characterUiState.value =
                 _characterUiState.value.copy(secondaryCharacters = updatedCharacters)
         }
-
-
     }
-
 
     private fun getPrimaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterRepository.getCampaignPrimaryCharactersWithDetails(campaignId)
@@ -98,7 +95,6 @@ class CharacterViewModel(
     private fun getSecondaryCharacters(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterRepository.getCampaignSecondaryCharactersWithDetails(campaignId)
     }
-
 
     private fun getEnemies(): Flow<List<Enemy>> {
         return enemyRepository.getAllEnemies()

@@ -22,6 +22,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
@@ -60,7 +63,7 @@ enum class CharacterTab {
 fun CharacterScreen(
     campaignId: Long,
     characterViewModel: CharacterViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateToEncounterBuilderScreen: () -> Unit = {},
+    navigateToSkirmishScreen: () -> Unit = {},
     navigateToCreateCharacterScreen: () -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
@@ -68,6 +71,11 @@ fun CharacterScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+//        Load primary and secondary characters on screen
+//    characterViewModel.loadCharacters(campaignId)
+
+    val characterUiState by characterViewModel.characterUiState.collectAsState()
+
     val tabItems = listOf(
         "Characters" to CharacterTab.Characters,
         "Secondary Characters" to CharacterTab.SecondaryCharacters,
@@ -75,8 +83,11 @@ fun CharacterScreen(
     )
     val (selectedTab, setSelectedTab) = remember { mutableStateOf(CharacterTab.Characters) }
 
-//    Load primary and secondary characters on screen
-//    characterViewModel.loadCharacters(campaignId)
+    val primaryCharacters by characterUiState.primaryCharacters.collectAsState(initial = emptyList())
+    val secondaryCharacters by characterUiState.secondaryCharacters.collectAsState(initial = emptyList())
+    val enemies by characterUiState.enemies.collectAsState(initial = emptyList())
+
+    val selectedCharacters = characterUiState.selectedCharacters
 
     Scaffold(
         topBar = {
@@ -93,6 +104,10 @@ fun CharacterScreen(
                 characterViewModel = characterViewModel,
                 navigateToCreatePrimaryCharacterScreen = navigateToCreateCharacterScreen,
                 selectedTab = selectedTab,
+                primaryCharacters = primaryCharacters,
+                secondaryCharacters = secondaryCharacters,
+                enemies = enemies,
+                selectedCharacters = selectedCharacters,
                 modifier = modifier
                     .padding(innerPadding)
                     .fillMaxSize()
@@ -106,7 +121,7 @@ fun CharacterScreen(
                     onTabSelected = setSelectedTab
                 )
                 NavigateToEncounterBuilderScreenButton(
-                    navigateToEncounterBuilderScreen = navigateToEncounterBuilderScreen
+                    navigateToEncounterBuilderScreen = navigateToSkirmishScreen
                 )
             }
 
@@ -120,7 +135,11 @@ fun CharacterScreenBody(
     modifier: Modifier,
     characterViewModel: CharacterViewModel,
     navigateToCreatePrimaryCharacterScreen: () -> Unit,
-    campaignId: Long
+    campaignId: Long,
+    primaryCharacters: List<CampaignPlayerCharacterDetail>,
+    secondaryCharacters: List<CampaignPlayerCharacterDetail>,
+    enemies: List<Enemy>,
+    selectedCharacters: MutableList<CampaignPlayerCharacterDetail>
 ) {
     LazyColumn(modifier = modifier) {
         item {
@@ -138,6 +157,8 @@ fun CharacterScreenBody(
                     PrimaryCharacters(
                         campaignId = campaignId,
                         characterViewModel = characterViewModel,
+                        primaryCharacters = primaryCharacters,
+                        selectedCharacters = selectedCharacters,
                         modifier = modifier
                     )
                 }
@@ -146,6 +167,8 @@ fun CharacterScreenBody(
                     SecondaryCharacters(
                         campaignId = campaignId,
                         characterViewModel = characterViewModel,
+                        secondaryCharacters = secondaryCharacters,
+                        selectedCharacters = selectedCharacters,
                         modifier = modifier
                     )
                 }
@@ -154,6 +177,8 @@ fun CharacterScreenBody(
                     EnemiesScreen(
                         campaignId = campaignId,
                         characterViewModel = characterViewModel,
+                        enemies = enemies,
+                        selectedCharacters = selectedCharacters,
                         modifier = modifier
                     )
                 }
@@ -219,7 +244,6 @@ fun CharacterTabBar(
 fun CharacterCard(
     playerCharacter: CampaignPlayerCharacterDetail,
     characterViewModel: CharacterViewModel,
-    characterUiState: CharacterUiState,
     isSelected: Boolean,
     onCardClick: (CampaignPlayerCharacterDetail) -> Unit
 ) {

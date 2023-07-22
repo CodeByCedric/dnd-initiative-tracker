@@ -13,10 +13,6 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignS
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createCharacterScreen.CreateCharacterScreenDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.encounterBuilderScreen.EncounterBuilderScreen
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.encounterBuilderScreen.EncounterBuilderScreenDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.initiativeScreen.InitiativeScreen
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.initiativeScreen.InitiativeScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen.SkirmishScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen.SkirmishScreenDestination
 
@@ -55,9 +51,9 @@ fun DnDInitiativeTrackerNavHost(
             val campaignId = backStackEntry.arguments?.getLong("campaignId") ?: -1L
             CharacterScreen(
                 campaignId = campaignId,
-                navigateToEncounterBuilderScreen = {
+                navigateToSkirmishScreen = {
                     navController.navigate(
-                        route = "${EncounterBuilderScreenDestination.route}?campaignId=$campaignId"
+                        route = "${SkirmishScreenDestination.route}?campaignId=$campaignId"
                     )
                 },
                 navigateToCreateCharacterScreen = {
@@ -70,41 +66,11 @@ fun DnDInitiativeTrackerNavHost(
                 navController = navController
             )
         }
-        composable(
-            route = "${EncounterBuilderScreenDestination.route}?campaignId={campaignId}",
-            arguments = listOf(navArgument("campaignId") { defaultValue = -1L })
-        ) { backStackEntry ->
-            val campaignId = backStackEntry.arguments?.getLong("campaignId") ?: -1L
-            EncounterBuilderScreen(
-                campaignId = campaignId,
-                navigateToInitiativeScreen = {
-                    navController.navigate(
-                        InitiativeScreenDestination
-                            .route
-                    )
-                },
-                navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() }
-            )
-        }
-        composable(route = InitiativeScreenDestination.route) {
-            InitiativeScreen(
-                navigateToSkirmishScreen = {
-                    navController.navigate(
-                        SkirmishScreenDestination
-                            .route
-                    )
-                },
-                navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() }
-            )
-        }
         composable(route = SkirmishScreenDestination.route) {
             SkirmishScreen(
                 navigateToCharacterScreen = {
                     navController.navigate(
-                        CharacterScreenDestination
-                            .route
+                        route = CharacterScreenDestination.route
                     )
                 },
                 navigateBack = { navController.popBackStack() },
