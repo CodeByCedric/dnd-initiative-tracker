@@ -72,7 +72,7 @@ fun CharacterScreen(
     navController: NavController
 ) {
 //        Load primary and secondary characters on screen
-//    characterViewModel.loadCharacters(campaignId)
+    characterViewModel.loadCharacters(campaignId)
 
     val characterUiState by characterViewModel.characterUiState.collectAsState()
 

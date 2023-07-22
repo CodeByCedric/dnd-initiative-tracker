@@ -21,14 +21,14 @@ class CharacterViewModel(
     val characterUiState: StateFlow<CharacterUiState> = _characterUiState.asStateFlow()
 
 
-    init {
-        _characterUiState.value = CharacterUiState(
-            primaryCharacters = getPrimaryCharacters(1L),
-            secondaryCharacters = getSecondaryCharacters(1L),
-            enemies = getEnemies(),
-
-            )
-    }
+//    init {
+//        _characterUiState.value = CharacterUiState(
+//            primaryCharacters = getPrimaryCharacters(1L),
+//            secondaryCharacters = getSecondaryCharacters(1L),
+//            enemies = getEnemies(),
+//
+//            )
+//    }
 
     fun loadCharacters(campaignId: Long) {
         _characterUiState.value = CharacterUiState(
