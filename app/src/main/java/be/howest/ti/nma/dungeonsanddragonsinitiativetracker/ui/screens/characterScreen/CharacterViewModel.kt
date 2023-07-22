@@ -30,6 +30,14 @@ class CharacterViewModel(
             )
     }
 
+    fun loadCharacters(campaignId: Long) {
+        _characterUiState.value = CharacterUiState(
+            primaryCharacters = getPrimaryCharacters(campaignId),
+            secondaryCharacters = getSecondaryCharacters(campaignId),
+            enemies = getEnemies()
+        )
+    }
+
     fun rollInitiative(initiativeModifier: Int): Int {
         return (1..20).random() + initiativeModifier
     }

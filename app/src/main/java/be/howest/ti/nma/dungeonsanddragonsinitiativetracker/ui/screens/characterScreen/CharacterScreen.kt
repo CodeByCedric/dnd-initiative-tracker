@@ -75,6 +75,9 @@ fun CharacterScreen(
     )
     val (selectedTab, setSelectedTab) = remember { mutableStateOf(CharacterTab.Characters) }
 
+//    Load primary and secondary characters on screen
+//    characterViewModel.loadCharacters(campaignId)
+
     Scaffold(
         topBar = {
             DnDInitiativeTrackerTopAppBar(
@@ -253,7 +256,7 @@ fun CharacterCard(
                         }
                     }"
                 )
-                //Textfield for manuel initiative input
+                //Textfield for manual initiative input
                 BasicTextField(
                     value = if (playerCharacter.initiative == null) {
                         ""
