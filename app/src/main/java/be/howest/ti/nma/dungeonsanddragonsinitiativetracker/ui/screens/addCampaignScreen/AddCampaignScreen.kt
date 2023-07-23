@@ -209,7 +209,7 @@ fun CampaignImage(
                     ).show()
                 }
             }
-
+            //ImagePicker Button
             Button(
                 onClick = {
                     val permission = android.Manifest.permission.READ_MEDIA_IMAGES
@@ -228,6 +228,7 @@ fun CampaignImage(
             ) {
                 Text(text = stringResource(id = R.string.pick_an_image))
             }
+            //Camera Button
             Button(
                 onClick = { /*TODO*/ },
                 enabled = false,

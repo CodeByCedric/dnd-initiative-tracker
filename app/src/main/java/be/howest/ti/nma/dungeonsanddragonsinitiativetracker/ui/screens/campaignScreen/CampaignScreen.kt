@@ -68,10 +68,10 @@ import kotlinx.coroutines.launch
 import java.sql.Date
 import java.util.Locale
 
-/*TODO
-Add more details to the expanded card, viz. the email addresses of the participants
-Add functionality to edit campaign participants from the card
-Add functionality to add new participants to a campaign from the card
+/*
+Todo: Add more details to the expanded card, viz. the email addresses of the participants
+Todo: Add functionality to edit campaign participants from the card
+Todo: Add functionality to add new participants to a campaign from the card
 */
 
 object CampaignScreenDestination : NavigationDestination {
@@ -79,6 +79,9 @@ object CampaignScreenDestination : NavigationDestination {
     override val titleRes: Int = R.string.campaign_overview_screen
 
 }
+
+//Started with refactoring of campaignscreen, but will postpone and implement crucial screens and
+// features first
 
 //@Composable
 //fun CampaignScreen(
@@ -879,9 +882,8 @@ private fun launchCalendarIntent(
     context: Context,
     selectedDateTimeCalendar: Calendar
 ) {
-    //todo work with package-manager and add to manifest
-    //todo return date and time from the calendar, and compare with date and time selected, if
-    // different, update dateTime for use in app, if null, don't set next session
+    // todo work with package-manager and add to manifest
+    // todo return date and time from the calendar, and compare with date and time selected, if different, update dateTime for use in app, if null, don't set next session
     val title = campaign.campaignName
     val begin = selectedDateTimeCalendar.timeInMillis
     val end = begin + 60 * 60 * 4000 // Add 4 hours
