@@ -41,44 +41,50 @@ object DataSource {
             name = "Ibun",
             armorClass = 16,
             initiativeModifier = -2,
-            isPrimaryCharacter = true,
-            isSecondaryCharacter = false,
+            isPrimaryCharacter = true
         ),
         PlayerCharacter(
             name = "Rhys",
             armorClass = 18,
             initiativeModifier = 1,
-            isPrimaryCharacter = true,
-            isSecondaryCharacter = false,
+            isPrimaryCharacter = true
         ),
         PlayerCharacter(
             name = "Tinuviel",
             armorClass = 14,
             initiativeModifier = 2,
-            isPrimaryCharacter = true,
-            isSecondaryCharacter = false,
+            isPrimaryCharacter = true
         ),
         PlayerCharacter(
             name = "Stool",
             armorClass = 12,
             initiativeModifier = 0,
-            isPrimaryCharacter = false,
             isSecondaryCharacter = true,
         ),
         PlayerCharacter(
             name = "Sushi",
             armorClass = 14,
             initiativeModifier = 1,
-            isPrimaryCharacter = false,
             isSecondaryCharacter = true,
         ),
         PlayerCharacter(
             name = "Hemmeth",
             armorClass = 16,
             initiativeModifier = 0,
-            isPrimaryCharacter = false,
             isSecondaryCharacter = true,
         ),
+        PlayerCharacter(
+            name = "Ann",
+            armorClass = 20,
+            initiativeModifier = +5,
+            isEnemy = true,
+        ),
+        PlayerCharacter(
+            name = "Koen",
+            armorClass = 20,
+            initiativeModifier = +5,
+            isEnemy = true,
+        ),
+    )
 
-        )
 }
