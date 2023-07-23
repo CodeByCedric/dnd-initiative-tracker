@@ -44,8 +44,6 @@ import kotlinx.coroutines.launch
 
 /*
 * TODO: spruce up the layout a bit
-*  refactor fun CharacterType() so it works with uistate instead
-*
 * */
 object CreateCharacterScreenDestination : NavigationDestination {
     override val route: String = "create_primary_character_screen"
