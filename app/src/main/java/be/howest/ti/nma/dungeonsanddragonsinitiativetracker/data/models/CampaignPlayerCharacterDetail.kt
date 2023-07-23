@@ -5,6 +5,7 @@ data class CampaignPlayerCharacterDetail(
     val armorClass: Int,
     val initiativeModifier: Int,
     var initiative: Int? = null,
-    val isPrimaryCharacter: Boolean,
-    val isSecondaryCharacter: Boolean,
+    val isPrimaryCharacter: Boolean = false,
+    val isSecondaryCharacter: Boolean = false,
+    val isEnemy: Boolean = false,
 )

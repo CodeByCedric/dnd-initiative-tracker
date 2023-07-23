@@ -28,7 +28,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeCon
         PlayerCharacter::class,
         CampaignPlayerCharacter::class,
         Enemy::class],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 @TypeConverters(

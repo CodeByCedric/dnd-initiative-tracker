@@ -44,7 +44,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Ene
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.EnemiesScreen
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.EnemyScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.PrimaryCharacters
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.SecondaryCharacters
 
@@ -177,7 +177,7 @@ fun CharacterScreenBody(
                 }
 
                 CharacterTab.Enemies -> {
-                    EnemiesScreen(
+                    EnemyScreen(
                         campaignId = campaignId,
                         characterViewModel = characterViewModel,
                         enemies = enemies,

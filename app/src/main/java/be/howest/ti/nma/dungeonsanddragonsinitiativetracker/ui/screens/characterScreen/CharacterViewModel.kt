@@ -105,4 +105,9 @@ class CharacterViewModel(
         return enemyRepository.getAllEnemies()
     }
 
+    fun updateSearchQuery(searchQuery: String) {
+        val currentUiState = characterUiState.value
+        _characterUiState.value = currentUiState.copy(searchQuery = searchQuery)
+    }
+
 }

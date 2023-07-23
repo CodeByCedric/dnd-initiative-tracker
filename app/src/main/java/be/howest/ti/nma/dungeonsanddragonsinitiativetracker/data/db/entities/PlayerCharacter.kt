@@ -11,6 +11,8 @@ data class PlayerCharacter(
     val name: String,
     val armorClass: Int,
     val initiativeModifier: Int,
-    val isPrimaryCharacter: Boolean,
-    val isSecondaryCharacter: Boolean,
-)
+    val isPrimaryCharacter: Boolean = false,
+    val isSecondaryCharacter: Boolean = false,
+    val isEnemy: Boolean = false,
+
+    )

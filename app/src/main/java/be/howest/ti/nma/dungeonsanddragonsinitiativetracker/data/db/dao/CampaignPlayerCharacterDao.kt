@@ -17,7 +17,8 @@ interface CampaignPlayerCharacterDao {
     suspend fun insertAll(campaignPlayerCharacters: List<CampaignPlayerCharacter>): List<Long>
 
     @Query(
-        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc.isSecondaryCharacter " +
+        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
+                ".isSecondaryCharacter, pc.isEnemy " +
                 "FROM campaign_player_characters as cpc " +
                 "INNER JOIN player_characters as pc on cpc.playerCharacterId = pc.playerCharacterId " +
                 "WHERE cpc.campaignId = :campaignId AND isPrimaryCharacter = 1"
@@ -25,7 +26,8 @@ interface CampaignPlayerCharacterDao {
     fun getCampaignPrimaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>>
 
     @Query(
-        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc.isSecondaryCharacter " +
+        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
+                ".isSecondaryCharacter, pc.isEnemy " +
                 "FROM campaign_player_characters as cpc " +
                 "INNER JOIN player_characters as pc on cpc.playerCharacterId = pc.playerCharacterId " +
                 "WHERE cpc.campaignId = :campaignId AND isSecondaryCharacter = 1"
