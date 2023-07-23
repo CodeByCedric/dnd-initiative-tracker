@@ -50,5 +50,16 @@
     <string name="enemies_subtitle">Enemies</string>
     <string name="search_enemies">Search for enemies</string>
     <string name="create_character">Create and add a new character</string>
-    <string name="create_primary_character_screen">Create a character</string>
+    <string name="create_primary_character_screen">Create a Character</string>
+    <string name="character_name_textfield">Character Name</string>
+    <string name="character_armorclass_textfield">Armor Class:</string>
+    <string name="character_initiative_textfield">Initiative Modifier:</string>
+    <string name="decrease_armor_class">Decrease the armor clas by one.</string>
+    <string name="increase_armor_class">Increase the armor class by one.</string>
+    <string name="decrease_initiative_modifier">Decreased the initiative modifier by one.</string>
+    <string name="increase_initiative_modifier">Increase the initiative modifier by one.</string>
+    <string name="primary_character">Primary Character</string>
+    <string name="secondary_character">Secondary Character</string>
+    <string name="enemy">Enemy</string>
+    <string name="character_type">"Character Type: "</string>
 </resources>

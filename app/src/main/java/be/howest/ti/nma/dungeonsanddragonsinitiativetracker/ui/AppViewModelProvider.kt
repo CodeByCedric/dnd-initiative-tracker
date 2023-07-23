@@ -8,6 +8,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTracker
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createCharacterScreen.CreateCharacterViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -26,12 +27,19 @@ object AppViewModelProvider {
                 dndInitiativeTrackerApplication().container.campaignParticipantRepository
             )
         }
-//        Initializer for the CharacterViewModel
+        //Initializer for the CharacterViewModel
         initializer {
             CharacterViewModel(
                 dndInitiativeTrackerApplication().container.playerCharacterRepository,
                 dndInitiativeTrackerApplication().container.campaignPlayerCharacterRepository,
                 dndInitiativeTrackerApplication().container.enemyRepository
+            )
+        }
+        //Initializer for the CreateCharacterViewModel
+        initializer {
+            CreateCharacterViewModel(
+                dndInitiativeTrackerApplication().container.playerCharacterRepository,
+                dndInitiativeTrackerApplication().container.campaignPlayerCharacterRepository
             )
         }
     }

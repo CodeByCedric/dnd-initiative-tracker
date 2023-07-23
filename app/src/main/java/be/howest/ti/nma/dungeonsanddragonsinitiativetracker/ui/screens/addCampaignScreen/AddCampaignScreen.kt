@@ -91,7 +91,6 @@ fun AddCampaignScreen(
         },
         bottomBar = {
             CreateCampaignButton(
-                addCampaignViewModel = addCampaignViewModel,
                 onSave = {
                     coroutineScope.launch {
                         addCampaignViewModel.save()
@@ -516,7 +515,6 @@ fun PlayerPillBox(
 
 @Composable
 private fun CreateCampaignButton(
-    addCampaignViewModel: AddCampaignViewModel,
     onSave: () -> Unit,
 ) {
     Button(
