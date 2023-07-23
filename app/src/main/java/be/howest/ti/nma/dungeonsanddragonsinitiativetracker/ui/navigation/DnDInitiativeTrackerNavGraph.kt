@@ -12,6 +12,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignS
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreenDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createCharacterScreen.CreateCharacterScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createCharacterScreen.CreateCharacterScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen.SkirmishScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen.SkirmishScreenDestination
@@ -63,7 +64,22 @@ fun DnDInitiativeTrackerNavHost(
                 },
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
-                navController = navController
+            )
+        }
+        composable(
+            route = "${CreateCharacterScreenDestination.route}?campaignId={campaignId}",
+            arguments = listOf(navArgument("campaignId") { defaultValue = -1L })
+        ) { backStackEntry ->
+            val campaignId = backStackEntry.arguments?.getLong("campaignId") ?: -1L
+            CreateCharacterScreen(
+                campaignId = campaignId,
+                navigateToCharacterScreen = {
+                    navController.navigate(
+                        route = "${CharacterScreenDestination.route}?campaignId=$campaignId"
+                    )
+                },
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() },
             )
         }
         composable(route = SkirmishScreenDestination.route) {

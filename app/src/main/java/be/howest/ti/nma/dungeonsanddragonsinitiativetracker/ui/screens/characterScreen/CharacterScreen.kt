@@ -15,8 +15,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -29,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -37,7 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
@@ -47,6 +52,15 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.Naviga
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.EnemyScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.PrimaryCharacters
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.SecondaryCharacters
+
+
+/*
+* Todo: when manually typing in the initiative, the cursor is placed before the previous number
+*  (e.g. typing in a 1 and a 5 results in 51)
+* Todo: when a card is selected and then the roll initiative button is pressed, the selection is
+*   removed
+* Todo: app crashes when clearing the initiative field
+* */
 
 object CharacterScreenDestination : NavigationDestination {
     override val route: String = "character_overview_screen"
@@ -69,7 +83,6 @@ fun CharacterScreen(
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
     modifier: Modifier = Modifier,
-    navController: NavController
 ) {
     val characterUiState by characterViewModel.characterUiState.collectAsState()
 
@@ -88,7 +101,8 @@ fun CharacterScreen(
 
     val primaryCharacters by characterUiState.primaryCharacters.collectAsState(initial = emptyList())
     val secondaryCharacters by characterUiState.secondaryCharacters.collectAsState(initial = emptyList())
-    val enemies by characterUiState.enemies.collectAsState(initial = emptyList())
+    val enemies by characterUiState.enemyCharacters.collectAsState(initial = emptyList())
+    val allEnemies by characterUiState.allEnemies.collectAsState(initial = emptyList())
 
     val selectedCharacters = characterUiState.selectedCharacters
 
@@ -105,16 +119,31 @@ fun CharacterScreen(
             CharacterScreenBody(
                 campaignId = campaignId,
                 characterViewModel = characterViewModel,
-                navigateToCreatePrimaryCharacterScreen = navigateToCreateCharacterScreen,
                 selectedTab = selectedTab,
                 primaryCharacters = primaryCharacters,
                 secondaryCharacters = secondaryCharacters,
                 enemies = enemies,
+                allEnemies = allEnemies,
                 selectedCharacters = selectedCharacters,
                 modifier = modifier
                     .padding(innerPadding)
                     .fillMaxSize()
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToCreateCharacterScreen,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_medium))
+                    .testTag("addCharacterFOB")
+            )
+            {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.create_character)
+                )
+            }
         },
         bottomBar = {
             Column() {
@@ -132,16 +161,17 @@ fun CharacterScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterScreenBody(
     selectedTab: CharacterTab,
     modifier: Modifier,
     characterViewModel: CharacterViewModel,
-    navigateToCreatePrimaryCharacterScreen: () -> Unit,
     campaignId: Long,
     primaryCharacters: List<CampaignPlayerCharacterDetail>,
     secondaryCharacters: List<CampaignPlayerCharacterDetail>,
-    enemies: List<Enemy>,
+    enemies: List<CampaignPlayerCharacterDetail>,
+    allEnemies: List<Enemy>,
     selectedCharacters: MutableList<CampaignPlayerCharacterDetail>
 ) {
     LazyColumn(modifier = modifier) {
@@ -181,6 +211,7 @@ fun CharacterScreenBody(
                         campaignId = campaignId,
                         characterViewModel = characterViewModel,
                         enemies = enemies,
+                        allEnemies = allEnemies,
                         selectedCharacters = selectedCharacters,
                         modifier = modifier
                     )
@@ -250,6 +281,7 @@ fun CharacterCard(
     isSelected: Boolean,
     onCardClick: (CampaignPlayerCharacterDetail) -> Unit
 ) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -283,41 +315,43 @@ fun CharacterCard(
                         }
                     }"
                 )
-                //Textfield for manual initiative input
-                BasicTextField(
-                    value = if (playerCharacter.initiative == null) {
-                        ""
-                    } else {
-                        playerCharacter.initiative.toString()
-                    },
-                    onValueChange = { newValue ->
-                        characterViewModel
-                            .updateInitiativeForCharacters(
+                Column() {
+                    //Add a title here to clarify that initiative is to be entered in this field?
+                    BasicTextField(
+                        value = if (playerCharacter.initiative == null) {
+                            ""
+                        } else {
+                            playerCharacter.initiative.toString()
+                        },
+                        onValueChange = { newValue ->
+                            characterViewModel.updateInitiativeForCharacters(
                                 playerCharacter,
-                                newValue.toInt()
+                                newValue
                             )
-                    },
-                    singleLine = true,
-                    textStyle = TextStyle(fontSize = 16.sp),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    modifier = Modifier
-                        .width(60.dp)
-                        .background(Color.LightGray)
-                        .padding(8.dp)
-                )
+                        },
+                        singleLine = true,
+                        textStyle = TextStyle(fontSize = 16.sp),
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number
+                        ),
+
+                        modifier = Modifier
+                            .width(60.dp)
+                            .background(Color.LightGray)
+                            .padding(8.dp)
+                    )
+                }
 
                 // Button to roll for initiative
                 Button(
                     onClick = {
-                        val initiativeValue = characterViewModel.rollInitiative(
+                        val rolledInitiative = characterViewModel.rollInitiative(
                             playerCharacter
                                 .initiativeModifier
                         )
                         characterViewModel.updateInitiativeForCharacters(
                             playerCharacter,
-                            initiativeValue
+                            rolledInitiative
                         )
                     },
                 ) {

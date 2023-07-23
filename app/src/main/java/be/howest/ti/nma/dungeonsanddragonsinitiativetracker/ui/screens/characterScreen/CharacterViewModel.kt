@@ -1,11 +1,15 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.PlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignPlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.PlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemiesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,12 +43,15 @@ class CharacterViewModel(
         _characterUiState.value = CharacterUiState(
             primaryCharacters = getPrimaryCharacters(campaignId),
             secondaryCharacters = getSecondaryCharacters(campaignId),
-            enemies = getEnemies()
+            enemyCharacters = getEnemies(campaignId),
+            allEnemies = getAllEnemies()
         )
     }
 
-    fun rollInitiative(initiativeModifier: Int): Int {
-        return (1..20).random() + initiativeModifier
+
+    fun rollInitiative(initiativeModifier: Int): String {
+        val initiative = (1..20).random() + initiativeModifier
+        return initiative.toString()
     }
 
     fun selectCharacter(character: CampaignPlayerCharacterDetail) {
@@ -63,21 +70,24 @@ class CharacterViewModel(
 
     fun updateInitiativeForCharacters(
         playerCharacter: CampaignPlayerCharacterDetail,
-        initiative: Int
+        initiative: String
     ) {
         val isPrimaryCharacter = playerCharacter.isPrimaryCharacter
+        val isSecondaryCharacter = playerCharacter.isSecondaryCharacter
+        val isEnemy = playerCharacter.isEnemy
 
         val characterFlow = if (isPrimaryCharacter) {
             _characterUiState.value.primaryCharacters
-        } else {
+        } else if (isSecondaryCharacter) {
             _characterUiState.value.secondaryCharacters
+        } else {
+            _characterUiState.value.enemyCharacters
         }
 
-        val updatedCharacters = characterFlow.map { characters
-            ->
+        val updatedCharacters = characterFlow.map { characters ->
             characters.map { character ->
                 if (character == playerCharacter) {
-                    character.copy(initiative = initiative)
+                    character.copy(initiative = initiative.toInt())
                 } else {
                     character
                 }
@@ -87,9 +97,14 @@ class CharacterViewModel(
         if (isPrimaryCharacter) {
             _characterUiState.value =
                 _characterUiState.value.copy(primaryCharacters = updatedCharacters)
-        } else {
+        }
+        if (isSecondaryCharacter) {
             _characterUiState.value =
                 _characterUiState.value.copy(secondaryCharacters = updatedCharacters)
+        }
+        if (isEnemy) {
+            _characterUiState.value =
+                _characterUiState.value.copy(enemyCharacters = updatedCharacters)
         }
     }
 
@@ -101,13 +116,73 @@ class CharacterViewModel(
         return campaignPlayerCharacterRepository.getCampaignSecondaryCharactersWithDetails(campaignId)
     }
 
-    private fun getEnemies(): Flow<List<Enemy>> {
+    private fun getEnemies(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
+        return campaignPlayerCharacterRepository.getCampaignEnemyCharactersWithDetails(campaignId)
+    }
+
+    private fun getAllEnemies(): Flow<List<Enemy>> {
         return enemyRepository.getAllEnemies()
     }
 
-    fun updateSearchQuery(searchQuery: String) {
-        val currentUiState = characterUiState.value
-        _characterUiState.value = currentUiState.copy(searchQuery = searchQuery)
+    suspend fun addEnemy(
+        campaignId: Long,
+        enemyIndex: String
+    ) {
+        val enemyResponseBody = EnemiesApi.retrofitService.getEnemy(enemyIndex).body()
+        Log.d(
+            "enemyResponse",
+            enemyResponseBody.toString()
+        )
+        if (enemyResponseBody != null) {
+            val enemyName: String = enemyResponseBody.name
+            val dexterity: Double = ((enemyResponseBody.dexterity - 10) / 2).toDouble()
+            val dexterityModifier: Int = kotlin.math.floor(dexterity).toInt()
+            val armorClass: Int = enemyResponseBody.armor_class.first().value
+
+            val enemy = PlayerCharacter(
+                name = enemyName,
+                armorClass = armorClass,
+                initiativeModifier = dexterityModifier,
+                isEnemy = true
+            )
+
+            val playerCharacterId: Long = playerCharacterRepository.insertPlayerCharacter(enemy)
+            val campaignPlayerCharacter = CampaignPlayerCharacter(
+                playerCharacterId = playerCharacterId,
+                campaignId = campaignId
+            )
+            campaignPlayerCharacterRepository.insertCampaignPlayerCharacter(campaignPlayerCharacter)
+
+        }
     }
+}
+
+
+/*
+        try {
+    val database = DnDInitiativeTrackerDatabase.getDatabase(applicationContext)
+    val enemyApiResponse = EnemiesApi.retrofitService.getEnemies()
+    if (enemyApiResponse.isSuccessful) {
+        val enemyApiResponseBody = enemyApiResponse.body()?.results ?: emptyList()
+        val enemies = enemyApiResponseBody.map { enemy ->
+            Enemy(
+                enemy.index,
+                enemy.name,
+                enemy.url
+            )
+        }
+        database.EnemyDao().insertAllEnemies(enemies)
+    }
+    Result.success()
+} catch (ex: Exception) {
+    Log.e(
+        "Fetch API and insert in DB worker",
+        "Error fetching from API and/or inserting in database",
+        ex
+    )
+    Result.failure()
+}
+}
 
 }
+* */

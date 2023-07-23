@@ -9,9 +9,9 @@ data class CharacterUiState(
     val isInitialized: Boolean = false,
     val primaryCharacters: Flow<List<CampaignPlayerCharacterDetail>> = MutableStateFlow(emptyList()),
     val secondaryCharacters: Flow<List<CampaignPlayerCharacterDetail>> = MutableStateFlow(emptyList()),
-    val enemies: Flow<List<Enemy>> = MutableStateFlow(emptyList()),
+    val enemyCharacters: Flow<List<CampaignPlayerCharacterDetail>> = MutableStateFlow(emptyList()),
+    val allEnemies: Flow<List<Enemy>> = MutableStateFlow(emptyList()),
     val selectedCharacters: MutableList<CampaignPlayerCharacterDetail> = mutableListOf(),
     val searchQuery: String = "",
-    val filteredEnemies: Flow<List<Enemy>> = MutableStateFlow(emptyList())
 )
 

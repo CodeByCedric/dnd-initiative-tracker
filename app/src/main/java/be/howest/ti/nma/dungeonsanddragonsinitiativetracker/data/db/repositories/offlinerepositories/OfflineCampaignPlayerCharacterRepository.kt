@@ -24,4 +24,8 @@ class OfflineCampaignPlayerCharacterRepository(
     override fun getCampaignSecondaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterDao.getCampaignSecondaryCharactersWithDetails(campaignId)
     }
+
+    override fun getCampaignEnemyCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
+        return campaignPlayerCharacterDao.getCampaignEnemyCharactersWithDetails(campaignId)
+    }
 }

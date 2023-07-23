@@ -34,4 +34,14 @@ interface CampaignPlayerCharacterDao {
     )
     fun getCampaignSecondaryCharactersWithDetails(campaignId: Long):
             Flow<List<CampaignPlayerCharacterDetail>>
+
+    @Query(
+        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
+                ".isSecondaryCharacter, pc.isEnemy " +
+                "FROM campaign_player_characters as cpc " +
+                "INNER JOIN player_characters as pc on cpc.playerCharacterId = pc.playerCharacterId " +
+                "WHERE cpc.campaignId = :campaignId AND isEnemy = 1"
+    )
+    fun getCampaignEnemyCharactersWithDetails(campaignId: Long):
+            Flow<List<CampaignPlayerCharacterDetail>>
 }

@@ -17,5 +17,8 @@ interface CampaignPlayerCharacterRepository {
     fun getCampaignSecondaryCharactersWithDetails(campaignId: Long):
             Flow<List<CampaignPlayerCharacterDetail>>
 
+    fun getCampaignEnemyCharactersWithDetails(campaignId: Long):
+            Flow<List<CampaignPlayerCharacterDetail>>
+
 
 }
