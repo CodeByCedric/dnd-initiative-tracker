@@ -880,6 +880,8 @@ private fun launchCalendarIntent(
     selectedDateTimeCalendar: Calendar
 ) {
     //todo work with package-manager and add to manifest
+    //todo return date and time from the calendar, and compare with date and time selected, if
+    // different, update dateTime for use in app, if null, don't set next session
     val title = campaign.campaignName
     val begin = selectedDateTimeCalendar.timeInMillis
     val end = begin + 60 * 60 * 4000 // Add 4 hours

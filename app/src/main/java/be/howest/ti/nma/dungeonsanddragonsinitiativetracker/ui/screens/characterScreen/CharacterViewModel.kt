@@ -30,6 +30,11 @@ class CharacterViewModel(
 //            )
 //    }
 
+    fun updateIsInitialized(isInitialized: Boolean) {
+        val currentUiState = characterUiState.value
+        _characterUiState.value = currentUiState.copy(isInitialized = isInitialized)
+    }
+
     fun loadCharacters(campaignId: Long) {
         _characterUiState.value = CharacterUiState(
             primaryCharacters = getPrimaryCharacters(campaignId),

@@ -6,8 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class CharacterUiState(
+    val isInitialized: Boolean = false,
     val primaryCharacters: Flow<List<CampaignPlayerCharacterDetail>> = MutableStateFlow(emptyList()),
     val secondaryCharacters: Flow<List<CampaignPlayerCharacterDetail>> = MutableStateFlow(emptyList()),
     val enemies: Flow<List<Enemy>> = MutableStateFlow(emptyList()),
     val selectedCharacters: MutableList<CampaignPlayerCharacterDetail> = mutableListOf(),
 )
+

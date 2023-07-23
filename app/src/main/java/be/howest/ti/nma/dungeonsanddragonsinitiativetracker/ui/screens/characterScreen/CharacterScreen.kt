@@ -71,10 +71,13 @@ fun CharacterScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-//        Load primary and secondary characters on screen
-    characterViewModel.loadCharacters(campaignId)
-
     val characterUiState by characterViewModel.characterUiState.collectAsState()
+
+    if (!characterUiState.isInitialized) {
+//        Load primary and secondary characters on screen
+        characterViewModel.loadCharacters(campaignId)
+        characterViewModel.updateIsInitialized(true)
+    }
 
     val tabItems = listOf(
         "Characters" to CharacterTab.Characters,
@@ -120,8 +123,8 @@ fun CharacterScreen(
                     selectedTab = selectedTab,
                     onTabSelected = setSelectedTab
                 )
-                NavigateToEncounterBuilderScreenButton(
-                    navigateToEncounterBuilderScreen = navigateToSkirmishScreen
+                NavigateToSkirmishScreenButton(
+                    navigateToSkirmishScreen = navigateToSkirmishScreen
                 )
             }
 
@@ -324,19 +327,20 @@ fun CharacterCard(
         }
     }
 }
+
 @Composable
-fun NavigateToEncounterBuilderScreenButton(
-    navigateToEncounterBuilderScreen: () -> Unit,
+fun NavigateToSkirmishScreenButton(
+    navigateToSkirmishScreen: () -> Unit,
 ) {
     Button(
-        onClick = { navigateToEncounterBuilderScreen() },
+        onClick = { navigateToSkirmishScreen() },
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.padding_small))
     ) {
         Text(
-            text = stringResource(R.string.to_encounter_builder_screen_button),
+            text = stringResource(R.string.to_skirmish_screen_button),
             textAlign = TextAlign.Center
         )
     }
