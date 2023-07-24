@@ -17,8 +17,9 @@ fun SecondaryCharacters(
 
     secondaryCharacters.forEach { secondaryCharacter ->
         CharacterCard(
-            secondaryCharacter,
-            characterViewModel,
+            campaignId = campaignId,
+            playerCharacter = secondaryCharacter,
+            characterViewModel = characterViewModel,
             isSelected = secondaryCharacter in selectedCharacters
         ) { clickedCharacter ->
             if (selectedCharacters.contains(clickedCharacter)) {

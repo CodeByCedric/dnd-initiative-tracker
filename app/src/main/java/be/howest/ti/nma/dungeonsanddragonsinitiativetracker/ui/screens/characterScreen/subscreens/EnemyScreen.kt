@@ -24,8 +24,9 @@ fun EnemyScreen(
 
     enemies.forEach { enemy ->
         CharacterCard(
-            enemy,
-            characterViewModel,
+            campaignId = campaignId,
+            playerCharacter = enemy,
+            characterViewModel = characterViewModel,
             isSelected = enemy in selectedCharacters
         ) { clickedCharacter ->
             if (selectedCharacters.contains(clickedCharacter)) {

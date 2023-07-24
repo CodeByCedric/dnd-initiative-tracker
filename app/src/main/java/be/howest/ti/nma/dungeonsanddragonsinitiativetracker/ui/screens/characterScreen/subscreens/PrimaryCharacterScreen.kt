@@ -21,8 +21,9 @@ fun PrimaryCharacters(
 
     primaryCharacters.forEach { primaryCharacter ->
         CharacterCard(
-            primaryCharacter,
-            characterViewModel,
+            campaignId = campaignId,
+            playerCharacter = primaryCharacter,
+            characterViewModel = characterViewModel,
             isSelected = primaryCharacter in selectedCharacters
         ) { clickedCharacter ->
             if (selectedCharacters.contains(clickedCharacter)) {

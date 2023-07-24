@@ -17,11 +17,13 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -31,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -225,6 +228,7 @@ fun CharacterScreenBody(
 
 @Composable
 fun CharacterCard(
+    campaignId: Long,
     playerCharacter: CampaignPlayerCharacterDetail,
     characterViewModel: CharacterViewModel,
     isSelected: Boolean,
@@ -306,8 +310,30 @@ fun CharacterCard(
                 ) {
                     Text(text = "Roll Initiative")
                 }
+                RemoveCharacterButton(
+                    characterViewModel = characterViewModel,
+                    campaignId = campaignId
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun RemoveCharacterButton(
+    characterViewModel: CharacterViewModel,
+    campaignId: Long
+) {
+    val coroutineScope = rememberCoroutineScope()
+    IconButton(
+        onClick = {
+//            coroutineScope.launch { createCharacterViewModel.deleteCharacter(campaign) }
+        }
+    ) {
+        Icon(
+            Icons.Default.Delete,
+            contentDescription = stringResource(id = R.string.delete_campaign_icon_label)
+        )
     }
 }
 
