@@ -33,7 +33,7 @@ class CreateCharacterViewModel(
         _createCharacterUiState.value = currentUiState.copy(characterName = name)
     }
 
-    fun updateCharacterArmorClass(armorClass: String) {
+    private fun updateCharacterArmorClass(armorClass: String) {
         val currentUiState = createCharacterUiState.value
         _createCharacterUiState.value = currentUiState.copy(armorClass = armorClass.toInt())
     }
@@ -65,7 +65,7 @@ class CreateCharacterViewModel(
     }
 
 
-    fun updateCharacterInitiativeModifier(initiativeModifier: String) {
+    private fun updateCharacterInitiativeModifier(initiativeModifier: String) {
         val currentUiState = createCharacterUiState.value
         _createCharacterUiState.value = currentUiState.copy(
             initiativeModifier =

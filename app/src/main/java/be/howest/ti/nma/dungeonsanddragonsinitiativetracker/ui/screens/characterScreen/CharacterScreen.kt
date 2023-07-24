@@ -59,7 +59,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.character
 *  (e.g. typing in a 1 and a 5 results in 51)
 * Todo: when a card is selected and then the roll initiative button is pressed, the selection is
 *   removed
-* Todo: app crashes when clearing the initiative field
+*  Todo: add delete icon to remove characters and enemies
 * */
 
 object CharacterScreenDestination : NavigationDestination {
@@ -86,8 +86,8 @@ fun CharacterScreen(
 ) {
     val characterUiState by characterViewModel.characterUiState.collectAsState()
 
+    //Load primary and secondary characters on screen
     if (!characterUiState.isInitialized) {
-//        Load primary and secondary characters on screen
         characterViewModel.loadCharacters(campaignId)
         characterViewModel.updateIsInitialized(true)
     }
@@ -224,57 +224,6 @@ fun CharacterScreenBody(
 
 
 @Composable
-fun CharacterTabBar(
-    tabItems: List<Pair<String, CharacterTab>>,
-    selectedTab: CharacterTab,
-    onTabSelected: (CharacterTab) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(dimensionResource(id = R.dimen.character_tab_bar_height))
-    ) {
-        tabItems.forEach { (label, tab) ->
-            val isSelected = tab == selectedTab
-            val textColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme
-                .colorScheme.onSurface
-            val indicatorColor =
-                if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
-            val indicatorHeight = dimensionResource(id = R.dimen.character_tab_indicator_height)
-
-            Tab(
-                selected = isSelected,
-                onClick = { onTabSelected(tab) },
-                modifier = Modifier.weight(1f)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.character_tab_bar_height))
-                        .padding(dimensionResource(id = R.dimen.padding_small))
-                ) {
-                    Text(
-                        text = label,
-                        color = textColor,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .fillMaxWidth()
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(indicatorHeight)
-                            .background(indicatorColor)
-                            .align(Alignment.BottomCenter)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun CharacterCard(
     playerCharacter: CampaignPlayerCharacterDetail,
     characterViewModel: CharacterViewModel,
@@ -356,6 +305,57 @@ fun CharacterCard(
                     },
                 ) {
                     Text(text = "Roll Initiative")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CharacterTabBar(
+    tabItems: List<Pair<String, CharacterTab>>,
+    selectedTab: CharacterTab,
+    onTabSelected: (CharacterTab) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(dimensionResource(id = R.dimen.character_tab_bar_height))
+    ) {
+        tabItems.forEach { (label, tab) ->
+            val isSelected = tab == selectedTab
+            val textColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme
+                .colorScheme.onSurface
+            val indicatorColor =
+                if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+            val indicatorHeight = dimensionResource(id = R.dimen.character_tab_indicator_height)
+
+            Tab(
+                selected = isSelected,
+                onClick = { onTabSelected(tab) },
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.character_tab_bar_height))
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                ) {
+                    Text(
+                        text = label,
+                        color = textColor,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .fillMaxWidth()
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(indicatorHeight)
+                            .background(indicatorColor)
+                            .align(Alignment.BottomCenter)
+                    )
                 }
             }
         }

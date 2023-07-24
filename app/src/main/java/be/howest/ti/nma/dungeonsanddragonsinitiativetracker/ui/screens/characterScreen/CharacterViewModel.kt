@@ -83,7 +83,7 @@ class CharacterViewModel(
         val updatedCharacters = characterFlow.map { characters ->
             characters.map { character ->
                 if (character == playerCharacter) {
-                    character.copy(initiative = initiative.toInt())
+                    character.copy(initiative = initiative.toIntOrNull())
                 } else {
                     character
                 }
@@ -123,32 +123,3 @@ class CharacterViewModel(
 
 }
 
-
-/*
-        try {
-    val database = DnDInitiativeTrackerDatabase.getDatabase(applicationContext)
-    val enemyApiResponse = EnemiesApi.retrofitService.getEnemies()
-    if (enemyApiResponse.isSuccessful) {
-        val enemyApiResponseBody = enemyApiResponse.body()?.results ?: emptyList()
-        val enemies = enemyApiResponseBody.map { enemy ->
-            Enemy(
-                enemy.index,
-                enemy.name,
-                enemy.url
-            )
-        }
-        database.EnemyDao().insertAllEnemies(enemies)
-    }
-    Result.success()
-} catch (ex: Exception) {
-    Log.e(
-        "Fetch API and insert in DB worker",
-        "Error fetching from API and/or inserting in database",
-        ex
-    )
-    Result.failure()
-}
-}
-
-}
-* */
