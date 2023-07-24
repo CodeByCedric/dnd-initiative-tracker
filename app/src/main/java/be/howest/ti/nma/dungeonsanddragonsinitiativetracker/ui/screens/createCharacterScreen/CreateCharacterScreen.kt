@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
 
 /*
 * TODO: make dropdown field searchable/filterable
+*  Why is the dropdown so slow?
 */
 object CreateCharacterScreenDestination : NavigationDestination {
     override val route: String = "create_primary_character_screen"
@@ -194,8 +195,7 @@ fun EnemySelectionDropdown(
         ) {
             val coroutineScope = rememberCoroutineScope()
             val allEnemies = createCharacterViewModel.getEnemiesFromUiState().collectAsState(
-                initial =
-                emptyList()
+                initial = emptyList()
             ).value
             allEnemies.forEach { enemy ->
                 DropdownMenuItem(
