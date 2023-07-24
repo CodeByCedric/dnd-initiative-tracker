@@ -39,6 +39,7 @@
     <string name="take_an_image">Take an Image</string>
     <string name="add_participants_to_campaign_screen">Add DM and Players</string>
     <string name="dm_section_title">Dungeon Master</string>
+    <string name="select_enemy_title">Or, Select an Enemy:</string>
     <string name="player_section_title">Players</string>
     <string name="date_time_picker_button">Next Session?</string>
     <string name="no_next_session_planned">No next session planned.</string>

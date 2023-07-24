@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -39,12 +41,13 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTracker
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.SectionTitle
 import kotlinx.coroutines.launch
 
 
 /*
-* TODO: spruce up the layout a bit
-* */
+* TODO: make dropdown field searchable/filterable
+*/
 object CreateCharacterScreenDestination : NavigationDestination {
     override val route: String = "create_primary_character_screen"
     override val titleRes: Int = R.string.create_primary_character_screen
@@ -80,9 +83,10 @@ fun CreateCharacterScreen(
         },
         bottomBar = {
             CreateCharacterButton(
+                createCharacterUiState = createCharacterUiState,
                 onSave = {
                     coroutineScope.launch {
-                        createCharacterViewModel.createCharacter()
+                        createCharacterViewModel.createCharacter(campaignId)
                         navigateBack()
                     }
                 }
@@ -93,10 +97,12 @@ fun CreateCharacterScreen(
 
 @Composable
 fun CreateCharacterButton(
-    onSave: () -> Unit
+    onSave: () -> Unit,
+    createCharacterUiState: CreateCharacterUiState
 ) {
     Button(
         onClick = onSave,
+        enabled = createCharacterUiState.characterName.isNotEmpty() && (createCharacterUiState.isPrimaryCharacter || createCharacterUiState.isSecondaryCharacter || createCharacterUiState.isEnemy),
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
@@ -118,10 +124,7 @@ fun CreateCharacterForm(
     LazyColumn(
         modifier = modifier
     ) {
-        //CharacterName
-        //ArmorClass
-        //Initiative Modifier
-        //IsPrimary, Secondary or Enemy
+
         item {
             CharacterName(
                 createCharacterViewModel,
@@ -144,6 +147,69 @@ fun CreateCharacterForm(
             CharacterType(
                 createCharacterViewModel,
             )
+        }
+        item {
+            Divider(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+            )
+        }
+        item {
+            SectionTitle(title = stringResource(id = R.string.select_enemy_title))
+        }
+        item {
+            EnemySelectionDropdown(createCharacterViewModel = createCharacterViewModel)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EnemySelectionDropdown(
+    createCharacterViewModel: CreateCharacterViewModel
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = isExpanded,
+        onExpandedChange = { isExpanded = !isExpanded },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = dimensionResource(id = R.dimen.padding_small))
+    ) {
+        TextField(
+            value = stringResource(id = R.string.search_enemies),
+            onValueChange = {},
+            readOnly = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+            },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+        )
+        ExposedDropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false }
+        ) {
+            val coroutineScope = rememberCoroutineScope()
+            val allEnemies = createCharacterViewModel.getEnemiesFromUiState().collectAsState(
+                initial =
+                emptyList()
+            ).value
+            allEnemies.forEach { enemy ->
+                DropdownMenuItem(
+                    text = { Text(text = enemy.name) },
+                    onClick = {
+                        coroutineScope.launch {
+                            createCharacterViewModel.addEnemy(
+                                enemyIndex = enemy.index
+                            )
+                        }
+                        isExpanded = false
+                    }
+                )
+            }
         }
     }
 }
@@ -173,9 +239,13 @@ fun ArmorClass(
 ) {
     val armorClass = createCharacterUiState.armorClass
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
     ) {
-        Text(stringResource(id = R.string.character_armorclass_textfield))
+        Text(
+            text = stringResource(id = R.string.character_armorclass_textfield),
+            modifier = Modifier.width(dimensionResource(id = R.dimen.create_character_screen_description_column_width))
+        )
         TextField(
             value = armorClass.toString(),
             onValueChange = {},
@@ -185,7 +255,7 @@ fun ArmorClass(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Number
             ),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.width(dimensionResource(id = R.dimen.create_character_screen_ac_and_initiative_column_width))
         )
         IconButton(onClick = { createCharacterViewModel.decrementArmorClassByOne() }) {
             Icon(
@@ -208,9 +278,13 @@ fun InitiativeModifier(
     createCharacterUiState: CreateCharacterUiState,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
     ) {
-        Text(stringResource(id = R.string.character_initiative_textfield))
+        Text(
+            text = stringResource(id = R.string.character_initiative_textfield),
+            modifier = Modifier.width(dimensionResource(id = R.dimen.create_character_screen_description_column_width))
+        )
 
         TextField(
             value = createCharacterUiState.initiativeModifier.toString(),
@@ -221,7 +295,7 @@ fun InitiativeModifier(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Number
             ),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.width(dimensionResource(id = R.dimen.create_character_screen_ac_and_initiative_column_width))
         )
         IconButton(onClick = { createCharacterViewModel.decrementInitiativeModifierByOne() }) {
             Icon(
@@ -246,18 +320,22 @@ fun CharacterType(
     var isExpanded by remember { mutableStateOf(false) }
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
     ) {
         Text(
-            text = stringResource(id = R.string.character_type)
+            text = stringResource(id = R.string.character_type),
+            modifier = Modifier.width(dimensionResource(id = R.dimen.create_character_screen_description_column_width))
         )
         ExposedDropdownMenuBox(
             expanded = isExpanded,
-            onExpandedChange = { isExpanded = it }
+            onExpandedChange = { isExpanded = it },
+            modifier = Modifier.fillMaxWidth()
         ) {
             TextField(
                 value = createCharacterViewModel.checkCharacterType(),
                 onValueChange = {},
+                label = { Text(text = "Select the Character Type") },
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),

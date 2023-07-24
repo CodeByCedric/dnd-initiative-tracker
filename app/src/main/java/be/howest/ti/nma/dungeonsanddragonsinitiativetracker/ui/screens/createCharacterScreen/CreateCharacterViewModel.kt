@@ -1,8 +1,14 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createCharacterScreen
 
 import androidx.lifecycle.ViewModel
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.PlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignPlayerCharacterRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.PlayerCharacterRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemiesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,10 +16,17 @@ import kotlinx.coroutines.flow.asStateFlow
 class CreateCharacterViewModel(
     private val playerCharacterRepository: PlayerCharacterRepository,
     private val campaignPlayerCharacterRepository: CampaignPlayerCharacterRepository,
+    private val enemyRepository: EnemyRepository
 ) : ViewModel() {
     private val _createCharacterUiState = MutableStateFlow(CreateCharacterUiState())
     val createCharacterUiState: StateFlow<CreateCharacterUiState> =
         _createCharacterUiState.asStateFlow()
+
+    init {
+        _createCharacterUiState.value = CreateCharacterUiState(
+            enemyFlow = getEnemiesFromDB()
+        )
+    }
 
     fun updateCharacterName(name: String) {
         val currentUiState = createCharacterUiState.value
@@ -85,9 +98,16 @@ class CreateCharacterViewModel(
         }
     }
 
+    private fun getEnemiesFromDB(): Flow<List<Enemy>> {
+        return enemyRepository.getAllEnemies()
+    }
+
+    fun getEnemiesFromUiState(): Flow<List<Enemy>> {
+        return _createCharacterUiState.value.enemyFlow
+    }
 
     //todo
-    fun createCharacter() {
+    suspend fun createCharacter(campaignId: Long) {
         val characterName = createCharacterUiState.value.characterName
         val characterArmorClass = createCharacterUiState.value.armorClass
         val characterInitiativeModifier = createCharacterUiState.value.initiativeModifier
@@ -95,6 +115,44 @@ class CreateCharacterViewModel(
         val isSecondaryCharacter = createCharacterUiState.value.isSecondaryCharacter
         val isEnemy = createCharacterUiState.value.isEnemy
 
-        TODO("Not yet implemented")
+        val playerCharacterId = playerCharacterRepository.insertPlayerCharacter(
+            PlayerCharacter(
+                name = characterName,
+                armorClass = characterArmorClass,
+                initiativeModifier = characterInitiativeModifier,
+                isPrimaryCharacter = isPrimaryCharacter,
+                isSecondaryCharacter = isSecondaryCharacter,
+                isEnemy = isEnemy
+            )
+        )
+
+        campaignPlayerCharacterRepository.insertCampaignPlayerCharacter(
+            CampaignPlayerCharacter(
+                campaignId = campaignId,
+                playerCharacterId = playerCharacterId
+            )
+        )
+    }
+
+    suspend fun addEnemy(
+        enemyIndex: String
+    ) {
+        val enemyResponseBody = EnemiesApi.retrofitService.getEnemy(enemyIndex).body()
+        var enemyName: String = ""
+        var dexterityModifier: Int = 0
+        var armorClass: Int = 0
+
+        if (enemyResponseBody != null) {
+            enemyName = enemyResponseBody.name
+            val dexterity: Double = ((enemyResponseBody.dexterity - 10) / 2).toDouble()
+            dexterityModifier = kotlin.math.floor(dexterity).toInt()
+            armorClass = enemyResponseBody.armor_class.first().value
+        }
+
+        updateCharacterName(enemyName)
+        updateCharacterArmorClass(armorClass.toString())
+        updateCharacterInitiativeModifier(dexterityModifier.toString())
+        updateCharacterType(isEnemy = true)
+
     }
 }

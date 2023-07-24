@@ -1,15 +1,11 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.PlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignPlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.PlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.network.EnemiesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -124,37 +120,7 @@ class CharacterViewModel(
         return enemyRepository.getAllEnemies()
     }
 
-    suspend fun addEnemy(
-        campaignId: Long,
-        enemyIndex: String
-    ) {
-        val enemyResponseBody = EnemiesApi.retrofitService.getEnemy(enemyIndex).body()
-        Log.d(
-            "enemyResponse",
-            enemyResponseBody.toString()
-        )
-        if (enemyResponseBody != null) {
-            val enemyName: String = enemyResponseBody.name
-            val dexterity: Double = ((enemyResponseBody.dexterity - 10) / 2).toDouble()
-            val dexterityModifier: Int = kotlin.math.floor(dexterity).toInt()
-            val armorClass: Int = enemyResponseBody.armor_class.first().value
 
-            val enemy = PlayerCharacter(
-                name = enemyName,
-                armorClass = armorClass,
-                initiativeModifier = dexterityModifier,
-                isEnemy = true
-            )
-
-            val playerCharacterId: Long = playerCharacterRepository.insertPlayerCharacter(enemy)
-            val campaignPlayerCharacter = CampaignPlayerCharacter(
-                playerCharacterId = playerCharacterId,
-                campaignId = campaignId
-            )
-            campaignPlayerCharacterRepository.insertCampaignPlayerCharacter(campaignPlayerCharacter)
-
-        }
-    }
 }
 
 

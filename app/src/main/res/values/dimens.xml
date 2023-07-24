@@ -14,4 +14,6 @@
     <dimen name="character_tab_indicator_height">2dp</dimen>
     <dimen name="image_size">100dp</dimen>
     <dimen name="enemy_card_height">50dp</dimen>
+    <dimen name="create_character_screen_description_column_width">150dp</dimen>
+    <dimen name="create_character_screen_ac_and_initiative_column_width">50dp</dimen>
 </resources>
