@@ -89,7 +89,6 @@ fun DnDInitiativeTrackerNavHost(
                         route = CharacterScreenDestination.route
                     )
                 },
-                navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )
         }

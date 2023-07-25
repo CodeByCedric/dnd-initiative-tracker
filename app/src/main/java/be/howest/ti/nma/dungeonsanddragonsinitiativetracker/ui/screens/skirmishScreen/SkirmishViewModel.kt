@@ -1,5 +1,6 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.DataSource.skirkmishScreenCharacters
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
@@ -39,6 +40,18 @@ class SkirmishViewModel(
             currentUiState.sortedListOfSkirmishCharacters - campaignPlayerCharacter
         _skirmishUiState.value =
             currentUiState.copy(sortedListOfSkirmishCharacters = updatedCharacters)
+    }
+
+    fun getBackgroundCardColor(campaignPlayerCharacter: CampaignPlayerCharacterDetail): Color {
+        if (campaignPlayerCharacter.isPrimaryCharacter) {
+            return Color(0xFFbafffe)
+        } else if (campaignPlayerCharacter.isSecondaryCharacter) {
+            return Color(0xFFddffba)
+        } else if (campaignPlayerCharacter.isEnemy) {
+            return Color(0xFFffbabb)
+        } else {
+            return Color.Transparent
+        }
     }
 
 
