@@ -9,17 +9,16 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampai
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.createCharacterScreen.CreateCharacterViewModel
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen.SkirmishViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
-        //Initializer for the CampaignViewModel
         initializer {
             CampaignViewModel(
                 dndInitiativeTrackerApplication().container.campaignRepository,
                 dndInitiativeTrackerApplication().container.campaignParticipantRepository
             )
         }
-        //Initializer for the addCampaignViewModel
         initializer {
             AddCampaignViewModel(
                 dndInitiativeTrackerApplication().container.campaignRepository,
@@ -27,7 +26,6 @@ object AppViewModelProvider {
                 dndInitiativeTrackerApplication().container.campaignParticipantRepository
             )
         }
-        //Initializer for the CharacterViewModel
         initializer {
             CharacterViewModel(
                 dndInitiativeTrackerApplication().container.playerCharacterRepository,
@@ -35,12 +33,15 @@ object AppViewModelProvider {
                 dndInitiativeTrackerApplication().container.enemyRepository
             )
         }
-        //Initializer for the CreateCharacterViewModel
         initializer {
             CreateCharacterViewModel(
                 dndInitiativeTrackerApplication().container.playerCharacterRepository,
                 dndInitiativeTrackerApplication().container.campaignPlayerCharacterRepository,
                 dndInitiativeTrackerApplication().container.enemyRepository
+            )
+        }
+        initializer {
+            SkirmishViewModel(
             )
         }
     }

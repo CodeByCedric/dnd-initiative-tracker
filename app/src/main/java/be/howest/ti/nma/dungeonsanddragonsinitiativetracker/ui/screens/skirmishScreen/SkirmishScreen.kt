@@ -14,6 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,9 +26,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 
 
@@ -41,111 +44,26 @@ object SkirmishScreenDestination : NavigationDestination {
     override val titleRes: Int = R.string.skirmish_screen
 }
 
-
-val campaignPlayerCharacters: List<CampaignPlayerCharacterDetail> = listOf(
-    CampaignPlayerCharacterDetail(
-        name = "Ibun",
-        armorClass = 16,
-        initiativeModifier = -2,
-        initiative = 13,
-        isPrimaryCharacter = true
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Rhys",
-        armorClass = 18,
-        initiativeModifier = 1,
-        initiative = 11,
-        isPrimaryCharacter = true
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Tinuviel",
-        armorClass = 14,
-        initiativeModifier = 2,
-        initiative = 14,
-        isPrimaryCharacter = true
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Stool",
-        armorClass = 12,
-        initiativeModifier = 0,
-        initiative = 15,
-        isSecondaryCharacter = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Sushi",
-        armorClass = 14,
-        initiativeModifier = 1,
-        initiative = 3,
-        isSecondaryCharacter = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Hemmeth",
-        armorClass = 16,
-        initiativeModifier = 0,
-        initiative = 8,
-        isSecondaryCharacter = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Eldeth",
-        armorClass = 16,
-        initiativeModifier = 0,
-        initiative = 14,
-        isSecondaryCharacter = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Rumpadump",
-        armorClass = 16,
-        initiativeModifier = 0,
-        initiative = 8,
-        isSecondaryCharacter = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Topsy",
-        armorClass = 16,
-        initiativeModifier = 0,
-        initiative = 8,
-        isSecondaryCharacter = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Turvy",
-        armorClass = 16,
-        initiativeModifier = 0,
-        initiative = 8,
-        isSecondaryCharacter = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Ann",
-        armorClass = 20,
-        initiativeModifier = +5,
-        initiative = 25,
-        isEnemy = true,
-    ),
-    CampaignPlayerCharacterDetail(
-        name = "Koen",
-        armorClass = 20,
-        initiativeModifier = +5,
-        initiative = 25,
-        isEnemy = true,
-    ),
-)
-
 @Composable
 fun SkirmishScreen(
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
     navigateToCharacterScreen: () -> Unit = {},
-    modifier: Modifier = Modifier
+    skirmishViewModel: SkirmishViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    modifier: Modifier = Modifier,
 ) {
 
-    var sortedList by remember { mutableStateOf(sortCampaignPlayerCharacters(campaignPlayerCharacters)) }
-    var backgroundColors by remember { mutableStateOf(getCharacterBackgroundColors(sortedList)) }
+    val skirmishUiState = skirmishViewModel.skirmishUiState.collectAsState()
+
+    var sortedListOfSkirmishCharacters = skirmishUiState.value.sortedListOfSkirmishCharacters
+    var backgroundColors by remember { mutableStateOf(getCharacterBackgroundColors(sortedListOfSkirmishCharacters)) }
 
     Scaffold(
         topBar = {
             DnDInitiativeTrackerTopAppBar(
                 title = stringResource(id = SkirmishScreenDestination.titleRes),
-                canNavigateBack = true,
+                canNavigateBack = canNavigateBack,
                 navigateUp = onNavigateUp
             )
         },
@@ -155,15 +73,16 @@ fun SkirmishScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 EndTurnButton {
-                    sortedList = sortedList.drop(1) + sortedList.take(1)
-                    backgroundColors = getCharacterBackgroundColors(sortedList)
+                    sortedListOfSkirmishCharacters =
+                        sortedListOfSkirmishCharacters.drop(1) + sortedListOfSkirmishCharacters.take(1)
+                    backgroundColors = getCharacterBackgroundColors(sortedListOfSkirmishCharacters)
                 }
                 NavigateToCharacterScreenButton(navigateToCharacterScreen)
             }
         }
     ) { innerPadding ->
         SkirmishScreenBody(
-            campaignPlayerCharacters = sortedList,
+            campaignPlayerCharacters = sortedListOfSkirmishCharacters,
             backgroundColors = backgroundColors,
             modifier = modifier
                 .padding(innerPadding)
@@ -254,13 +173,6 @@ fun EndTurnButton(
     }
 }
 
-private fun sortCampaignPlayerCharacters(campaignPlayerCharactersDetail: List<CampaignPlayerCharacterDetail>): List<CampaignPlayerCharacterDetail> {
-    return campaignPlayerCharactersDetail.sortedWith(
-        compareByDescending<CampaignPlayerCharacterDetail> { it.initiative }
-            .thenByDescending { it.initiativeModifier }
-            .thenByDescending { Math.random() }
-    )
-}
 
 private fun getCharacterBackgroundColors(campaignPlayerCharacters: List<CampaignPlayerCharacterDetail>): List<Color> {
     return campaignPlayerCharacters.map { campaignPlayerCharacter ->

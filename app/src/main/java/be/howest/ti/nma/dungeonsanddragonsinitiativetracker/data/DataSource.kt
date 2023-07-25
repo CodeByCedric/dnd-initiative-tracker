@@ -4,6 +4,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.PlayerCharacter
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 
 object DataSource {
     val campaigns = listOf(
@@ -86,5 +87,93 @@ object DataSource {
             isEnemy = true,
         ),
     )
+
+    val skirkmishScreenCharacters: List<CampaignPlayerCharacterDetail> = listOf(
+        CampaignPlayerCharacterDetail(
+            name = "Ibun",
+            armorClass = 16,
+            initiativeModifier = -2,
+            initiative = 13,
+            isPrimaryCharacter = true
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Rhys",
+            armorClass = 18,
+            initiativeModifier = 1,
+            initiative = 11,
+            isPrimaryCharacter = true
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Tinuviel",
+            armorClass = 14,
+            initiativeModifier = 2,
+            initiative = 14,
+            isPrimaryCharacter = true
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Stool",
+            armorClass = 12,
+            initiativeModifier = 0,
+            initiative = 15,
+            isSecondaryCharacter = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Sushi",
+            armorClass = 14,
+            initiativeModifier = 1,
+            initiative = 3,
+            isSecondaryCharacter = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Hemmeth",
+            armorClass = 16,
+            initiativeModifier = 0,
+            initiative = 8,
+            isSecondaryCharacter = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Eldeth",
+            armorClass = 16,
+            initiativeModifier = 0,
+            initiative = 14,
+            isSecondaryCharacter = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Rumpadump",
+            armorClass = 16,
+            initiativeModifier = 0,
+            initiative = 8,
+            isSecondaryCharacter = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Topsy",
+            armorClass = 16,
+            initiativeModifier = 0,
+            initiative = 8,
+            isSecondaryCharacter = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Turvy",
+            armorClass = 16,
+            initiativeModifier = 0,
+            initiative = 8,
+            isSecondaryCharacter = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Ann",
+            armorClass = 20,
+            initiativeModifier = +5,
+            initiative = 25,
+            isEnemy = true,
+        ),
+        CampaignPlayerCharacterDetail(
+            name = "Koen",
+            armorClass = 20,
+            initiativeModifier = +5,
+            initiative = 25,
+            isEnemy = true,
+        ),
+    )
+
 
 }
