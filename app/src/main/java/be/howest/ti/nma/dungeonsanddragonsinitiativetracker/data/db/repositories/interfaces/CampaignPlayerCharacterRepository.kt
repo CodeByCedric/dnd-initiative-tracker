@@ -20,5 +20,6 @@ interface CampaignPlayerCharacterRepository {
     fun getCampaignEnemyCharactersWithDetails(campaignId: Long):
             Flow<List<CampaignPlayerCharacterDetail>>
 
+    suspend fun deleteCampaignPlayerCharacter(campaignPlayerCharacter: CampaignPlayerCharacter)
 
 }

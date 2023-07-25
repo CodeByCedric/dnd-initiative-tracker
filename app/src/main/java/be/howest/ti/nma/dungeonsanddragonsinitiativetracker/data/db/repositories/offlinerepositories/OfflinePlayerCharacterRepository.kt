@@ -19,4 +19,8 @@ class OfflinePlayerCharacterRepository(
     override suspend fun getPlayerCharacterIdByName(playerCharacterName: String): Long {
         return playerCharacterDao.getPlayerCharacterIdByName(playerCharacterName)
     }
+
+    override suspend fun deletePlayerCharacter(playerCharacter: PlayerCharacter) {
+        playerCharacterDao.delete(playerCharacter)
+    }
 }

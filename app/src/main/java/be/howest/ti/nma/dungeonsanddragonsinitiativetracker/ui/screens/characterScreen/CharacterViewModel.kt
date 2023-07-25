@@ -1,10 +1,10 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen
 
 import androidx.lifecycle.ViewModel
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignPlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.PlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 
 class CharacterViewModel(
-    private val playerCharacterRepository: PlayerCharacterRepository,
     private val campaignPlayerCharacterRepository: CampaignPlayerCharacterRepository,
     private val enemyRepository: EnemyRepository
 ) : ViewModel() {
@@ -118,6 +117,18 @@ class CharacterViewModel(
 
     private fun getAllEnemies(): Flow<List<Enemy>> {
         return enemyRepository.getAllEnemies()
+    }
+
+    suspend fun deleteCharacter(
+        campaignId: Long,
+        playerCharacter: CampaignPlayerCharacterDetail
+    ) {
+        campaignPlayerCharacterRepository.deleteCampaignPlayerCharacter(
+            CampaignPlayerCharacter(
+                playerCharacterId = playerCharacter.playerCharacterId,
+                campaignId = campaignId
+            )
+        )
     }
 
 

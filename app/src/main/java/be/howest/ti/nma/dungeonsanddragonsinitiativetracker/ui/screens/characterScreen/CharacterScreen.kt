@@ -48,22 +48,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.EnemyScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.PrimaryCharacters
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.SecondaryCharacters
-
+import kotlinx.coroutines.launch
 
 /*
 * Todo: when manually typing in the initiative, the cursor is placed before the previous number
 *  (e.g. typing in a 1 and a 5 results in 51)
 * Todo: when a card is selected and then the roll initiative button is pressed, the selection is
 *   removed
-*  Todo: add delete icon to remove characters and enemies
 * */
+
 
 object CharacterScreenDestination : NavigationDestination {
     override val route: String = "character_overview_screen"
@@ -79,13 +78,12 @@ enum class CharacterTab {
 @Composable
 fun CharacterScreen(
     campaignId: Long,
-    characterViewModel: CharacterViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateToSkirmishScreen: () -> Unit = {},
     navigateToCreateCharacterScreen: () -> Unit,
-    navigateBack: () -> Unit,
+    navigateToSkirmishScreen: () -> Unit,
     onNavigateUp: () -> Unit,
-    canNavigateBack: Boolean = true,
     modifier: Modifier = Modifier,
+    canNavigateBack: Boolean = true,
+    characterViewModel: CharacterViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val characterUiState by characterViewModel.characterUiState.collectAsState()
 
@@ -105,7 +103,6 @@ fun CharacterScreen(
     val primaryCharacters by characterUiState.primaryCharacters.collectAsState(initial = emptyList())
     val secondaryCharacters by characterUiState.secondaryCharacters.collectAsState(initial = emptyList())
     val enemies by characterUiState.enemyCharacters.collectAsState(initial = emptyList())
-    val allEnemies by characterUiState.allEnemies.collectAsState(initial = emptyList())
 
     val selectedCharacters = characterUiState.selectedCharacters
 
@@ -126,7 +123,6 @@ fun CharacterScreen(
                 primaryCharacters = primaryCharacters,
                 secondaryCharacters = secondaryCharacters,
                 enemies = enemies,
-                allEnemies = allEnemies,
                 selectedCharacters = selectedCharacters,
                 modifier = modifier
                     .padding(innerPadding)
@@ -149,7 +145,7 @@ fun CharacterScreen(
             }
         },
         bottomBar = {
-            Column() {
+            Column {
                 CharacterTabBar(
                     tabItems = tabItems,
                     selectedTab = selectedTab,
@@ -174,7 +170,6 @@ fun CharacterScreenBody(
     primaryCharacters: List<CampaignPlayerCharacterDetail>,
     secondaryCharacters: List<CampaignPlayerCharacterDetail>,
     enemies: List<CampaignPlayerCharacterDetail>,
-    allEnemies: List<Enemy>,
     selectedCharacters: MutableList<CampaignPlayerCharacterDetail>
 ) {
     LazyColumn(modifier = modifier) {
@@ -195,7 +190,6 @@ fun CharacterScreenBody(
                         characterViewModel = characterViewModel,
                         primaryCharacters = primaryCharacters,
                         selectedCharacters = selectedCharacters,
-                        modifier = modifier
                     )
                 }
 
@@ -205,7 +199,6 @@ fun CharacterScreenBody(
                         characterViewModel = characterViewModel,
                         secondaryCharacters = secondaryCharacters,
                         selectedCharacters = selectedCharacters,
-                        modifier = modifier
                     )
                 }
 
@@ -214,9 +207,7 @@ fun CharacterScreenBody(
                         campaignId = campaignId,
                         characterViewModel = characterViewModel,
                         enemies = enemies,
-                        allEnemies = allEnemies,
                         selectedCharacters = selectedCharacters,
-                        modifier = modifier
                     )
                 }
             }
@@ -234,6 +225,7 @@ fun CharacterCard(
     isSelected: Boolean,
     onCardClick: (CampaignPlayerCharacterDetail) -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
 
     Card(
         modifier = Modifier
@@ -268,8 +260,8 @@ fun CharacterCard(
                         }
                     }"
                 )
-                Column() {
-                    //Add a title here to clarify that initiative is to be entered in this field?
+                Column {
+                    //TODO Add a title here to clarify that initiative is to be entered in this field?
                     BasicTextField(
                         value = if (playerCharacter.initiative == null) {
                             ""
@@ -310,30 +302,24 @@ fun CharacterCard(
                 ) {
                     Text(text = "Roll Initiative")
                 }
-                RemoveCharacterButton(
-                    characterViewModel = characterViewModel,
-                    campaignId = campaignId
-                )
+                //Button to delete characters
+                IconButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            characterViewModel.deleteCharacter(
+                                campaignId,
+                                playerCharacter
+                            )
+                        }
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = stringResource(id = R.string.delete_campaign_icon_label)
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun RemoveCharacterButton(
-    characterViewModel: CharacterViewModel,
-    campaignId: Long
-) {
-    val coroutineScope = rememberCoroutineScope()
-    IconButton(
-        onClick = {
-//            coroutineScope.launch { createCharacterViewModel.deleteCharacter(campaign) }
-        }
-    ) {
-        Icon(
-            Icons.Default.Delete,
-            contentDescription = stringResource(id = R.string.delete_campaign_icon_label)
-        )
     }
 }
 

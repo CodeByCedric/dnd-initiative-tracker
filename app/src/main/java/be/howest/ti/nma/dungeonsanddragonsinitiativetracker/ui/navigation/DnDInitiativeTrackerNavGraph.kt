@@ -62,7 +62,6 @@ fun DnDInitiativeTrackerNavHost(
                         route = "${CreateCharacterScreenDestination.route}?campaignId=$campaignId",
                     )
                 },
-                navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
             )
         }

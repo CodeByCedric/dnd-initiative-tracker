@@ -28,7 +28,6 @@ object AppViewModelProvider {
         }
         initializer {
             CharacterViewModel(
-                dndInitiativeTrackerApplication().container.playerCharacterRepository,
                 dndInitiativeTrackerApplication().container.campaignPlayerCharacterRepository,
                 dndInitiativeTrackerApplication().container.enemyRepository
             )

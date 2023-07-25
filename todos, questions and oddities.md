@@ -1,3 +1,7 @@
+# Todos (the important ones)
+
+## CharacterScreen
+
 # Questions and Oddities
 
 ## Dimens

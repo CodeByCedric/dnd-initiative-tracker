@@ -1,6 +1,7 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,8 +17,11 @@ interface CampaignPlayerCharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(campaignPlayerCharacters: List<CampaignPlayerCharacter>): List<Long>
 
+    @Delete
+    suspend fun delete(campaignPlayerCharacter: CampaignPlayerCharacter)
+
     @Query(
-        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
+        "SELECT pc.playerCharacterId, pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
                 ".isSecondaryCharacter, pc.isEnemy " +
                 "FROM campaign_player_characters as cpc " +
                 "INNER JOIN player_characters as pc on cpc.playerCharacterId = pc.playerCharacterId " +
@@ -26,7 +30,7 @@ interface CampaignPlayerCharacterDao {
     fun getCampaignPrimaryCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>>
 
     @Query(
-        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
+        "SELECT pc.playerCharacterId, pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
                 ".isSecondaryCharacter, pc.isEnemy " +
                 "FROM campaign_player_characters as cpc " +
                 "INNER JOIN player_characters as pc on cpc.playerCharacterId = pc.playerCharacterId " +
@@ -36,7 +40,8 @@ interface CampaignPlayerCharacterDao {
             Flow<List<CampaignPlayerCharacterDetail>>
 
     @Query(
-        "SELECT pc.name, pc.armorClass, pc.initiativeModifier, pc.isPrimaryCharacter, pc" +
+        "SELECT  pc.playerCharacterId, pc.name, pc.armorClass, pc.initiativeModifier, pc" +
+                ".isPrimaryCharacter, pc" +
                 ".isSecondaryCharacter, pc.isEnemy " +
                 "FROM campaign_player_characters as cpc " +
                 "INNER JOIN player_characters as pc on cpc.playerCharacterId = pc.playerCharacterId " +

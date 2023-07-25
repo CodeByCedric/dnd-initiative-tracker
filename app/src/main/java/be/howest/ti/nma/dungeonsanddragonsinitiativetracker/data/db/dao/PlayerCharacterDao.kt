@@ -1,6 +1,7 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,4 +17,8 @@ interface PlayerCharacterDao {
 
     @Query("SELECT playerCharacterId FROM player_characters WHERE name = :playerCharacterName")
     suspend fun getPlayerCharacterIdByName(playerCharacterName: String): Long
+
+    @Delete
+    suspend fun delete(playerCharacter: PlayerCharacter)
+
 }

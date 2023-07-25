@@ -28,4 +28,8 @@ class OfflineCampaignPlayerCharacterRepository(
     override fun getCampaignEnemyCharactersWithDetails(campaignId: Long): Flow<List<CampaignPlayerCharacterDetail>> {
         return campaignPlayerCharacterDao.getCampaignEnemyCharactersWithDetails(campaignId)
     }
+
+    override suspend fun deleteCampaignPlayerCharacter(campaignPlayerCharacter: CampaignPlayerCharacter) {
+        campaignPlayerCharacterDao.delete(campaignPlayerCharacter)
+    }
 }
