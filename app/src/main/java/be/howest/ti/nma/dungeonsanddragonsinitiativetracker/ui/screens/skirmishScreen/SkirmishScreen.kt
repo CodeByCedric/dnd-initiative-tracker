@@ -12,20 +12,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -57,11 +51,8 @@ fun SkirmishScreen(
     skirmishViewModel: SkirmishViewModel = viewModel(factory = AppViewModelProvider.Factory),
     modifier: Modifier = Modifier,
 ) {
-
     val skirmishUiState = skirmishViewModel.skirmishUiState.collectAsState()
-
     var sortedListOfSkirmishCharacters = skirmishUiState.value.sortedListOfSkirmishCharacters
-    var backgroundColors by remember { mutableStateOf(getCharacterBackgroundColors(sortedListOfSkirmishCharacters)) }
 
     Scaffold(
         topBar = {
@@ -76,10 +67,19 @@ fun SkirmishScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                EndTurnButton {
-                    sortedListOfSkirmishCharacters =
-                        sortedListOfSkirmishCharacters.drop(1) + sortedListOfSkirmishCharacters.take(1)
-                    backgroundColors = getCharacterBackgroundColors(sortedListOfSkirmishCharacters)
+                Button(
+                    onClick = {
+                        val updatedList =
+                            sortedListOfSkirmishCharacters.drop(1) + sortedListOfSkirmishCharacters.take(1)
+                        skirmishViewModel.updateSortedCharacters(updatedList)
+                    },
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.button_height))
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.end_turn),
+                    )
                 }
                 NavigateToCharacterScreenButton(navigateToCharacterScreen)
             }
@@ -87,8 +87,6 @@ fun SkirmishScreen(
     ) { innerPadding ->
         SkirmishScreenBody(
             campaignPlayerCharacters = sortedListOfSkirmishCharacters,
-            skirmishViewModel = skirmishViewModel,
-            backgroundColors = backgroundColors,
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -99,19 +97,15 @@ fun SkirmishScreen(
 @Composable
 fun SkirmishScreenBody(
     campaignPlayerCharacters: List<CampaignPlayerCharacterDetail>,
-    backgroundColors: List<Color>,
     modifier: Modifier,
-    skirmishViewModel: SkirmishViewModel,
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        campaignPlayerCharacters.forEachIndexed { index, campaignPlayerCharacter ->
+        campaignPlayerCharacters.forEach { campaignPlayerCharacter ->
             item {
                 SkirmishCharacterCard(
-                    campaignPlayerCharacter = campaignPlayerCharacter,
-                    backgroundColor = backgroundColors[index],
-                    skirmishViewModel = skirmishViewModel
+                    campaignPlayerCharacter = campaignPlayerCharacter
                 )
             }
         }
@@ -121,11 +115,8 @@ fun SkirmishScreenBody(
 @Composable
 fun SkirmishCharacterCard(
     campaignPlayerCharacter: CampaignPlayerCharacterDetail,
-    backgroundColor: Color,
-    skirmishViewModel: SkirmishViewModel
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
@@ -143,7 +134,7 @@ fun SkirmishCharacterCard(
             Column() {
                 IconButton(
                     onClick = {
-                        skirmishViewModel.deleteSkirmishCharacter(campaignPlayerCharacter)
+                        // TODO Perform the delete operation here if needed
                     }
                 ) {
                     Icon(
@@ -169,33 +160,5 @@ private fun NavigateToCharacterScreenButton(navigateToCharacterScreen: () -> Uni
             text = stringResource(R.string.to_character_overview_button),
             textAlign = TextAlign.Center
         )
-    }
-}
-
-@Composable
-fun EndTurnButton(
-    onEndTurnClicked: () -> Unit
-) {
-    Button(
-        onClick = { onEndTurnClicked() },
-        modifier = Modifier
-            .height(dimensionResource(id = R.dimen.button_height))
-            .padding(dimensionResource(id = R.dimen.padding_small))
-    ) {
-        Text(
-            text = stringResource(id = R.string.end_turn),
-        )
-    }
-}
-
-
-private fun getCharacterBackgroundColors(campaignPlayerCharacters: List<CampaignPlayerCharacterDetail>): List<Color> {
-    return campaignPlayerCharacters.map { campaignPlayerCharacter ->
-        when {
-            campaignPlayerCharacter.isPrimaryCharacter -> Color(0xFFbafffe)
-            campaignPlayerCharacter.isSecondaryCharacter -> Color(0xFFddffba)
-            campaignPlayerCharacter.isEnemy -> Color(0xFFffbabb)
-            else -> Color.Transparent
-        }
     }
 }

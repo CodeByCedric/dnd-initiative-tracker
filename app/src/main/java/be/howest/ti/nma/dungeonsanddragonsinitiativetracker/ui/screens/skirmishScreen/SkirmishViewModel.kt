@@ -27,6 +27,12 @@ class SkirmishViewModel(
         )
     }
 
+    fun updateSortedCharacters(sortedListOfSkirmishCharacters: List<CampaignPlayerCharacterDetail>) {
+        val newState =
+            _skirmishUiState.value.copy(sortedListOfSkirmishCharacters = sortedListOfSkirmishCharacters)
+        _skirmishUiState.value = newState
+    }
+
     fun deleteSkirmishCharacter(campaignPlayerCharacter: CampaignPlayerCharacterDetail) {
         val currentUiState = skirmishUiState.value
         val updatedCharacters =
@@ -34,4 +40,5 @@ class SkirmishViewModel(
         _skirmishUiState.value =
             currentUiState.copy(sortedListOfSkirmishCharacters = updatedCharacters)
     }
+
 }
