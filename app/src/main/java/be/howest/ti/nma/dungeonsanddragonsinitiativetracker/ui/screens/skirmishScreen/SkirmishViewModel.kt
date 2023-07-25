@@ -41,4 +41,5 @@ class SkirmishViewModel(
             currentUiState.copy(sortedListOfSkirmishCharacters = updatedCharacters)
     }
 
+
 }

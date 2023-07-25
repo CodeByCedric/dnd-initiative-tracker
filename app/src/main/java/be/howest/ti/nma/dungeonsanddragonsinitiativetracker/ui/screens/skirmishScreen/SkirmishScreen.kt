@@ -44,15 +44,14 @@ object SkirmishScreenDestination : NavigationDestination {
 
 @Composable
 fun SkirmishScreen(
-    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
-    canNavigateBack: Boolean = true,
-    navigateToCharacterScreen: () -> Unit = {},
-    skirmishViewModel: SkirmishViewModel = viewModel(factory = AppViewModelProvider.Factory),
     modifier: Modifier = Modifier,
+    canNavigateBack: Boolean = true,
+    skirmishViewModel: SkirmishViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToCharacterScreen: () -> Unit = {},
 ) {
     val skirmishUiState = skirmishViewModel.skirmishUiState.collectAsState()
-    var sortedListOfSkirmishCharacters = skirmishUiState.value.sortedListOfSkirmishCharacters
+    val sortedListOfSkirmishCharacters = skirmishUiState.value.sortedListOfSkirmishCharacters
 
     Scaffold(
         topBar = {
@@ -87,6 +86,7 @@ fun SkirmishScreen(
     ) { innerPadding ->
         SkirmishScreenBody(
             campaignPlayerCharacters = sortedListOfSkirmishCharacters,
+            skirmishViewModel = skirmishViewModel,
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -97,6 +97,7 @@ fun SkirmishScreen(
 @Composable
 fun SkirmishScreenBody(
     campaignPlayerCharacters: List<CampaignPlayerCharacterDetail>,
+    skirmishViewModel: SkirmishViewModel,
     modifier: Modifier,
 ) {
     LazyColumn(
@@ -105,7 +106,8 @@ fun SkirmishScreenBody(
         campaignPlayerCharacters.forEach { campaignPlayerCharacter ->
             item {
                 SkirmishCharacterCard(
-                    campaignPlayerCharacter = campaignPlayerCharacter
+                    campaignPlayerCharacter = campaignPlayerCharacter,
+                    skirmishViewModel = skirmishViewModel,
                 )
             }
         }
@@ -115,6 +117,7 @@ fun SkirmishScreenBody(
 @Composable
 fun SkirmishCharacterCard(
     campaignPlayerCharacter: CampaignPlayerCharacterDetail,
+    skirmishViewModel: SkirmishViewModel,
 ) {
     Card(
         modifier = Modifier
@@ -127,14 +130,14 @@ fun SkirmishCharacterCard(
                 .fillMaxWidth()
                 .padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
-            Column() {
+            Column {
                 Text(text = campaignPlayerCharacter.name)
                 Text(text = "AC: ${campaignPlayerCharacter.armorClass}")
             }
-            Column() {
+            Column {
                 IconButton(
                     onClick = {
-                        // TODO Perform the delete operation here if needed
+                        skirmishViewModel.deleteSkirmishCharacter(campaignPlayerCharacter)
                     }
                 ) {
                     Icon(
