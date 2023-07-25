@@ -26,4 +26,12 @@ class SkirmishViewModel(
                 .thenByDescending { Math.random() }
         )
     }
+
+    fun deleteSkirmishCharacter(campaignPlayerCharacter: CampaignPlayerCharacterDetail) {
+        val currentUiState = skirmishUiState.value
+        val updatedCharacters =
+            currentUiState.sortedListOfSkirmishCharacters - campaignPlayerCharacter
+        _skirmishUiState.value =
+            currentUiState.copy(sortedListOfSkirmishCharacters = updatedCharacters)
+    }
 }

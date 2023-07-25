@@ -87,6 +87,7 @@ fun SkirmishScreen(
     ) { innerPadding ->
         SkirmishScreenBody(
             campaignPlayerCharacters = sortedListOfSkirmishCharacters,
+            skirmishViewModel = skirmishViewModel,
             backgroundColors = backgroundColors,
             modifier = modifier
                 .padding(innerPadding)
@@ -99,7 +100,8 @@ fun SkirmishScreen(
 fun SkirmishScreenBody(
     campaignPlayerCharacters: List<CampaignPlayerCharacterDetail>,
     backgroundColors: List<Color>,
-    modifier: Modifier
+    modifier: Modifier,
+    skirmishViewModel: SkirmishViewModel,
 ) {
     LazyColumn(
         modifier = modifier
@@ -107,8 +109,9 @@ fun SkirmishScreenBody(
         campaignPlayerCharacters.forEachIndexed { index, campaignPlayerCharacter ->
             item {
                 SkirmishCharacterCard(
-                    campaignPlayerCharacter,
-                    backgroundColors[index]
+                    campaignPlayerCharacter = campaignPlayerCharacter,
+                    backgroundColor = backgroundColors[index],
+                    skirmishViewModel = skirmishViewModel
                 )
             }
         }
@@ -118,7 +121,8 @@ fun SkirmishScreenBody(
 @Composable
 fun SkirmishCharacterCard(
     campaignPlayerCharacter: CampaignPlayerCharacterDetail,
-    backgroundColor: Color
+    backgroundColor: Color,
+    skirmishViewModel: SkirmishViewModel
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -139,7 +143,7 @@ fun SkirmishCharacterCard(
             Column() {
                 IconButton(
                     onClick = {
-                        //todo
+                        skirmishViewModel.deleteSkirmishCharacter(campaignPlayerCharacter)
                     }
                 ) {
                     Icon(
