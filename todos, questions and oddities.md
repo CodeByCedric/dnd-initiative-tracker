@@ -1,5 +1,10 @@
 # Todos (the important ones)
 
+## General
+
+Remove implementation of CampaignPlayerCharacterDetail since this is exactly the same as the more
+recent implemented SkirmishCharacter
+
 ## CharacterScreen
 
 # Questions and Oddities

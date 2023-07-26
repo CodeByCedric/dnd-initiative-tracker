@@ -34,7 +34,6 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.Naviga
 
 
 /*
-TODO: add icon to remove character from list
 TODO: add deathSaves
 TODO: add statuses (e.g. poison, petrification, etc.)
 TODO: add expand functionality with more enemy details from API
