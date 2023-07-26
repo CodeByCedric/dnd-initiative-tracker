@@ -8,12 +8,14 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.ParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.PlayerCharacterRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.SkirmishCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineCampaignParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineCampaignPlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineCampaignRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineEnemyRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineParticipantRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflinePlayerCharacterRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.offlinerepositories.OfflineSkirmishCharacterRepository
 
 interface AppContainer {
     val campaignRepository: CampaignRepository
@@ -22,6 +24,7 @@ interface AppContainer {
     val playerCharacterRepository: PlayerCharacterRepository
     val campaignPlayerCharacterRepository: CampaignPlayerCharacterRepository
     val enemyRepository: EnemyRepository
+    val skirmishCharacterRepository: SkirmishCharacterRepository
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -50,6 +53,11 @@ class AppDataContainer(private val context: Context) : AppContainer {
     }
     override val enemyRepository: EnemyRepository by lazy {
         OfflineEnemyRepository(DnDInitiativeTrackerDatabase.getDatabase(context).EnemyDao())
+    }
+    override val skirmishCharacterRepository: SkirmishCharacterRepository by lazy {
+        OfflineSkirmishCharacterRepository(
+            DnDInitiativeTrackerDatabase.getDatabase(context).SkirmishCharacterDao()
+        )
     }
 
 }

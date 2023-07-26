@@ -14,5 +14,4 @@ data class PlayerCharacter(
     val isPrimaryCharacter: Boolean = false,
     val isSecondaryCharacter: Boolean = false,
     val isEnemy: Boolean = false,
-
-    )
+)

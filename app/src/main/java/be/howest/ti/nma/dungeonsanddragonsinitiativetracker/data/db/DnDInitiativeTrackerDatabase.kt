@@ -12,12 +12,14 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.EnemyDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.ParticipantDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.PlayerCharacterDao
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.dao.SkirmishCharacterDao
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Campaign
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignParticipant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Participant
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.PlayerCharacter
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.SkirmishCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeConverter
 
 @Database(
@@ -27,8 +29,10 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.DrawableTypeCon
         CampaignParticipant::class,
         PlayerCharacter::class,
         CampaignPlayerCharacter::class,
-        Enemy::class],
-    version = 11,
+        Enemy::class,
+        SkirmishCharacter::class
+    ],
+    version = 12,
     exportSchema = false
 )
 @TypeConverters(
@@ -43,6 +47,7 @@ abstract class DnDInitiativeTrackerDatabase : RoomDatabase() {
     abstract fun PlayerCharacterDao(): PlayerCharacterDao
     abstract fun CampaignPlayerCharacterDao(): CampaignPlayerCharacterDao
     abstract fun EnemyDao(): EnemyDao
+    abstract fun SkirmishCharacterDao(): SkirmishCharacterDao
 
     companion object {
         @Volatile

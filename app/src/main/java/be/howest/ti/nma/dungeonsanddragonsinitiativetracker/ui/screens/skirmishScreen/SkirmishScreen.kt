@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.SkirmishCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
 
@@ -87,7 +87,7 @@ fun SkirmishScreen(
         }
     ) { innerPadding ->
         SkirmishScreenBody(
-            campaignPlayerCharacters = sortedListOfSkirmishCharacters,
+            skirmishCharacters = sortedListOfSkirmishCharacters,
             skirmishViewModel = skirmishViewModel,
             modifier = modifier
                 .padding(innerPadding)
@@ -98,17 +98,17 @@ fun SkirmishScreen(
 
 @Composable
 fun SkirmishScreenBody(
-    campaignPlayerCharacters: List<CampaignPlayerCharacterDetail>,
+    skirmishCharacters: List<SkirmishCharacter>,
     skirmishViewModel: SkirmishViewModel,
     modifier: Modifier,
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        campaignPlayerCharacters.forEach { campaignPlayerCharacter ->
+        skirmishCharacters.forEach { skirmishCharacter ->
             item {
                 SkirmishCharacterCard(
-                    campaignPlayerCharacter = campaignPlayerCharacter,
+                    skirmishCharacter = skirmishCharacter,
                     skirmishViewModel = skirmishViewModel,
                 )
             }
@@ -118,13 +118,13 @@ fun SkirmishScreenBody(
 
 @Composable
 fun SkirmishCharacterCard(
-    campaignPlayerCharacter: CampaignPlayerCharacterDetail,
+    skirmishCharacter: SkirmishCharacter,
     skirmishViewModel: SkirmishViewModel,
 ) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = skirmishViewModel.getBackgroundCardColor
-                (campaignPlayerCharacter)
+                (skirmishCharacter)
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -137,13 +137,13 @@ fun SkirmishCharacterCard(
                 .padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             Column {
-                Text(text = campaignPlayerCharacter.name)
-                Text(text = "AC: ${campaignPlayerCharacter.armorClass}")
+                Text(text = skirmishCharacter.name)
+                Text(text = "AC: ${skirmishCharacter.armorClass}")
             }
             Column {
                 IconButton(
                     onClick = {
-                        skirmishViewModel.deleteSkirmishCharacter(campaignPlayerCharacter)
+                        skirmishViewModel.deleteSkirmishCharacter(skirmishCharacter)
                     }
                 ) {
                     Icon(

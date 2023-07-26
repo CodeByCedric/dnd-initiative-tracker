@@ -1,53 +1,70 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.DataSource.skirkmishScreenCharacters
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
+import androidx.lifecycle.viewModelScope
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.SkirmishCharacter
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.SkirmishCharacterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class SkirmishViewModel(
+    private val skirmishCharacterRepository: SkirmishCharacterRepository
 ) : ViewModel() {
     private val _skirmishUiState = MutableStateFlow(SkirmishUiState())
     val skirmishUiState: StateFlow<SkirmishUiState> = _skirmishUiState.asStateFlow()
 
 
     init {
-        _skirmishUiState.value = SkirmishUiState(
-            sortedListOfSkirmishCharacters = getSortedListOfCharacters(skirkmishScreenCharacters)
-        )
+        viewModelScope.launch {
+            _skirmishUiState.value = SkirmishUiState(
+                sortedListOfSkirmishCharacters = getSortedListOfCharacters(getListOfSkirmishCharacters())
+            )
+        }
     }
 
-    private fun getSortedListOfCharacters(listOfSkirmishCharacters: List<CampaignPlayerCharacterDetail>): List<CampaignPlayerCharacterDetail> {
+    private fun getSortedListOfCharacters(listOfSkirmishCharacters: List<SkirmishCharacter>): List<SkirmishCharacter> {
         return listOfSkirmishCharacters.sortedWith(
-            compareByDescending<CampaignPlayerCharacterDetail> { it.initiative }
+            compareByDescending<SkirmishCharacter> { it.initiative }
                 .thenByDescending { it.initiativeModifier }
                 .thenByDescending { Math.random() }
         )
     }
 
-    fun updateSortedCharacters(sortedListOfSkirmishCharacters: List<CampaignPlayerCharacterDetail>) {
+    private suspend fun getListOfSkirmishCharacters(): List<SkirmishCharacter> {
+        val flowOfSkirmishCharacters = skirmishCharacterRepository.getAllSkirmishCharacters()
+        val listOfSkirmishCharacters = flowOfSkirmishCharacters.first().toList()
+        Log.d(
+            "listOfSkirmishCharacters",
+            listOfSkirmishCharacters.toString()
+        )
+        return listOfSkirmishCharacters
+    }
+
+    fun updateSortedCharacters(sortedListOfSkirmishCharacters: List<SkirmishCharacter>) {
         val newState =
             _skirmishUiState.value.copy(sortedListOfSkirmishCharacters = sortedListOfSkirmishCharacters)
         _skirmishUiState.value = newState
     }
 
-    fun deleteSkirmishCharacter(campaignPlayerCharacter: CampaignPlayerCharacterDetail) {
+    fun deleteSkirmishCharacter(skirmishCharacter: SkirmishCharacter) {
         val currentUiState = skirmishUiState.value
         val updatedCharacters =
-            currentUiState.sortedListOfSkirmishCharacters - campaignPlayerCharacter
+            currentUiState.sortedListOfSkirmishCharacters - skirmishCharacter
         _skirmishUiState.value =
             currentUiState.copy(sortedListOfSkirmishCharacters = updatedCharacters)
     }
 
-    fun getBackgroundCardColor(campaignPlayerCharacter: CampaignPlayerCharacterDetail): Color {
-        if (campaignPlayerCharacter.isPrimaryCharacter) {
+    fun getBackgroundCardColor(skirmishCharacter: SkirmishCharacter): Color {
+        if (skirmishCharacter.isPrimaryCharacter) {
             return Color(0xFFbafffe)
-        } else if (campaignPlayerCharacter.isSecondaryCharacter) {
+        } else if (skirmishCharacter.isSecondaryCharacter) {
             return Color(0xFFddffba)
-        } else if (campaignPlayerCharacter.isEnemy) {
+        } else if (skirmishCharacter.isEnemy) {
             return Color(0xFFffbabb)
         } else {
             return Color.Transparent

@@ -29,7 +29,8 @@ object AppViewModelProvider {
         initializer {
             CharacterViewModel(
                 dndInitiativeTrackerApplication().container.campaignPlayerCharacterRepository,
-                dndInitiativeTrackerApplication().container.enemyRepository
+                dndInitiativeTrackerApplication().container.enemyRepository,
+                dndInitiativeTrackerApplication().container.skirmishCharacterRepository
             )
         }
         initializer {
@@ -41,6 +42,7 @@ object AppViewModelProvider {
         }
         initializer {
             SkirmishViewModel(
+                dndInitiativeTrackerApplication().container.skirmishCharacterRepository
             )
         }
     }

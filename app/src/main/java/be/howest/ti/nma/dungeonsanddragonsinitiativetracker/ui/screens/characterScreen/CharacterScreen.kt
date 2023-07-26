@@ -1,5 +1,6 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -152,10 +153,11 @@ fun CharacterScreen(
                     onTabSelected = setSelectedTab
                 )
                 NavigateToSkirmishScreenButton(
+                    characterViewModel = characterViewModel,
+                    selectedCharacters = selectedCharacters,
                     navigateToSkirmishScreen = navigateToSkirmishScreen
                 )
             }
-
         }
     )
 }
@@ -377,9 +379,22 @@ fun CharacterTabBar(
 @Composable
 fun NavigateToSkirmishScreenButton(
     navigateToSkirmishScreen: () -> Unit,
+    selectedCharacters: MutableList<CampaignPlayerCharacterDetail>,
+    characterViewModel: CharacterViewModel,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Button(
-        onClick = { navigateToSkirmishScreen() },
+        onClick = {
+            Log.d(
+                "Selected Characters:",
+                selectedCharacters.toString()
+            )
+            coroutineScope.launch {
+                characterViewModel.clearSkirmishCharacterTable()
+                characterViewModel.insertSkirmishParticipants(selectedCharacters)
+            }
+            navigateToSkirmishScreen()
+        },
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()

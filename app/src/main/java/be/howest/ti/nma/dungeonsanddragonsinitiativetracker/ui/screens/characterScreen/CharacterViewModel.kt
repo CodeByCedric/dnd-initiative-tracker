@@ -3,8 +3,10 @@ package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characte
 import androidx.lifecycle.ViewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.CampaignPlayerCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Enemy
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.SkirmishCharacter
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.CampaignPlayerCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.EnemyRepository
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories.interfaces.SkirmishCharacterRepository
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignPlayerCharacterDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,8 @@ import kotlinx.coroutines.flow.map
 
 class CharacterViewModel(
     private val campaignPlayerCharacterRepository: CampaignPlayerCharacterRepository,
-    private val enemyRepository: EnemyRepository
+    private val enemyRepository: EnemyRepository,
+    private val skirmishCharacterRepository: SkirmishCharacterRepository
 ) : ViewModel() {
     private val _characterUiState = MutableStateFlow(CharacterUiState())
     val characterUiState: StateFlow<CharacterUiState> = _characterUiState.asStateFlow()
@@ -129,6 +132,30 @@ class CharacterViewModel(
                 campaignId = campaignId
             )
         )
+    }
+
+    suspend fun clearSkirmishCharacterTable() {
+        skirmishCharacterRepository.deleteAllSkirmishCharacters()
+    }
+
+    //TODO elvis operator on initiative is om de int? te omzeilen, CampaignPlayerCharacterDetail
+    // moet uit het project, en vervangen worden door skirmishCharacter
+    suspend fun insertSkirmishParticipants(selectedCharacters: MutableList<CampaignPlayerCharacterDetail>) {
+        val listOfSkirmishCharacters: MutableList<SkirmishCharacter> = mutableListOf()
+        selectedCharacters.forEach { campaignPlayerCharacter ->
+            val skirmishCharacter = SkirmishCharacter(
+                name = campaignPlayerCharacter.name,
+                armorClass = campaignPlayerCharacter.armorClass,
+                initiativeModifier = campaignPlayerCharacter.initiativeModifier,
+                initiative = campaignPlayerCharacter.initiative ?: 10,
+                isPrimaryCharacter = campaignPlayerCharacter.isPrimaryCharacter,
+                isSecondaryCharacter = campaignPlayerCharacter.isSecondaryCharacter,
+                isEnemy = campaignPlayerCharacter.isEnemy,
+            )
+            listOfSkirmishCharacters.add(skirmishCharacter)
+        }
+
+        skirmishCharacterRepository.insertListOfSkirmishCharacters(listOfSkirmishCharacters)
     }
 
 
