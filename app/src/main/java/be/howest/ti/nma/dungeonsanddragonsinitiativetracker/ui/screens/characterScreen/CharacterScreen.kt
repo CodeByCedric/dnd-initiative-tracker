@@ -79,8 +79,8 @@ enum class CharacterTab {
 @Composable
 fun CharacterScreen(
     campaignId: Long,
-    navigateToCreateCharacterScreen: () -> Unit,
-    navigateToSkirmishScreen: () -> Unit,
+    navigateToCreateCharacterScreen: (Long) -> Unit,
+    navigateToSkirmishScreen: (Long) -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = true,
@@ -132,7 +132,7 @@ fun CharacterScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = navigateToCreateCharacterScreen,
+                onClick = { navigateToCreateCharacterScreen(campaignId) },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_medium))
@@ -155,7 +155,7 @@ fun CharacterScreen(
                 NavigateToSkirmishScreenButton(
                     characterViewModel = characterViewModel,
                     selectedCharacters = selectedCharacters,
-                    navigateToSkirmishScreen = navigateToSkirmishScreen
+                    navigateToSkirmishScreen = { navigateToSkirmishScreen(campaignId) }
                 )
             }
         }

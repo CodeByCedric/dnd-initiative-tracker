@@ -80,7 +80,7 @@ object CampaignScreenDestination : NavigationDestination {
 
 }
 
-//Started with refactoring of campaignscreen, but will postpone and implement crucial screens and
+//Started with refactoring of campaignScreen, but will postpone and implement crucial screens and
 // features first
 
 //@Composable
@@ -507,7 +507,6 @@ fun CampaignScreen(
         }
     ) { innerPadding ->
         CampaignBody(
-            navigateToCharacterScreen = navigateToCharacterScreen,
             campaignViewModel = campaignViewModel,
             campaignUiState = campaignUiState,
             modifier = modifier
@@ -520,7 +519,6 @@ fun CampaignScreen(
 
 @Composable
 fun CampaignBody(
-    navigateToCharacterScreen: (Long) -> Unit,
     campaignViewModel: CampaignViewModel,
     campaignUiState: CampaignUiState,
     modifier: Modifier

@@ -81,11 +81,15 @@ fun DnDInitiativeTrackerNavHost(
                 onNavigateUp = { navController.navigateUp() },
             )
         }
-        composable(route = SkirmishScreenDestination.route) {
+        composable(
+            route = "${SkirmishScreenDestination.route}?campaignId={campaignId}",
+            arguments = listOf(navArgument("campaignId") { defaultValue = -1L })
+        ) { backStackEntry ->
+            val campaignId = backStackEntry.arguments?.getLong("campaignId") ?: -1L
             SkirmishScreen(
                 navigateToCharacterScreen = {
                     navController.navigate(
-                        route = CharacterScreenDestination.route
+                        route = "${CharacterScreenDestination.route}?campaignId=$campaignId"
                     )
                 },
                 onNavigateUp = { navController.navigateUp() }
