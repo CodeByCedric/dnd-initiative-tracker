@@ -5,7 +5,11 @@
 Remove implementation of CampaignPlayerCharacterDetail since this is exactly the same as the more
 recent implemented SkirmishCharacter
 
+Move color of textfields to Color.kt and implement value for darktheme
+
 ## CharacterScreen
+
+Tapping on roll initiative clears the selection, fix this
 
 # Questions and Oddities
 

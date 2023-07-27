@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -44,7 +45,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
@@ -229,20 +229,33 @@ fun CharacterCard(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    val backgroundCardColor = if (playerCharacter.isPrimaryCharacter) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else if (playerCharacter.isSecondaryCharacter) {
+        MaterialTheme.colorScheme.tertiaryContainer
+    } else if (playerCharacter.isEnemy) {
+        MaterialTheme.colorScheme.errorContainer
+    } else {
+        Color.Transparent
+    }
+
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = backgroundCardColor
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(dimensionResource(id = R.dimen.padding_small))
             .clickable { onCardClick(playerCharacter) },
         border = if (isSelected) BorderStroke(
-            2.dp,
-            Color.Blue
+            width = dimensionResource(id = R.dimen.border_medium),
+            color = MaterialTheme.colorScheme.outline
         ) else null
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             Row {
                 Text(text = playerCharacter.name)
@@ -277,15 +290,21 @@ fun CharacterCard(
                             )
                         },
                         singleLine = true,
-                        textStyle = TextStyle(fontSize = 16.sp),
+                        textStyle = TextStyle(
+                            fontSize = dimensionResource(
+                                id = R.dimen
+                                    .fontSize_medium
+                            ).value.sp
+                        ),
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
                         ),
 
                         modifier = Modifier
-                            .width(60.dp)
+                            .width(dimensionResource(id = R.dimen.initiative_textfield_width))
+                            //TODO create a color for the textfield in the theme and use this
                             .background(Color.LightGray)
-                            .padding(8.dp)
+                            .padding(dimensionResource(R.dimen.padding_small))
                     )
                 }
 

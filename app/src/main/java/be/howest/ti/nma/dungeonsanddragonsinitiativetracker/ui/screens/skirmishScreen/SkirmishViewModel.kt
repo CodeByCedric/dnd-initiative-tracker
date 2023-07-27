@@ -1,7 +1,5 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen
 
-import android.util.Log
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.SkirmishCharacter
@@ -9,7 +7,6 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.repositories
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SkirmishViewModel(
@@ -38,16 +35,6 @@ class SkirmishViewModel(
         )
     }
 
-    private suspend fun getListOfSkirmishCharacters(): List<SkirmishCharacter> {
-        val flowOfSkirmishCharacters = skirmishCharacterRepository.getAllSkirmishCharacters()
-        val listOfSkirmishCharacters = flowOfSkirmishCharacters.first().toList()
-        Log.d(
-            "listOfSkirmishCharacters",
-            listOfSkirmishCharacters.toString()
-        )
-        return listOfSkirmishCharacters
-    }
-
     fun updateSortedCharacters(sortedListOfSkirmishCharacters: List<SkirmishCharacter>) {
         val newState =
             _skirmishUiState.value.copy(sortedListOfSkirmishCharacters = sortedListOfSkirmishCharacters)
@@ -60,18 +47,6 @@ class SkirmishViewModel(
             currentUiState.sortedListOfSkirmishCharacters - skirmishCharacter
         _skirmishUiState.value =
             currentUiState.copy(sortedListOfSkirmishCharacters = updatedCharacters)
-    }
-
-    fun getBackgroundCardColor(skirmishCharacter: SkirmishCharacter): Color {
-        if (skirmishCharacter.isPrimaryCharacter) {
-            return Color(0xFFbafffe)
-        } else if (skirmishCharacter.isSecondaryCharacter) {
-            return Color(0xFFddffba)
-        } else if (skirmishCharacter.isEnemy) {
-            return Color(0xFFffbabb)
-        } else {
-            return Color.Transparent
-        }
     }
 
 

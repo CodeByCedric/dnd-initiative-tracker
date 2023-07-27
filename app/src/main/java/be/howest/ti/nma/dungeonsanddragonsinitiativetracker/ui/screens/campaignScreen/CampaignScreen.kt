@@ -587,8 +587,8 @@ fun CampaignCard(
             .padding(dimensionResource(id = R.dimen.padding_small))
             .clickable { onSelect(campaign) }
             .border(
-                width = 2.dp,
-                color = if (isSelected) Color.Blue else Color.Transparent,
+                width = dimensionResource(id = R.dimen.border_medium),
+                color = if (isSelected) MaterialTheme.colorScheme.outline else Color.Transparent,
                 shape = RoundedCornerShape(8.dp)
             )
             .testTag("campaignCard")

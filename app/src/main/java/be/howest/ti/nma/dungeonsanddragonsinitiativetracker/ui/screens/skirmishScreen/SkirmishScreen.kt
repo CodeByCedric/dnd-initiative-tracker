@@ -15,16 +15,17 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
@@ -120,14 +121,23 @@ fun SkirmishCharacterCard(
     skirmishCharacter: SkirmishCharacter,
     skirmishViewModel: SkirmishViewModel,
 ) {
+    val backgroundCardColor = if (skirmishCharacter.isPrimaryCharacter) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else if (skirmishCharacter.isSecondaryCharacter) {
+        MaterialTheme.colorScheme.tertiaryContainer
+    } else if (skirmishCharacter.isEnemy) {
+        MaterialTheme.colorScheme.errorContainer
+    } else {
+        Color.Transparent
+    }
+
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = skirmishViewModel.getBackgroundCardColor
-                (skirmishCharacter)
+            containerColor = backgroundCardColor
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(dimensionResource(id = R.dimen.padding_small)),
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="border_small">1dp</dimen>
+    <dimen name="border_medium">2dp</dimen>
     <dimen name="padding_smallest">8dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
@@ -16,4 +17,5 @@
     <dimen name="enemy_card_height">50dp</dimen>
     <dimen name="create_character_screen_description_column_width">150dp</dimen>
     <dimen name="create_character_screen_ac_and_initiative_column_width">50dp</dimen>
+    <dimen name="initiative_textfield_width">60dp</dimen>
 </resources>
