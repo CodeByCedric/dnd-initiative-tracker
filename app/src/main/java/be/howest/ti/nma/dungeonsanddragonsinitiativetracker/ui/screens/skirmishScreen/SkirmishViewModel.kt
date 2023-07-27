@@ -21,9 +21,12 @@ class SkirmishViewModel(
 
     init {
         viewModelScope.launch {
-            _skirmishUiState.value = SkirmishUiState(
-                sortedListOfSkirmishCharacters = getSortedListOfCharacters(getListOfSkirmishCharacters())
-            )
+            skirmishCharacterRepository.getAllSkirmishCharacters()
+                .collect { listOfSkirmishCharacters ->
+                    _skirmishUiState.value = SkirmishUiState(
+                        sortedListOfSkirmishCharacters = getSortedListOfCharacters(listOfSkirmishCharacters)
+                    )
+                }
         }
     }
 

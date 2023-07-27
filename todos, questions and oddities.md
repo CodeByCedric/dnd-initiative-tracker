@@ -2,6 +2,9 @@
 
 ## General
 
+!!! campaign id meegeven doorheen alle schermen, anders laadt hij het niet correct bij het einde van
+een battle
+
 Remove implementation of CampaignPlayerCharacterDetail since this is exactly the same as the more
 recent implemented SkirmishCharacter
 
