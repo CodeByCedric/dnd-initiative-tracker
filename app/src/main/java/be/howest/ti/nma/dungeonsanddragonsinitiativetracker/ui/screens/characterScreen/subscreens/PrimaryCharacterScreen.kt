@@ -18,6 +18,7 @@ fun PrimaryCharacters(
             campaignId = campaignId,
             playerCharacter = primaryCharacter,
             characterViewModel = characterViewModel,
+
             isSelected = primaryCharacter in selectedCharacters
         ) { clickedCharacter ->
             if (selectedCharacters.contains(clickedCharacter)) {

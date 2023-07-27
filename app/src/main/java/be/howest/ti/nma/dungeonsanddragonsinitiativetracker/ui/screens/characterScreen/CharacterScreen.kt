@@ -1,6 +1,5 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,6 +54,7 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.Naviga
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.EnemyScreen
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.PrimaryCharacters
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.subscreens.SecondaryCharacters
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /*
@@ -113,7 +113,6 @@ fun CharacterScreen(
                 title = stringResource(id = CharacterScreenDestination.titleRes),
                 canNavigateBack = canNavigateBack,
                 navigateUp = onNavigateUp
-
             )
         },
         content = { innerPadding ->
@@ -275,73 +274,103 @@ fun CharacterCard(
                         }
                     }"
                 )
-                Column {
-                    //TODO Add a title here to clarify that initiative is to be entered in this field?
-                    BasicTextField(
-                        value = if (playerCharacter.initiative == null) {
-                            ""
-                        } else {
-                            playerCharacter.initiative.toString()
-                        },
-                        onValueChange = { newValue ->
-                            characterViewModel.updateInitiativeForCharacters(
-                                playerCharacter,
-                                newValue
-                            )
-                        },
-                        singleLine = true,
-                        textStyle = TextStyle(
-                            fontSize = dimensionResource(
-                                id = R.dimen
-                                    .fontSize_medium
-                            ).value.sp
-                        ),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
-                        ),
-
-                        modifier = Modifier
-                            .width(dimensionResource(id = R.dimen.initiative_textfield_width))
-                            //TODO create a color for the textfield in the theme and use this
-                            .background(Color.LightGray)
-                            .padding(dimensionResource(R.dimen.padding_small))
-                    )
-                }
-
-                // Button to roll for initiative
-                Button(
-                    onClick = {
-                        val rolledInitiative = characterViewModel.rollInitiative(
-                            playerCharacter
-                                .initiativeModifier
-                        )
-                        characterViewModel.updateInitiativeForCharacters(
-                            playerCharacter,
-                            rolledInitiative
-                        )
-                    },
-                ) {
-                    Text(text = "Roll Initiative")
-                }
-                //Button to delete characters
-                IconButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            characterViewModel.deleteCharacter(
-                                campaignId,
-                                playerCharacter
-                            )
-                        }
-                    }
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = stringResource(id = R.string.delete_campaign_icon_label)
-                    )
-                }
+                InitiativeTextfield(
+                    playerCharacter,
+                    characterViewModel
+                )
+                RollForInitiativeButton(
+                    characterViewModel,
+                    playerCharacter
+                )
+                DeleteCharacterButton(
+                    coroutineScope,
+                    characterViewModel,
+                    campaignId,
+                    playerCharacter
+                )
             }
         }
     }
+}
+
+@Composable
+private fun DeleteCharacterButton(
+    coroutineScope: CoroutineScope,
+    characterViewModel: CharacterViewModel,
+    campaignId: Long,
+    playerCharacter: CampaignPlayerCharacterDetail
+) {
+    IconButton(
+        onClick = {
+            coroutineScope.launch {
+                characterViewModel.deleteCharacter(
+                    campaignId,
+                    playerCharacter
+                )
+            }
+        }
+    ) {
+        Icon(
+            Icons.Default.Delete,
+            contentDescription = stringResource(id = R.string.delete_campaign_icon_label)
+        )
+    }
+}
+
+@Composable
+private fun RollForInitiativeButton(
+    characterViewModel: CharacterViewModel,
+    playerCharacter: CampaignPlayerCharacterDetail
+) {
+    Button(
+        onClick = {
+            val rolledInitiative = characterViewModel.rollInitiative(
+                playerCharacter.initiativeModifier
+            )
+            characterViewModel.updateInitiativeForCharacters(
+                playerCharacter,
+                rolledInitiative
+            )
+        },
+    ) {
+        Text(text = "Roll Initiative")
+    }
+}
+
+@Composable
+private fun InitiativeTextfield(
+    playerCharacter: CampaignPlayerCharacterDetail,
+    characterViewModel: CharacterViewModel
+) {
+    BasicTextField(
+        value = if (playerCharacter.initiative == null) {
+            ""
+        } else {
+            playerCharacter.initiative.toString()
+        },
+        onValueChange = { newValue ->
+            characterViewModel.updateInitiativeForCharacters(
+                playerCharacter,
+                newValue
+            )
+        },
+        singleLine = true,
+        textStyle = TextStyle(
+            fontSize = dimensionResource(
+                id = R.dimen
+                    .fontSize_medium
+            ).value.sp
+        ),
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
+        ),
+
+        modifier = Modifier
+            .width(dimensionResource(id = R.dimen.initiative_textfield_width))
+            //TODO create a color for the textfield in the theme and use this
+            .background(Color.LightGray)
+            .padding(dimensionResource(R.dimen.padding_small))
+    )
 }
 
 @Composable
@@ -404,10 +433,6 @@ fun NavigateToSkirmishScreenButton(
     val coroutineScope = rememberCoroutineScope()
     Button(
         onClick = {
-            Log.d(
-                "Selected Characters:",
-                selectedCharacters.toString()
-            )
             coroutineScope.launch {
                 characterViewModel.clearSkirmishCharacterTable()
                 characterViewModel.insertSkirmishParticipants(selectedCharacters)
