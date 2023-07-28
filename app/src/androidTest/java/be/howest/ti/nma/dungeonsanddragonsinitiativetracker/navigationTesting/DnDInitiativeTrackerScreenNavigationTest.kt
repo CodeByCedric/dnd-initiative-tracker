@@ -11,12 +11,9 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerApp
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen.AddCampaignScreenDestination
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen.CampaignScreenDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.characterScreen.CharacterScreenDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.encounterBuilderScreen.EncounterBuilderScreenDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.initiativeScreen.InitiativeScreenDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.skirmishScreen.SkirmishScreenDestination
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,17 +34,19 @@ class DungeonsAndDragonsScreenNavigationTest {
         }
     }
 
+
+    //This test sometimes keeps running until timed out, do not understand why
     @Test
     fun dndNavHost_verifyStartDestination() {
-        navController.assertCurrentRouteName(CampaignScreenDestination.route)
+        val expectedTitleResID = R.string.campaign_overview_screen
+        composeTestRule.onNodeWithStringId(expectedTitleResID).assertExists()
     }
 
+    //This test sometimes keeps running until timed out, do not understand why
     @Test
     fun dndNavHost_verifyBackNavigationNotShownOnCampaignScreen() {
         val backText =
-            composeTestRule.activity.getString(
-                be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R.string.back_button
-            )
+            composeTestRule.activity.getString(R.string.back_button)
         composeTestRule.onNodeWithContentDescription(backText).assertDoesNotExist()
     }
 
@@ -55,27 +54,18 @@ class DungeonsAndDragonsScreenNavigationTest {
     fun dndNavHost_clickOnCampaign_navigatesToCharacterOverviewScreen() {
         composeTestRule.onAllNodesWithTag("campaignCard")[0].performClick()
         composeTestRule.onNodeWithText("To the Character Overview Screen!").performClick()
-        navController.assertCurrentRouteName(
-            CharacterScreenDestination.route
-        )
-    }
 
-    @Test
-    fun dndNavHost_clickOnToEncounterBuilder_navigatesToEncounterBuilder() {
-        navigateToEncounterBuilderScreen()
-        navController.assertCurrentRouteName(EncounterBuilderScreenDestination.route)
-    }
+        val expectedTitleResID = R.string.character_overview_screen
+        composeTestRule.onNodeWithStringId(expectedTitleResID).assertExists()
 
-    @Test
-    fun dndNavHost_clickToInitiativeScreen_navigatesToInitiativeScreen() {
-        navigateToInitiativeScreen()
-        navController.assertCurrentRouteName(InitiativeScreenDestination.route)
     }
 
     @Test
     fun dndNavHost_clickToSkirmishScreen_navigatesToSkirmishScreen() {
         navigateToSkirmishScreen()
-        navController.assertCurrentRouteName(SkirmishScreenDestination.route)
+
+        val expectedTitleResID = R.string.skirmish_screen
+        composeTestRule.onNodeWithStringId(expectedTitleResID).assertExists()
     }
 
     @Test
@@ -87,24 +77,12 @@ class DungeonsAndDragonsScreenNavigationTest {
     }
 
     @Test
-    fun dndNavHost_clickBackOnEncounterBuilderScreen_navigatesToCharacterOverviewScreen() {
-        navigateToEncounterBuilderScreen()
-        performNavigateUp()
-        navController.assertCurrentRouteName(CharacterScreenDestination.route)
-    }
-
-    @Test
-    fun dndNavHost_clickBackOnInitiativeScreen_navigatesToEncounterBuilderScreen() {
-        navigateToInitiativeScreen()
-        performNavigateUp()
-        navController.assertCurrentRouteName(EncounterBuilderScreenDestination.route)
-    }
-
-    @Test
-    fun dndNavHost_clickBackOnSkirmishScreen_navigatesToInitiativeScreen() {
+    fun dndNavHost_clickBackOnSkirmishScreen_navigatesToCharacterScreen() {
         navigateToSkirmishScreen()
         performNavigateUp()
-        navController.assertCurrentRouteName(InitiativeScreenDestination.route)
+
+        val expectedTitleResID = R.string.character_overview_screen
+        composeTestRule.onNodeWithStringId(expectedTitleResID).assertExists()
     }
 
     @Test
@@ -118,24 +96,8 @@ class DungeonsAndDragonsScreenNavigationTest {
         composeTestRule.onNodeWithText("To the Character Overview Screen!").performClick()
     }
 
-    private fun navigateToEncounterBuilderScreen() {
-        navigateToCharacterOverviewScreen()
-        composeTestRule.onNodeWithStringId(
-            be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R.string
-                .to_encounter_builder_screen_button
-        ).performClick()
-    }
-
-    private fun navigateToInitiativeScreen() {
-        navigateToEncounterBuilderScreen()
-        composeTestRule.onNodeWithStringId(
-            be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R.string
-                .to_initiative_screen_button
-        ).performClick()
-    }
-
     private fun navigateToSkirmishScreen() {
-        navigateToInitiativeScreen()
+        navigateToCharacterOverviewScreen()
         composeTestRule.onNodeWithStringId(
             be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R.string
                 .to_skirmish_screen_button
@@ -148,7 +110,7 @@ class DungeonsAndDragonsScreenNavigationTest {
 
     private fun performNavigateUp() {
         val backText =
-            composeTestRule.activity.getString(be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R.string.back_button)
+            composeTestRule.activity.getString(R.string.back_button)
         composeTestRule.onNodeWithContentDescription(backText).performClick()
     }
 }
