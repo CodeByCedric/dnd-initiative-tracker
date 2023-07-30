@@ -67,4 +67,5 @@
     <string name="notification_channel_id">Next Session Notification</string>
     <string name="notification_channel_name">Next Session</string>
     <string name="notification_channel_description">A channel used to send a reminder about the next session</string>
+    <string name="roll_for_initiative_icon_label">Roll for intiative</string>
 </resources>

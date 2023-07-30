@@ -171,12 +171,11 @@ fun CampaignBody(
                 campaignViewModel = campaignViewModel
             )
         }
-        item {
-            Button(onClick = { nextSessionNotificationService.showBasicNotification() }) {
-                Text(text = "Show basic notification")
-            }
-
-        }
+//        item {
+//            Button(onClick = { nextSessionNotificationService.showBasicNotification() }) {
+//                Text(text = "Show basic notification")
+//            }
+//        }
     }
 }
 
