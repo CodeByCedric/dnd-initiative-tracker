@@ -17,24 +17,6 @@ class CampaignViewModel(
     private val campaignRepository: CampaignRepository,
     private val campaignParticipantRepository: CampaignParticipantRepository
 ) : ViewModel() {
-//    private val _dndUiState = MutableStateFlow(DnDUiState())
-//    val dndUiState: StateFlow<DnDUiState> = _dndUiState.asStateFlow()
-//
-//    init {
-//        _dndUiState.value = DnDUiState(
-//            campaigns = getCurrentCampaigns()
-//        )
-//    }
-//
-//    fun setSelectedCampaignId(campaignId: Long) {
-//        val currentUiState = dndUiState.value
-//        _dndUiState.value = currentUiState.copy(selectedCampaignId = campaignId)
-//    }
-//
-//    private fun getCurrentCampaigns(): Flow<List<Campaign>> {
-//        return campaignRepository.getAllCampaigns()
-//    }
-
 
     private val _campaignUiState = MutableStateFlow(CampaignUiState())
     val campaignUiState: StateFlow<CampaignUiState> = _campaignUiState.asStateFlow()
@@ -80,6 +62,4 @@ class CampaignViewModel(
             )
         }
     }
-
-
 }
