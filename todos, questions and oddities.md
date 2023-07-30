@@ -7,6 +7,8 @@ recent implemented SkirmishCharacter
 
 Move color of textfields to Color.kt and implement value for darktheme
 
+API: implement try catch, and handle errors (e.g. no network connection = no data to populate form)
+
 ## CharacterScreen
 
 Tapping on roll initiative clears the selection, fix this

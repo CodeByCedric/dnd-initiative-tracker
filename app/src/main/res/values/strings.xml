@@ -55,7 +55,7 @@
     <string name="character_name_textfield">Character Name</string>
     <string name="character_armorclass_textfield">Armor Class:</string>
     <string name="character_initiative_textfield">Initiative Modifier:</string>
-    <string name="decrease_armor_class">Decrease the armor clas by one.</string>
+    <string name="decrease_armor_class">Decrease the armor class by one.</string>
     <string name="increase_armor_class">Increase the armor class by one.</string>
     <string name="decrease_initiative_modifier">Decreased the initiative modifier by one.</string>
     <string name="increase_initiative_modifier">Increase the initiative modifier by one.</string>
@@ -64,4 +64,7 @@
     <string name="enemy">Enemy</string>
     <string name="character_type">"Character Type: "</string>
     <string name="end_turn">End Turn</string>
+    <string name="notification_channel_id">Next Session Notification</string>
+    <string name="notification_channel_name">Next Session</string>
+    <string name="notification_channel_description">A channel used to send a reminder about the next session</string>
 </resources>

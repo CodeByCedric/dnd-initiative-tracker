@@ -8,12 +8,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.theme.DungeonsAndDragonsInitiativeTrackerTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             DungeonsAndDragonsInitiativeTrackerTheme {
+
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -23,5 +27,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 }
