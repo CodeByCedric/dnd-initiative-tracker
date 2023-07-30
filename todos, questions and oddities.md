@@ -11,6 +11,9 @@ Move color of textfields to Color.kt and implement value for darktheme
 
 API: implement try catch, and handle errors (e.g. no network connection = no data to populate form)
 
+Calendar picker: de datum en tijd worden eerst gekozen, en dan doorgegeven aan de calendar, maar wat
+als de gebruiker de datum en tijd nog wijzigt in de calendar
+
 ## CampaignScreen
 
 Change font settings to materialTheme.typography.h1, h2, h3, etc.
@@ -26,6 +29,3 @@ Tapping on roll initiative clears the selection, fix this
 
 Waarom moet in res/values/dimens.xml de waarden als bv. 8dp worden meegeven, terwijl voor gebruik in
 code, het 8.dp is
-
-Calendar picker: de datum en tijd worden eerst gekozen, en dan doorgegeven aan de calendar, maar wat
-als de gebruiker de datum en tijd nog wijzigt in de calendar
