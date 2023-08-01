@@ -7,9 +7,15 @@ recent implemented SkirmishCharacter
 
 Move color of textfields to Color.kt and implement value for darktheme
 
+## CampaignScreen
+
+## CreateCampaignScreen
+
+Implement validation of input fields and createCampaignButton
+
 ## CharacterScreen
 
-Tapping on roll initiative clears the selection, fix this
+Tapping on roll initiative clears the selection, fix this.
 
 # Questions and Oddities
 

@@ -1,12 +1,15 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -82,12 +85,34 @@ fun AddCampaignScreen(
             )
         },
         content = { innerPadding ->
-            AddCampaignForm(
-                addCampaignViewModel = addCampaignViewModel,
-                addCampaignUiState = addCampaignUiState,
-                modifier = Modifier
-                    .padding(innerPadding)
-            )
+            LazyColumn(
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                item {
+                    CampaignName(
+                        addCampaignViewModel,
+                        addCampaignUiState
+                    )
+                }
+                item {
+                    CampaignImage(
+                        addCampaignViewModel,
+                        addCampaignUiState
+                    )
+                }
+                item {
+                    DungeonMaster(
+                        addCampaignViewModel,
+                        addCampaignUiState
+                    )
+                }
+                item {
+                    Player(
+                        addCampaignViewModel,
+                        addCampaignUiState
+                    )
+                }
+            }
         },
         bottomBar = {
             CreateCampaignButton(
@@ -99,49 +124,8 @@ fun AddCampaignScreen(
                 },
             )
         }
-
     )
 }
-
-@Composable
-fun AddCampaignForm(
-    addCampaignViewModel: AddCampaignViewModel,
-    addCampaignUiState: AddCampaignUiState,
-    modifier: Modifier,
-) {
-    LazyColumn(
-        modifier = modifier
-    )
-    {
-        item {
-            CampaignName(
-                addCampaignViewModel,
-                addCampaignUiState
-            )
-        }
-        item {
-            CampaignImage(
-                addCampaignViewModel,
-                addCampaignUiState
-            )
-        }
-        item { SectionTitle(title = stringResource(id = R.string.dm_section_title)) }
-        item {
-            DungeonMaster(
-                addCampaignViewModel,
-                addCampaignUiState
-            )
-        }
-        item { SectionTitle(title = stringResource(id = R.string.player_section_title)) }
-        item {
-            Player(
-                addCampaignViewModel,
-                addCampaignUiState
-            )
-        }
-    }
-}
-
 
 @Composable
 fun CampaignName(
@@ -167,6 +151,16 @@ fun CampaignImage(
     Row(
         modifier = modifier.padding(top = dimensionResource(id = R.dimen.padding_medium))
     ) {
+        val context = LocalContext.current
+        val photoPicker = photoPicker(
+            addCampaignViewModel,
+            context
+        )
+        val launcherSinglePermission = requestPermission(
+            photoPicker,
+            context
+        )
+
         AsyncImage(
             model = addCampaignUiState.campaignImageUri ?: R.drawable.placeholder_view_vector,
             contentDescription = null,
@@ -175,59 +169,23 @@ fun CampaignImage(
                 .size(dimensionResource(id = R.dimen.image_size))
                 .padding(dimensionResource(id = R.dimen.padding_small))
                 .clip(RoundedCornerShape(50))
+                .clickable {
+                    selectImage(
+                        context,
+                        photoPicker,
+                        launcherSinglePermission
+                    )
+                }
         )
         Column(
             modifier = Modifier
                 .weight(1f)
         ) {
-            val context = LocalContext.current
-
-            val photoPicker = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.PickVisualMedia(),
-                onResult = { uri ->
-                    if (uri != null) {
-                        addCampaignViewModel.updateCampaignImage(uri)
-                        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        context.contentResolver.takePersistableUriPermission(
-                            uri,
-                            flag
-                        )
-                    }
-                }
+            ImagePickerButton(
+                context,
+                photoPicker,
+                launcherSinglePermission
             )
-
-            val launcherSinglePermission = rememberLauncherForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (isGranted) {
-                    photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Permission Denied",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-            //ImagePicker Button
-            Button(
-                onClick = {
-                    val permission = android.Manifest.permission.READ_MEDIA_IMAGES
-
-                    if (ContextCompat.checkSelfPermission(
-                            context,
-                            permission
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    } else {
-                        launcherSinglePermission.launch(permission)
-                    }
-                }
-
-            ) {
-                Text(text = stringResource(id = R.string.pick_an_image))
-            }
             //Camera Button
             Button(
                 onClick = { /*TODO*/ },
@@ -239,6 +197,85 @@ fun CampaignImage(
         }
 
     }
+}
+
+@Composable
+private fun ImagePickerButton(
+    context: Context,
+    photoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>,
+    launcherSinglePermission: ManagedActivityResultLauncher<String, Boolean>
+) {
+    Button(
+        onClick = {
+            selectImage(
+                context,
+                photoPicker,
+                launcherSinglePermission
+            )
+        }
+    ) {
+        Text(text = stringResource(id = R.string.pick_an_image))
+    }
+}
+
+
+private fun selectImage(
+    context: Context,
+    photoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>,
+    launcherSinglePermission: ManagedActivityResultLauncher<String, Boolean>
+) {
+    val permission = Manifest.permission.READ_MEDIA_IMAGES
+    if (ContextCompat.checkSelfPermission(
+            context,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    } else {
+        launcherSinglePermission.launch(permission)
+    }
+}
+
+@Composable
+private fun requestPermission(
+    photoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>,
+    context: Context
+): ManagedActivityResultLauncher<String, Boolean> {
+    val launcherSinglePermission = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        } else {
+            Toast.makeText(
+                context,
+                "Permission Denied",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    return launcherSinglePermission
+}
+
+@Composable
+private fun photoPicker(
+    addCampaignViewModel: AddCampaignViewModel,
+    context: Context
+): ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?> {
+    val photoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) {
+                addCampaignViewModel.updateCampaignImage(uri)
+                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    flag
+                )
+            }
+        }
+    )
+    return photoPicker
 }
 
 
@@ -256,6 +293,7 @@ fun DungeonMaster(
     addCampaignViewModel: AddCampaignViewModel,
     addCampaignUiState: AddCampaignUiState
 ) {
+    SectionTitle(title = stringResource(id = R.string.dm_section_title))
     DungeonMasterNameTextField(
         addCampaignUiState,
         addCampaignViewModel
@@ -326,6 +364,8 @@ fun Player(
 ) {
     val playerList = addCampaignViewModel.getParticipants()
 
+    SectionTitle(title = stringResource(id = R.string.player_section_title))
+
     playerList.forEach { player ->
         PlayerPillBox(
             playerName = player.participantName,
@@ -349,7 +389,7 @@ fun Player(
                 end = dimensionResource(id = R.dimen.padding_medium)
             )
     ) {
-        SelectPlayerFromContactsButton(addCampaignViewModel)
+        SelectPlayerFromContactsButton()
         AddPlayerButton(
             addCampaignViewModel
         )
@@ -405,9 +445,7 @@ private fun PlayerNameTextField(
 }
 
 @Composable
-private fun SelectPlayerFromContactsButton(
-    addCampaignViewModel: AddCampaignViewModel
-) {
+private fun SelectPlayerFromContactsButton() {
 
     val context = LocalContext.current
 
@@ -416,8 +454,7 @@ private fun SelectPlayerFromContactsButton(
     ) { isGranted: Boolean ->
         if (isGranted) {
             selectContact(
-                context,
-                addCampaignViewModel
+                context
             )
         } else {
             Toast.makeText(
@@ -430,7 +467,7 @@ private fun SelectPlayerFromContactsButton(
 
     Button(
         onClick = {
-            val permission = android.Manifest.permission.READ_CONTACTS
+            val permission = Manifest.permission.READ_CONTACTS
 
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -439,8 +476,7 @@ private fun SelectPlayerFromContactsButton(
                     .PERMISSION_GRANTED
             ) {
                 selectContact(
-                    context,
-                    addCampaignViewModel
+                    context
                 )
             } else {
                 launcherSinglePermission.launch(permission)
@@ -454,8 +490,7 @@ private fun SelectPlayerFromContactsButton(
 }
 
 fun selectContact(
-    context: Context,
-    addCampaignViewModel: AddCampaignViewModel
+    context: Context
 ) {
     val intent = Intent(Intent.ACTION_PICK).apply {
         type = CommonDataKinds.Email.CONTENT_TYPE
