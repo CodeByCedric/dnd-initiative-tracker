@@ -57,6 +57,9 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTracker
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.photoPicker
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.requestPermissionForVisualMedia
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.selectImage
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
@@ -156,7 +159,7 @@ fun CampaignImage(
             addCampaignViewModel,
             context
         )
-        val launcherSinglePermission = requestPermission(
+        val launcherSinglePermission = requestPermissionForVisualMedia(
             photoPicker,
             context
         )
@@ -218,34 +221,17 @@ private fun ImagePickerButton(
     }
 }
 
-
-private fun selectImage(
-    context: Context,
-    photoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>,
-    launcherSinglePermission: ManagedActivityResultLauncher<String, Boolean>
-) {
-    val permission = Manifest.permission.READ_MEDIA_IMAGES
-    if (ContextCompat.checkSelfPermission(
-            context,
-            permission
-        ) == PackageManager.PERMISSION_GRANTED
-    ) {
-        photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    } else {
-        launcherSinglePermission.launch(permission)
-    }
-}
-
 @Composable
-private fun requestPermission(
-    photoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>,
-    context: Context
-): ManagedActivityResultLauncher<String, Boolean> {
+private fun SelectPlayerFromContactsButton() {
+    val context = LocalContext.current
+
     val launcherSinglePermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            selectContact(
+                context
+            )
         } else {
             Toast.makeText(
                 context,
@@ -254,28 +240,52 @@ private fun requestPermission(
             ).show()
         }
     }
-    return launcherSinglePermission
+
+    Button(
+        onClick = {
+            val permission = Manifest.permission.READ_CONTACTS
+
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    permission
+                ) == PackageManager
+                    .PERMISSION_GRANTED
+            ) {
+                selectContact(
+                    context
+                )
+            } else {
+                launcherSinglePermission.launch(permission)
+            }
+        },
+        modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
+    ) {
+        Text(text = stringResource(id = R.string.select_player_from_contacts))
+    }
 }
 
-@Composable
-private fun photoPicker(
-    addCampaignViewModel: AddCampaignViewModel,
+fun selectContact(
     context: Context
-): ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?> {
-    val photoPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) {
-                addCampaignViewModel.updateCampaignImage(uri)
-                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                context.contentResolver.takePersistableUriPermission(
-                    uri,
-                    flag
-                )
-            }
-        }
-    )
-    return photoPicker
+) {
+    val intent = Intent(Intent.ACTION_PICK).apply {
+        type = CommonDataKinds.Email.CONTENT_TYPE
+    }
+        .putExtra(
+            ContactsContract.Intents.Insert.NAME,
+            true
+        )
+        .putExtra(
+            ContactsContract.Intents.Insert.EMAIL,
+            true
+        )
+
+    context.startActivity(intent)
+    intent.dataString?.let {
+        Log.d(
+            "implicitIntents",
+            it
+        )
+    }
 }
 
 
@@ -394,7 +404,6 @@ fun Player(
             addCampaignViewModel
         )
     }
-
 }
 
 @Composable
@@ -442,75 +451,6 @@ private fun PlayerNameTextField(
         singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
-}
-
-@Composable
-private fun SelectPlayerFromContactsButton() {
-
-    val context = LocalContext.current
-
-    val launcherSinglePermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            selectContact(
-                context
-            )
-        } else {
-            Toast.makeText(
-                context,
-                "Permission Denied",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    Button(
-        onClick = {
-            val permission = Manifest.permission.READ_CONTACTS
-
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    permission
-                ) == PackageManager
-                    .PERMISSION_GRANTED
-            ) {
-                selectContact(
-                    context
-                )
-            } else {
-                launcherSinglePermission.launch(permission)
-            }
-        },
-        modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
-    ) {
-        Text(text = stringResource(id = R.string.select_player_from_contacts))
-    }
-
-}
-
-fun selectContact(
-    context: Context
-) {
-    val intent = Intent(Intent.ACTION_PICK).apply {
-        type = CommonDataKinds.Email.CONTENT_TYPE
-    }
-        .putExtra(
-            ContactsContract.Intents.Insert.NAME,
-            true
-        )
-        .putExtra(
-            ContactsContract.Intents.Insert.EMAIL,
-            true
-        )
-
-    context.startActivity(intent)
-    intent.dataString?.let {
-        Log.d(
-            "implicitIntents",
-            it
-        )
-    }
 }
 
 
