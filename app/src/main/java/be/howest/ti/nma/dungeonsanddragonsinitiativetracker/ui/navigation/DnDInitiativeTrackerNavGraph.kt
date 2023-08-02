@@ -72,11 +72,6 @@ fun DnDInitiativeTrackerNavHost(
             val campaignId = backStackEntry.arguments?.getLong("campaignId") ?: -1L
             CreateCharacterScreen(
                 campaignId = campaignId,
-                navigateToCharacterScreen = {
-                    navController.navigate(
-                        route = "${CharacterScreenDestination.route}?campaignId=$campaignId"
-                    )
-                },
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
             )

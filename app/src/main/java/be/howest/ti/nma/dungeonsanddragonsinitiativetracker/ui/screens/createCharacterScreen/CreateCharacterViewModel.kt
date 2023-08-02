@@ -33,43 +33,59 @@ class CreateCharacterViewModel(
         _createCharacterUiState.value = currentUiState.copy(characterName = name)
     }
 
-    private fun updateCharacterArmorClass(armorClass: String) {
+    fun updateCharacterArmorClass(armorClass: String) {
         val currentUiState = createCharacterUiState.value
-        _createCharacterUiState.value = currentUiState.copy(armorClass = armorClass.toInt())
+        _createCharacterUiState.value = currentUiState.copy(armorClass = armorClass)
     }
 
     fun incrementArmorClassByOne() {
         val currentUiState = createCharacterUiState.value
-        val newArmorClass = currentUiState.armorClass + 1
-        _createCharacterUiState.value = currentUiState.copy(armorClass = newArmorClass)
+        val newArmorClass = if (currentUiState.armorClass == "") {
+            +1
+        } else {
+            currentUiState.armorClass.toInt() + 1
+        }
+        _createCharacterUiState.value = currentUiState.copy(armorClass = newArmorClass.toString())
     }
 
     fun decrementArmorClassByOne() {
         val currentUiState = createCharacterUiState.value
-        val newArmorClass = currentUiState.armorClass - 1
-        _createCharacterUiState.value = currentUiState.copy(armorClass = newArmorClass)
+        val newArmorClass = if (currentUiState.armorClass == "") {
+            -1
+        } else {
+            currentUiState.armorClass.toInt() - 1
+        }
+        _createCharacterUiState.value = currentUiState.copy(armorClass = newArmorClass.toString())
     }
 
     fun incrementInitiativeModifierByOne() {
         val currentUiState = createCharacterUiState.value
-        val newInitiativeModifier = currentUiState.initiativeModifier + 1
+        val newInitiativeModifier = if (currentUiState.initiativeModifier == "") {
+            +1
+        } else {
+            currentUiState.initiativeModifier.toInt() + 1
+        }
         _createCharacterUiState.value =
-            currentUiState.copy(initiativeModifier = newInitiativeModifier)
+            currentUiState.copy(initiativeModifier = newInitiativeModifier.toString())
     }
 
     fun decrementInitiativeModifierByOne() {
         val currentUiState = createCharacterUiState.value
-        val newInitiativeModifier = currentUiState.initiativeModifier - 1
+        val newInitiativeModifier = if (currentUiState.initiativeModifier == "") {
+            -1
+        } else {
+            currentUiState.initiativeModifier.toInt() - 1
+        }
         _createCharacterUiState.value =
-            currentUiState.copy(initiativeModifier = newInitiativeModifier)
+            currentUiState.copy(initiativeModifier = newInitiativeModifier.toString())
     }
 
 
-    private fun updateCharacterInitiativeModifier(initiativeModifier: String) {
+    fun updateCharacterInitiativeModifier(initiativeModifier: String) {
         val currentUiState = createCharacterUiState.value
+
         _createCharacterUiState.value = currentUiState.copy(
-            initiativeModifier =
-            initiativeModifier.toInt()
+            initiativeModifier = initiativeModifier
         )
     }
 
@@ -106,11 +122,10 @@ class CreateCharacterViewModel(
         return _createCharacterUiState.value.enemyFlow
     }
 
-    //todo
     suspend fun createCharacter(campaignId: Long) {
         val characterName = createCharacterUiState.value.characterName
-        val characterArmorClass = createCharacterUiState.value.armorClass
-        val characterInitiativeModifier = createCharacterUiState.value.initiativeModifier
+        val characterArmorClass = createCharacterUiState.value.armorClass.toInt()
+        val characterInitiativeModifier = createCharacterUiState.value.initiativeModifier.toInt()
         val isPrimaryCharacter = createCharacterUiState.value.isPrimaryCharacter
         val isSecondaryCharacter = createCharacterUiState.value.isSecondaryCharacter
         val isEnemy = createCharacterUiState.value.isEnemy
@@ -138,9 +153,9 @@ class CreateCharacterViewModel(
         enemyIndex: String
     ) {
         val enemyResponseBody = EnemiesApi.retrofitService.getEnemy(enemyIndex).body()
-        var enemyName: String = ""
-        var dexterityModifier: Int = 0
-        var armorClass: Int = 0
+        var enemyName = ""
+        var dexterityModifier = 0
+        var armorClass = 0
 
         if (enemyResponseBody != null) {
             enemyName = enemyResponseBody.name
@@ -153,6 +168,14 @@ class CreateCharacterViewModel(
         updateCharacterArmorClass(armorClass.toString())
         updateCharacterInitiativeModifier(dexterityModifier.toString())
         updateCharacterType(isEnemy = true)
+    }
 
+    fun validateForm(): Boolean {
+        val currentUiState = createCharacterUiState.value
+
+        return currentUiState.characterName.isNotEmpty() &&
+                currentUiState.initiativeModifier.isNotEmpty() &&
+                currentUiState.armorClass.isNotEmpty() &&
+                (currentUiState.isPrimaryCharacter || currentUiState.isSecondaryCharacter || currentUiState.isEnemy)
     }
 }

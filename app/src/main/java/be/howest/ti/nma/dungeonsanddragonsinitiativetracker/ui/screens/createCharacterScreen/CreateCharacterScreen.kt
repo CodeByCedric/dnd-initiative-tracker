@@ -57,7 +57,6 @@ object CreateCharacterScreenDestination : NavigationDestination {
 @Composable
 fun CreateCharacterScreen(
     campaignId: Long,
-    navigateToCharacterScreen: () -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
@@ -84,7 +83,7 @@ fun CreateCharacterScreen(
         },
         bottomBar = {
             CreateCharacterButton(
-                createCharacterUiState = createCharacterUiState,
+                createCharacterViewModel = createCharacterViewModel,
                 onSave = {
                     coroutineScope.launch {
                         createCharacterViewModel.createCharacter(campaignId)
@@ -99,11 +98,11 @@ fun CreateCharacterScreen(
 @Composable
 fun CreateCharacterButton(
     onSave: () -> Unit,
-    createCharacterUiState: CreateCharacterUiState
+    createCharacterViewModel: CreateCharacterViewModel,
 ) {
     Button(
         onClick = onSave,
-        enabled = createCharacterUiState.characterName.isNotEmpty() && (createCharacterUiState.isPrimaryCharacter || createCharacterUiState.isSecondaryCharacter || createCharacterUiState.isEnemy),
+        enabled = createCharacterViewModel.validateForm(),
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
@@ -237,7 +236,6 @@ fun ArmorClass(
     createCharacterViewModel: CreateCharacterViewModel,
     createCharacterUiState: CreateCharacterUiState,
 ) {
-    val armorClass = createCharacterUiState.armorClass
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
@@ -247,9 +245,12 @@ fun ArmorClass(
             modifier = Modifier.width(dimensionResource(id = R.dimen.create_character_screen_description_column_width))
         )
         TextField(
-            value = armorClass.toString(),
-            onValueChange = {},
-            readOnly = true,
+            value = createCharacterUiState.armorClass,
+            onValueChange = { newArmorClass ->
+                createCharacterViewModel.updateCharacterArmorClass(
+                    newArmorClass
+                )
+            },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
@@ -287,9 +288,12 @@ fun InitiativeModifier(
         )
 
         TextField(
-            value = createCharacterUiState.initiativeModifier.toString(),
-            onValueChange = {},
-            readOnly = true,
+            value = createCharacterUiState.initiativeModifier,
+            onValueChange = { newInitiative ->
+                createCharacterViewModel.updateCharacterInitiativeModifier(
+                    newInitiative
+                )
+            },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
@@ -362,10 +366,9 @@ fun CharacterType(
                     onClick = {
                         createCharacterViewModel.updateCharacterType(isEnemy = true)
                         isExpanded = false
-                    })
+                    }
+                )
             }
-
         }
     }
-
 }
