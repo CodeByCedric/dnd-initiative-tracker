@@ -1,18 +1,9 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.addCampaignScreen
 
-import android.Manifest
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,15 +42,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.photoPicker
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.requestPermissionForVisualMedia
-import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.selectImage
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents.contactPicker
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents.photoPicker
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents.requestPermissionForContact
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents.requestPermissionForVisualMedia
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents.selectImage
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
@@ -222,69 +214,21 @@ private fun ImagePickerButton(
 }
 
 @Composable
-private fun SelectPlayerFromContactsButton() {
-    val context = LocalContext.current
-
-    val launcherSinglePermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            selectContact(
-                context
-            )
-        } else {
-            Toast.makeText(
-                context,
-                "Permission Denied",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
+private fun ContactPickerButton(
+    context: Context,
+    contactPicker: ManagedActivityResultLauncher<Void?, Uri?>,
+    launcherSinglePermission: ManagedActivityResultLauncher<String, Boolean>
+) {
     Button(
         onClick = {
-            val permission = Manifest.permission.READ_CONTACTS
-
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    permission
-                ) == PackageManager
-                    .PERMISSION_GRANTED
-            ) {
-                selectContact(
-                    context
-                )
-            } else {
-                launcherSinglePermission.launch(permission)
-            }
-        },
-        modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
+            be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents.selectContact(
+                context,
+                contactPicker,
+                launcherSinglePermission
+            )
+        }
     ) {
         Text(text = stringResource(id = R.string.select_player_from_contacts))
-    }
-}
-
-fun selectContact(
-    context: Context
-) {
-    val intent = Intent(Intent.ACTION_PICK).apply {
-        type = CommonDataKinds.Email.CONTENT_TYPE
-    }
-        .putExtra(
-            ContactsContract.Intents.Insert.NAME,
-            true
-        )
-        .putExtra(
-            ContactsContract.Intents.Insert.EMAIL,
-            true
-        )
-
-    context.startActivity(intent)
-    intent.dataString?.let {
-        Log.d(
-            "implicitIntents",
-            it
-        )
     }
 }
 
@@ -374,6 +318,17 @@ fun Player(
 ) {
     val playerList = addCampaignViewModel.getParticipants()
 
+    val context = LocalContext.current
+    val contactPicker = contactPicker(
+        addCampaignViewModel,
+        context
+    )
+    val launcherSinglePermission = requestPermissionForContact(
+        contactPicker = contactPicker,
+        context = context
+    )
+
+
     SectionTitle(title = stringResource(id = R.string.player_section_title))
 
     playerList.forEach { player ->
@@ -399,7 +354,12 @@ fun Player(
                 end = dimensionResource(id = R.dimen.padding_medium)
             )
     ) {
-        SelectPlayerFromContactsButton()
+        ContactPickerButton(
+            context = context,
+            contactPicker = contactPicker,
+            launcherSinglePermission = launcherSinglePermission
+        )
+//        SelectPlayerFromContactsButton()
         AddPlayerButton(
             addCampaignViewModel
         )

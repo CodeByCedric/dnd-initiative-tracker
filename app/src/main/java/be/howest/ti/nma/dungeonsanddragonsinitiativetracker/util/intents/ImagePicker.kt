@@ -1,4 +1,4 @@
-package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util
+package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents
 
 import android.Manifest
 import android.content.Context
