@@ -173,9 +173,9 @@ class CreateCharacterViewModel(
     fun validateForm(): Boolean {
         val currentUiState = createCharacterUiState.value
 
-        return currentUiState.characterName.isNotEmpty() &&
-                currentUiState.initiativeModifier.isNotEmpty() &&
-                currentUiState.armorClass.isNotEmpty() &&
+        return currentUiState.characterName.isNotBlank() &&
+                currentUiState.initiativeModifier.isNotBlank() &&
+                currentUiState.armorClass.isNotBlank() &&
                 (currentUiState.isPrimaryCharacter || currentUiState.isSecondaryCharacter || currentUiState.isEnemy)
     }
 }

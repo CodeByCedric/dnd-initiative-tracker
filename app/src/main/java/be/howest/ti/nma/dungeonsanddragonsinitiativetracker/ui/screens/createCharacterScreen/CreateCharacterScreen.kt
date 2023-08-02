@@ -84,6 +84,7 @@ fun CreateCharacterScreen(
         bottomBar = {
             CreateCharacterButton(
                 createCharacterViewModel = createCharacterViewModel,
+                createCharacterUiState = createCharacterUiState,
                 onSave = {
                     coroutineScope.launch {
                         createCharacterViewModel.createCharacter(campaignId)
@@ -99,6 +100,7 @@ fun CreateCharacterScreen(
 fun CreateCharacterButton(
     onSave: () -> Unit,
     createCharacterViewModel: CreateCharacterViewModel,
+    createCharacterUiState: CreateCharacterUiState,
 ) {
     Button(
         onClick = onSave,
