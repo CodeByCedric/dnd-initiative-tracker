@@ -1,6 +1,8 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -22,6 +24,18 @@ class DnDInitiativeTrackerApplication : Application() {
     lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
+
+        val notificationChannel = NotificationChannel(
+            getString(R.string.notification_channel_id),
+            getString(R.string.notification_channel_name),
+            NotificationManager.IMPORTANCE_HIGH,
+        )
+
+        notificationChannel.description = getString(R.string.notification_channel_description)
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
+
+
         container = AppDataContainer(this)
 
         CoroutineScope(Dispatchers.Default).launch {

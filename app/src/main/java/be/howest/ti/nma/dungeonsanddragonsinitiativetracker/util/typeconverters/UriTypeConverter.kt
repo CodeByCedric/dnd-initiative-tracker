@@ -1,4 +1,4 @@
-package be.howest.ti.nma.bdnd.util
+package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.typeconverters
 
 import android.net.Uri
 import androidx.room.TypeConverter

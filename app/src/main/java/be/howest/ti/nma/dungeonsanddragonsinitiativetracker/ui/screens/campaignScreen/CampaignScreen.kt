@@ -1,5 +1,6 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -37,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,7 +65,11 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.db.entities.Cam
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.data.models.CampaignParticipantDetails
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.AppViewModelProvider
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.navigation.NavigationDestination
+import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.notifications.NextSessionNotificationService
 import coil.compose.AsyncImage
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import java.sql.Date
 import java.util.Locale
@@ -129,6 +135,7 @@ fun CampaignScreen(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CampaignBody(
     campaignViewModel: CampaignViewModel,
@@ -136,6 +143,22 @@ fun CampaignBody(
     modifier: Modifier
 ) {
     val campaigns by campaignUiState.campaigns.collectAsState(initial = emptyList())
+
+    val context = LocalContext.current
+
+    val postNotificationPermission = rememberPermissionState(
+        permission = Manifest.permission.POST_NOTIFICATIONS
+    )
+    val nextSessionNotificationService =
+        remember { NextSessionNotificationService(context = context) }
+
+    LaunchedEffect(
+        key1 = true,
+    ) {
+        if (!postNotificationPermission.status.isGranted) {
+            postNotificationPermission.launchPermissionRequest()
+        }
+    }
 
     LazyColumn(
         modifier = modifier
@@ -148,6 +171,11 @@ fun CampaignBody(
                 campaignViewModel = campaignViewModel
             )
         }
+//        item {
+//            Button(onClick = { nextSessionNotificationService.showBasicNotification() }) {
+//                Text(text = "Show basic notification")
+//            }
+//        }
     }
 }
 

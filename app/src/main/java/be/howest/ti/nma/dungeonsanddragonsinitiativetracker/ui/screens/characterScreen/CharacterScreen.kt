@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -214,9 +215,7 @@ fun CharacterScreenBody(
             }
         }
     }
-
 }
-
 
 @Composable
 fun CharacterCard(
@@ -256,32 +255,40 @@ fun CharacterCard(
                 .fillMaxWidth()
                 .padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
-            Row {
-                Text(text = playerCharacter.name)
+            Row() {
+                Text(
+                    text = playerCharacter.name,
+                )
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "AC: ${playerCharacter.armorClass}")
-                Text(
-                    text = "Initiative Modifier: ${
-                        when {
-                            playerCharacter.initiativeModifier > 0 -> "+${playerCharacter.initiativeModifier}"
-                            playerCharacter.initiativeModifier < 0 -> playerCharacter.initiativeModifier.toString()
-                            else -> "0"
-                        }
-                    }"
-                )
-                InitiativeTextfield(
-                    playerCharacter,
-                    characterViewModel
-                )
-                RollForInitiativeButton(
-                    characterViewModel,
-                    playerCharacter
-                )
+                Column {
+                    Text(text = "AC: ${playerCharacter.armorClass}")
+                    Text(
+                        text = "Initiative Mod.: ${
+                            when {
+                                playerCharacter.initiativeModifier > 0 -> "+${playerCharacter.initiativeModifier}"
+                                playerCharacter.initiativeModifier < 0 -> playerCharacter.initiativeModifier.toString()
+                                else -> "0"
+                            }
+                        }"
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    InitiativeTextField(
+                        playerCharacter,
+                        characterViewModel
+                    )
+                    RollForInitiativeIcon(
+                        characterViewModel,
+                        playerCharacter
+                    )
+                }
                 DeleteCharacterButton(
                     coroutineScope,
                     characterViewModel,
@@ -318,27 +325,29 @@ private fun DeleteCharacterButton(
 }
 
 @Composable
-private fun RollForInitiativeButton(
+private fun RollForInitiativeIcon(
     characterViewModel: CharacterViewModel,
     playerCharacter: CampaignPlayerCharacterDetail
 ) {
-    Button(
-        onClick = {
-            val rolledInitiative = characterViewModel.rollInitiative(
-                playerCharacter.initiativeModifier
-            )
-            characterViewModel.updateInitiativeForCharacters(
-                playerCharacter,
-                rolledInitiative
-            )
-        },
-    ) {
-        Text(text = "Roll Initiative")
-    }
+    Icon(
+        imageVector = Icons.Default.Casino,
+        contentDescription = stringResource(id = R.string.roll_for_initiative_icon_label),
+        modifier = Modifier
+            .padding(start = dimensionResource(id = R.dimen.padding_medium))
+            .clickable {
+                val rolledInitiative = characterViewModel.rollInitiative(
+                    playerCharacter.initiativeModifier
+                )
+                characterViewModel.updateInitiativeForCharacters(
+                    playerCharacter,
+                    rolledInitiative
+                )
+            },
+    )
 }
 
 @Composable
-private fun InitiativeTextfield(
+private fun InitiativeTextField(
     playerCharacter: CampaignPlayerCharacterDetail,
     characterViewModel: CharacterViewModel
 ) {
