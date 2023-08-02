@@ -43,8 +43,6 @@ mini's
 
 ## Create Character Scherm
 
-Moet nog kijken om een manuele input toe te laten, heb het uitgezet omdat met de "+" en "-" knop je
-wel gemakkelijk negatieve getallen kan ingeven.
 Hier zou je ook nog moeten kunnen kiezen uit reeds bestaande characters.
 
 De lijst aan enemies heeft plots beslist om er lang over te doen om te laden, maar het werkt wel
@@ -53,8 +51,6 @@ Zou hier ook nog het aanmaken van de characters willen scheiden van toe te voege
 overzicht (gelijk aan het toevoegen van players aan een campaign, met die pillboxen, dan moet je
 niet telkens heen en weer van scherm als je er een aantal wil toevoegen)
 
-Je kan nog door naar het volgende scherm zonder dat er initiative is ingevuld. Moet ook nog op
-worden gevalideerd.
 
 ## Battle Screen
 

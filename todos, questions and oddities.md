@@ -18,7 +18,6 @@ Change font settings to materialTheme.typography.h1, h2, h3, etc.
 Calendar picker: de datum en tijd worden eerst gekozen, en dan doorgegeven aan de calendar, maar wat
 als de gebruiker de datum en tijd nog wijzigt in de calendar
 
-
 ## CreateCampaignScreen
 
 
@@ -26,6 +25,9 @@ als de gebruiker de datum en tijd nog wijzigt in de calendar
 
 Change font settings to materialTheme.typography.h1, h2, h3, etc.
 Tapping on roll initiative clears the selection, fix this
+Adjust calculation of column width, give every column a fraction? Right now the elements on the card
+move slightly, presumably based on the name (since that's the only element which varies at the
+moment)
 
 # Questions and Oddities
 
