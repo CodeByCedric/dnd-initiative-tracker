@@ -388,7 +388,14 @@ fun CampaignImage(
     modifier: Modifier = Modifier
 ) {
     AsyncImage(
-        model = campaign.campaignImageDrawable ?: campaign.campaignImageUri,
+        model = if (campaign.campaignImageUri != null) {
+            campaign.campaignImageUri
+        } else if (campaign.campaignImageDrawable != null) {
+            campaign.campaignImageDrawable
+        } else {
+            R.drawable.placeholder_view_vector
+        },
+//        model = campaign.campaignImageDrawable ?: campaign.campaignImageUri,
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier

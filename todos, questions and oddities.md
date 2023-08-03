@@ -11,13 +11,13 @@ API: implement try catch, and handle errors (e.g. no network connection = no dat
 
 ## CampaignScreen
 
-Change font settings to materialTheme.typography.h1, h2, h3, etc.
-
 Calendar picker: de datum en tijd worden eerst gekozen, en dan doorgegeven aan de calendar, maar wat
 als de gebruiker de datum en tijd nog wijzigt in de calendar
 
 ## CreateCampaignScreen
-
+Clarify what the required fields are
+Make the email fields nullable. The email fields should not be required (+ editable from the
+campaignscreen)
 
 ## CharacterScreen
 

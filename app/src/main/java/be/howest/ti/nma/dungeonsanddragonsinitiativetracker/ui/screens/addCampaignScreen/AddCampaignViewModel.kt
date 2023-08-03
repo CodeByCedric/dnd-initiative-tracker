@@ -138,21 +138,11 @@ class AddCampaignViewModel(
         return currentUiState.player.participantName.isNotBlank() && isEmailValid(currentUiState.player.email)
     }
 
-    private fun validateDungeonMasterInputFields(): Boolean {
+    fun validateCreateCampaign(): Boolean {
         val currentUiState = addCampaignUiState.value
-        return currentUiState.dungeonMaster.participantName.isNotBlank() && isEmailValid(
-            currentUiState
-                .dungeonMaster.email
-        )
+        return currentUiState.campaignName.isNotBlank() &&
+                currentUiState.dungeonMaster.participantName.isNotBlank() && currentUiState.dungeonMaster.email.isNotBlank() &&
+                currentUiState.playerList.isNotEmpty()
     }
 
-    private fun validateCampaignName(): Boolean {
-        val currentUiState = addCampaignUiState.value
-        return currentUiState.campaignName.isNotBlank()
-    }
-
-    private fun isPlayerListEmpty(): Boolean {
-        val currentUiState = addCampaignUiState.value
-        return currentUiState.playerList.isNotEmpty()
-    }
 }

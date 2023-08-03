@@ -71,4 +71,5 @@
     <string name="please_select_characters_button">Please select characters</string>
     <string name="plan_next_session_button_label">Plan Next Session</string>
     <string name="participant_section_title">Participants</string>
+    <string name="create_campaign_disabled">Please fill in all of the required fields.</string>
 </resources>

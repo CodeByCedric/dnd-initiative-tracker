@@ -55,6 +55,8 @@ import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.util.intents.selectI
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
+//Todo: clarify what the required fields are
+
 object AddCampaignScreenDestination : NavigationDestination {
     override val route: String = "add_campaign_screen"
     override val titleRes: Int = R.string.add_campaign_screen
@@ -111,6 +113,7 @@ fun AddCampaignScreen(
         },
         bottomBar = {
             CreateCampaignButton(
+                addCampaignViewModel = addCampaignViewModel,
                 onSave = {
                     coroutineScope.launch {
                         addCampaignViewModel.save()
@@ -450,17 +453,23 @@ fun PlayerPillBox(
 
 @Composable
 private fun CreateCampaignButton(
+    addCampaignViewModel: AddCampaignViewModel,
     onSave: () -> Unit,
 ) {
     Button(
         onClick = onSave,
+        enabled = addCampaignViewModel.validateCreateCampaign(),
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.padding_small)),
     ) {
         Text(
-            text = stringResource(R.string.create_campaign),
+            text = if (addCampaignViewModel.validateCreateCampaign()) {
+                stringResource(R.string.create_campaign)
+            } else {
+                stringResource(R.string.create_campaign_disabled)
+            },
             textAlign = TextAlign.Center
         )
     }
