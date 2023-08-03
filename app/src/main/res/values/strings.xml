@@ -69,4 +69,6 @@
     <string name="notification_channel_description">A channel used to send a reminder about the next session</string>
     <string name="roll_for_initiative_icon_label">Roll for intiative</string>
     <string name="please_select_characters_button">Please select characters</string>
+    <string name="plan_next_session_button_label">Plan Next Session</string>
+    <string name="participant_section_title">Participants</string>
 </resources>

@@ -13,9 +13,9 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Button
@@ -56,7 +57,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.DnDInitiativeTrackerTopAppBar
 import be.howest.ti.nma.dungeonsanddragonsinitiativetracker.R
@@ -75,7 +75,6 @@ import java.sql.Date
 import java.util.Locale
 
 /*
-Todo: Add more details to the expanded card, viz. the email addresses of the participants
 Todo: Add functionality to edit campaign participants from the card
 Todo: Add functionality to add new participants to a campaign from the card
 */
@@ -221,9 +220,9 @@ fun CampaignCard(
     val participants = campaignViewModel.getCampaignParticipantsWithDetails(
         campaign.campaignId
     ).collectAsState(initial = emptyList()).value
-
     Card(
         modifier = modifier
+            .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.padding_small))
             .clickable { onSelect(campaign) }
             .border(
@@ -231,39 +230,39 @@ fun CampaignCard(
                 color = if (isSelected) MaterialTheme.colorScheme.outline else Color.Transparent,
                 shape = RoundedCornerShape(8.dp)
             )
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
             .testTag("campaignCard")
     ) {
-        Column(
-            modifier = Modifier
-                .animateContentSize(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    )
-                )
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-            ) {
-                CampaignImage(campaign)
-                Column {
+        Column {
+            Row {
+                Column(
+                    modifier = Modifier.weight(0.2f)
+                ) {
+                    CampaignImage(campaign)
+                }
+
+                Column(
+                    modifier = modifier.weight(0.7f)
+                ) {
                     CampaignInformation(campaign)
                     Text(
                         text = "Next session:",
-                        fontSize = dimensionResource(id = R.dimen.fontSize_medium).value.sp,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                         modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
                     )
                     Text(
                         text = campaign.nextSession?.let { convertLongToString(it) }
                             ?: stringResource(id = R.string.no_next_session_planned),
-                        fontSize = dimensionResource(R.dimen.fontSize_small).value.sp
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     )
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
-                Column {
+                Column(modifier = modifier.weight(0.1f)) {
                     ExpandCampaignCardButton(
                         expanded = isCampaignCardExpanded,
                         onClickExpandCard = { isCampaignCardExpanded = !isCampaignCardExpanded },
@@ -276,7 +275,6 @@ fun CampaignCard(
 
             }
         }
-
         if (isCampaignCardExpanded) {
             CampaignParticipants(
                 participants = participants,
@@ -287,35 +285,80 @@ fun CampaignCard(
                 campaignViewModel = campaignViewModel
             )
         }
-
     }
-
 }
-
 
 @Composable
 fun CampaignParticipants(
     campaignViewModel: CampaignViewModel,
     participants: List<CampaignParticipantDetails>
 ) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.padding_small))
 
-    Column(
-        modifier = Modifier.padding(
-            dimensionResource(id = R.dimen.padding_medium),
-            dimensionResource(id = R.dimen.padding_small),
-            dimensionResource(id = R.dimen.padding_medium),
-            dimensionResource(id = R.dimen.padding_medium)
-        )
     ) {
-        participants.forEach { participant ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+        Text(
+            text = stringResource(id = R.string.participant_section_title),
+            style = MaterialTheme.typography.headlineSmall,
+        )
+//        IconButton(
+//            onClick = {
+//                // Todo: add participant, remove text composable above
+//            },
+//            )
+//        {
+//            Icon(
+//                imageVector = Icons.Default.PersonAdd,
+//                contentDescription = stringResource(id = R.string.expand_button_content_description)
+//            )
+//        }
+    }
+
+    participants.forEach { participant ->
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(
+                    start = dimensionResource(id = R.dimen.padding_medium),
+                    end = dimensionResource(id = R.dimen.padding_small)
+                )
+                .fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(0.40f)
             ) {
                 Text(
                     text = participant.participantName,
-                    modifier = Modifier.weight(1f)
                 )
-                // Remove Participant Button
+            }
+            Column(
+                modifier = Modifier
+                    .weight(0.40f)
+            ) {
+                Text(
+                    text = participant.email
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .weight(0.1f)
+            ) {
+//                EditParticipantButton(
+//                    campaignViewModel,
+//                    participant
+//                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(0.1f)
+            ) {
                 RemoveParticipantButton(
                     campaignViewModel,
                     participant
@@ -323,10 +366,7 @@ fun CampaignParticipants(
             }
         }
     }
-
-
 }
-
 
 @Composable
 fun ExpandCampaignCardButton(
@@ -366,7 +406,7 @@ fun CampaignInformation(
     Column {
         Text(
             text = campaign.campaignName,
-            fontSize = dimensionResource(id = R.dimen.fontSize_large).value.sp,
+            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             modifier = modifier
                 .padding(top = dimensionResource(id = R.dimen.padding_small))
         )
@@ -407,14 +447,24 @@ fun RemoveParticipantButton(
                     )
                 )
             }
-
-
         },
-        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_small))
     ) {
         Icon(
             Icons.Default.Delete,
             contentDescription = stringResource(id = R.string.delete_player_icon_label)
+        )
+    }
+}
+
+@Composable
+fun EditParticipantButton(
+    campaignViewModel: CampaignViewModel,
+    participant: CampaignParticipantDetails
+) {
+    IconButton(onClick = { /*TODO*/ }) {
+        Icon(
+            imageVector = Icons.Filled.Edit,
+            contentDescription = stringResource(id = R.string.expand_button_content_description)
         )
     }
 }
@@ -433,9 +483,9 @@ fun NextSessionButton(
                 campaignViewModel
             )
         },
-        modifier = Modifier.padding(top = 16.dp)
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
     ) {
-        Text(text = "Select Date and Time")
+        Text(text = stringResource(id = R.string.plan_next_session_button_label))
     }
 }
 
