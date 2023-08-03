@@ -29,6 +29,14 @@ moment)
 
 # Questions and Oddities
 
+## Composable functions
+
+Het gebruik van bv. stringResource(id = R.string.add_to_calendar_dialog_title is enkel toegelaten in
+een composible function, maar waarom?
+De timepicker en calendar intent bv. zijn een heel aantal niet-composable functies, die o.a. een
+alert dialog tonen. Is het beter om al deze functies composible te maken?
+Of maak je ze beter niet composable en gebruik je gewoon string values?
+
 ## Dimens
 
 Waarom moet in res/values/dimens.xml de waarden als bv. 8dp worden meegeven, terwijl voor gebruik in

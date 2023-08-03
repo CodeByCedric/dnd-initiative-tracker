@@ -1,6 +1,7 @@
 package be.howest.ti.nma.dungeonsanddragonsinitiativetracker.ui.screens.campaignScreen
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -390,12 +391,7 @@ fun CampaignImage(
     AsyncImage(
         model = if (campaign.campaignImageUri != null) {
             campaign.campaignImageUri
-        } else if (campaign.campaignImageDrawable != null) {
-            campaign.campaignImageDrawable
-        } else {
-            R.drawable.placeholder_view_vector
-        },
-//        model = campaign.campaignImageDrawable ?: campaign.campaignImageUri,
+        } else campaign.campaignImageDrawable ?: R.drawable.placeholder_view_vector,
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
@@ -598,9 +594,10 @@ private fun launchCalendarIntent(
             end
         )
 
-    context.startActivity(intent)
-
-
+    showAddToCalendarConfirmationDialog(
+        context = context,
+        intent = intent
+    )
 }
 
 
@@ -613,4 +610,16 @@ private fun convertLongToString(dateTimeInMillis: Long): String {
     return dateFormat.format(dateTime)
 }
 
+private fun showAddToCalendarConfirmationDialog(
+    context: Context,
+    intent: Intent,
+) {
+    AlertDialog.Builder(context)
+        .setTitle("Add to Calendar")
+        .setMessage("Do you want to add this event to your calendar?")
+        .setPositiveButton("Yes") { _, _ -> context.startActivity(intent) }
+        .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+        .setCancelable(true)
+        .show()
+}
 
