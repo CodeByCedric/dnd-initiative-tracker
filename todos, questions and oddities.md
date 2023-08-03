@@ -9,12 +9,16 @@ recently implemented SkirmishCharacter
 
 API: implement try catch, and handle errors (e.g. no network connection = no data to populate form)
 
+User friendly to ask to launch an intent? Or simply launch the intent and let the user decide to
+cancel it?
+
 ## CampaignScreen
 
 Calendar picker: de datum en tijd worden eerst gekozen, en dan doorgegeven aan de calendar, maar wat
 als de gebruiker de datum en tijd nog wijzigt in de calendar
 
 ## CreateCampaignScreen
+
 Clarify what the required fields are
 Make the email fields nullable. The email fields should not be required (+ editable from the
 campaignscreen)
@@ -32,7 +36,7 @@ moment)
 ## Composable functions
 
 Het gebruik van bv. stringResource(id = R.string.add_to_calendar_dialog_title is enkel toegelaten in
-een composible function, maar waarom?
+een composable function, maar waarom?
 De timepicker en calendar intent bv. zijn een heel aantal niet-composable functies, die o.a. een
 alert dialog tonen. Is het beter om al deze functies composible te maken?
 Of maak je ze beter niet composable en gebruik je gewoon string values?
