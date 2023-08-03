@@ -258,6 +258,7 @@ fun CharacterCard(
             Row() {
                 Text(
                     text = playerCharacter.name,
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 )
             }
             Row(
@@ -266,7 +267,10 @@ fun CharacterCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column {
-                    Text(text = "AC: ${playerCharacter.armorClass}")
+                    Text(
+                        text = "AC: ${playerCharacter.armorClass}",
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
+                    )
                     Text(
                         text = "Initiative Mod.: ${
                             when {
@@ -274,7 +278,8 @@ fun CharacterCard(
                                 playerCharacter.initiativeModifier < 0 -> playerCharacter.initiativeModifier.toString()
                                 else -> "0"
                             }
-                        }"
+                        }",
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
                     )
                 }
                 Row(
