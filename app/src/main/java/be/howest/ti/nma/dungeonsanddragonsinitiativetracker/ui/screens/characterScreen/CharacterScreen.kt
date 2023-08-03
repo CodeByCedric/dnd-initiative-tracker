@@ -441,6 +441,7 @@ fun NavigateToSkirmishScreenButton(
 ) {
     val coroutineScope = rememberCoroutineScope()
     Button(
+        enabled = selectedCharacters.isNotEmpty(),
         onClick = {
             coroutineScope.launch {
                 characterViewModel.clearSkirmishCharacterTable()
@@ -448,15 +449,24 @@ fun NavigateToSkirmishScreenButton(
             }
             navigateToSkirmishScreen()
         },
+
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.padding_small))
     ) {
-        Text(
-            text = stringResource(R.string.to_skirmish_screen_button),
-            textAlign = TextAlign.Center
-        )
+        if (selectedCharacters.isEmpty()) {
+            Text(
+                text = stringResource(R.string.please_select_characters_button),
+                textAlign = TextAlign.Center
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.to_skirmish_screen_button),
+                textAlign = TextAlign.Center
+            )
+        }
+
     }
 }
 

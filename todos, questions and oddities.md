@@ -5,9 +5,7 @@
 !! Loss of functionality when display size and or font size of the device (phone) is set to large !!
 
 Remove implementation of CampaignPlayerCharacterDetail since this is exactly the same as the more
-recent implemented SkirmishCharacter
-
-Move color of textfields to Color.kt and implement value for darktheme
+recently implemented SkirmishCharacter
 
 API: implement try catch, and handle errors (e.g. no network connection = no data to populate form)
 
