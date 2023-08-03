@@ -44,3 +44,7 @@ createCharacterUiState: CreateCharacterUiState werd meegegeven.
 
 Omdat die parameter nu niet meer nodig is, had ik ze verwijderd, maar dan stopt de validatie ook met
 werken om de een of andere reden (die geen gebruik maakt van die parameter)
+
+Gelijkaardige situatie in het CreateCampaignScreen, werkte initieel via viewmodel, maar dan 'plots'
+niet meer.
+Verplaatst naar het CreateCampaignScreen zelf.

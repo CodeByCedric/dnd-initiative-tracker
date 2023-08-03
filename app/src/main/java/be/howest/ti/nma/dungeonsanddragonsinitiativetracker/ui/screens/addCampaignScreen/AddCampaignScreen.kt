@@ -113,6 +113,7 @@ fun AddCampaignScreen(
         },
         bottomBar = {
             CreateCampaignButton(
+                addCampaignUiState = addCampaignUiState,
                 addCampaignViewModel = addCampaignViewModel,
                 onSave = {
                     coroutineScope.launch {
@@ -453,12 +454,13 @@ fun PlayerPillBox(
 
 @Composable
 private fun CreateCampaignButton(
+    addCampaignUiState: AddCampaignUiState,
     addCampaignViewModel: AddCampaignViewModel,
     onSave: () -> Unit,
 ) {
     Button(
         onClick = onSave,
-        enabled = addCampaignViewModel.validateCreateCampaign(),
+        enabled = validateCampaign(addCampaignUiState),
         modifier = Modifier
             .height(dimensionResource(id = R.dimen.button_height))
             .fillMaxWidth()
@@ -473,4 +475,10 @@ private fun CreateCampaignButton(
             textAlign = TextAlign.Center
         )
     }
+}
+
+private fun validateCampaign(addCampaignUiState: AddCampaignUiState): Boolean {
+    return addCampaignUiState.campaignName.isNotBlank() &&
+            addCampaignUiState.dungeonMaster.participantName.isNotBlank() && addCampaignUiState.dungeonMaster.email.isNotBlank() &&
+            addCampaignUiState.playerList.isNotEmpty()
 }
