@@ -15,9 +15,12 @@
 
 ## Project: [Dungeons And Dragons Initiative Tracker](https://git.ti.howest.be/TI/2022-2023/s4/native-mobile-apps/students/cedric-puystjens/herexamen)
 
-### Implemented Technical Requirements
+### Project Videos
 
-#### Must Have
+- [App presentation](https://youtu.be/X3rxI7s9E3U)
+- [Code showcase](https://youtu.be/eG7Jhm8tkns)
+
+### Implemented Technical Requirements
 
 - Build a multiscreen app (at least 4 screens) using the Jetpack Navigation component
 - Use Jetpack Compose with Kotlin to build your screen layout (use at least 4 different elements
@@ -55,13 +58,3 @@ done in the `EnemySyncWorker` class.
 
 - Implement a custom application theme using MaterialDesign with a custom app icon
 
-#### Intermediate - self learning topics
-
-- Notifications: partially implemented as of 30/07/2023. Needs link to alarmmanager (and
-  workmanager?) to schedule notifications.
-- CameraXLibrary: NYI, take picture for campaignImage?
-- Canvas: NYI, draw a dungeon map?
-
-#### Experienced - self learning topics
-
-n/a
