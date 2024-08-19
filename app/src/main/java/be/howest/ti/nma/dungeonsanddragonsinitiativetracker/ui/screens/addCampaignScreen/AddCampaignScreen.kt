@@ -185,15 +185,19 @@ fun CampaignImage(
                 photoPicker,
                 launcherSinglePermission
             )
-            //Camera Button
-            Button(
-                onClick = { /*TODO*/ },
-                enabled = false,
-            ) {
-                Text(text = stringResource(id = R.string.take_an_image))
-
-            }
+//            CameraButton()
         }
+
+    }
+}
+
+@Composable
+private fun CameraButton() {
+    Button(
+        onClick = { /*TODO*/ },
+        enabled = false,
+    ) {
+        Text(text = stringResource(id = R.string.take_an_image))
 
     }
 }
@@ -358,11 +362,11 @@ fun Player(
                 end = dimensionResource(id = R.dimen.padding_medium)
             )
     ) {
-        ContactPickerButton(
-            context = context,
-            contactPicker = contactPicker,
-            launcherSinglePermission = launcherSinglePermission
-        )
+//        ContactPickerButton(
+//            context = context,
+//            contactPicker = contactPicker,
+//            launcherSinglePermission = launcherSinglePermission
+//        )
 //        SelectPlayerFromContactsButton()
         AddPlayerButton(
             addCampaignViewModel

@@ -152,6 +152,7 @@ class CreateCharacterViewModel(
     suspend fun addEnemy(
         enemyIndex: String
     ) {
+
         val enemyResponseBody = EnemiesApi.retrofitService.getEnemy(enemyIndex).body()
         var enemyName = ""
         var dexterityModifier = 0
